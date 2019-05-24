@@ -37,3 +37,9 @@ Win:
 6.User: postgres
 7.PAssword: postgres
 8.Name: meet_and_eat
+
+
+--
+
+Afterwards you can access the DB via IntelliJ or DBeaver.
+Make you you use 'python manage.py migrate' after adding a new model.
