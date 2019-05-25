@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block main %}
+<div align="left" class="container">
+    <div class="shadow p-3 mb-5 bg-white rounded">
+        <h2 class="border-bottom">User-Login</h2>
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-row" style="padding-bottom: 1em">
+                <div class="col">
+                    <label>Username</label>
+                    <div>
+                        {{ form.username }}
+                    </div>
+                </div>
+
+                <div class="col">
+                    <label>Password</label>
+                    <div>
+                        {{ form.password }}
+                    </div>
+                </div>
+            </div>
+
+            <input class="btn btn-primary type" type="submit" value="Login">
+        </form>
+        <div style="padding-top: 1em; font-size: 10pt">
+            No account yet? <a href="#">Sign up</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
