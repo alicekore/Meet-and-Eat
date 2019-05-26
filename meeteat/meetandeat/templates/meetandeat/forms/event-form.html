@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load tz %}
+{% load i18n %}
+{% block main %}
+    <div class="container">
+        <h2 class="mb-3">{% block formTitle %}{% endblock %}</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="eventName">Title:</label>
+                <input type="text" class="form-control form-control-lg {% if form.event_name.errors %}is-invalid{%  endif %}" id="eventName" name="event_name" maxlength="50" {% if form.event_name.value %}value="{{ form.event_name.value}}"{% endif %} required>
+                {% if form.event_name.errors %}<div class="invalid-feedback">Give a correct name</div>{%  endif %}
+            </div>
+            <div class="form-group">
+                <label for="todoText">Description:</label>
+                <textarea class="form-control form-control-lg {% if form.description.errors %}is-invalid{%  endif %}" id="description" rows="3" maxlength="160" placeholder="Max. 160 symbols" name="description">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+                {% if form.description.errors %}<div class="invalid-feedback">Give a correct description</div>{%  endif %}
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="place">Place:</label>
+                    <input type="text" class="form-control form-control-lg {% if form.place.errors %}is-invalid{%  endif %}" id="place" name="place" maxlength="50" {% if form.place.value %}value="{{ form.place.value}}"{% endif %} >
+                    {% if form.place.errors %}<div class="invalid-feedback">Give a correct place</div>{%  endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="personNumber">Number of Persons:</label>
+                    <input type="number" id="personNumber" class="form-control form-control-lg" name="person_number" min="2" max="{% if maxPersonNumber %}{{ maxPersonNumber }}{% else %}6{% endif %}" value="{% if form.person_number.value %}{{ form.person_number.value }}{% else %}2{% endif %}">
+                    {% if form.person_number.errors %}<div class="invalid-feedback">Give a person number</div>{%  endif %}
+                </div>
+            </div>
+            <div class="form-group col-md-6 pl-0 pr-1">
+                    <label for="datetime">Date and Time:</label>
+                    <input type="datetime-local" class="form-control form-control-lg {% if form.datetime.errors %}is-invalid{%  endif %}" id="datetime" name="datetime" {% if form.datetime.value %}value="{{ form.datetime.value | localtime }}" {% endif %} required>
+                    {% if form.datetime.errors %}<div class="invalid-feedback">Give a correct date and time</div>{%  endif %}
+                </div>
+
+            <button type="submit" class="btn btn-custom-primary">Save Event</button>
+        </form>
+    </div>
+{% endblock %}
