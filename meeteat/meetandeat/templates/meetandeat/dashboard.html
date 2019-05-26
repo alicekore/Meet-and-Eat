@@ -1,11 +1,41 @@
-{# dummy dashboard#}
 {% extends "base.html" %}
 
 {#TODO: implement list view, when model is ready#}
 {% block title %}Dashboard{% endblock %}
 {% block main %}
     <div class="container">
-        <a href="{% url 'meetandeat:create-event' %}" class="btn btn-custom-primary">Create Event</a>
-        <p>Dummy Dashboard, implement after creating event</p>
+{#        {% if user.is_authenticated %}#}
+            <a href="{% url 'meetandeat:create-event' %}" class="btn btn-custom-primary">Create Event</a>
+{#        {% endif %}#}
+        <div class="event-list-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Participants</th>
+                        <th scope="col">Time</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for event in event_list %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ event.title }}</td>
+                        <td>{{ event.location}}</td>
+                        <td>{{ event.participants }}</td>
+                        <td>{{ event.datetime | date:"d.m.Y G:i" }}</td>
+
+                        <td>
+                            <a href="{% url 'meetandeat:edit-event' event.id %}" class="btn btn-sm btn-custom-primary">Edit</a>
+{#                            <a href="#" onclick="return confirm('Do you really want to delete this Event?');" class="btn btn-sm btn-danger">Delete</a>#}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
