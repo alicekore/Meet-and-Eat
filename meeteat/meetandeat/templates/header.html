@@ -15,12 +15,18 @@
             </ul>
             {# right floating items            #}
             <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item {% if request.resolver_match.url_name == 'logout' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'meetandeat:logout' %}">Logout{% if request.resolver_match.url_name == 'logout' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                </li>
+                {% else %}
                 <li class="nav-item {% if request.resolver_match.url_name == 'login' %}active{% endif %}">
-                        <a class="nav-link" href="#">Login{% if request.resolver_match.url_name == 'login' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                        <a class="nav-link" href="{% url 'meetandeat:login' %}">Login{% if request.resolver_match.url_name == 'login' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 <li class="nav-item mr-auto {% if request.resolver_match.url_name == 'create-account' %}active{% endif %}">
                         <a class="nav-link" href="#">Create Account{% if request.resolver_match.url_name == 'create-account' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
+                {% endif%}
             </ul>
         </div>
     </nav>
