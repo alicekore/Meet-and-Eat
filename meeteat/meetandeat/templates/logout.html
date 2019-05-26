@@ -1,0 +1,12 @@
+
+{% extends "base.html" %}
+{% block main %}
+<div align="left" class="container">
+    <div class="shadow p-3 mb-5 bg-white rounded">
+        <h2>Successfully logged out</h2>
+        <div style="padding-top: 1em; font-size: 10pt">
+            Sign back in? <a href="{% url 'meetandeat:login' %}">Login</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
