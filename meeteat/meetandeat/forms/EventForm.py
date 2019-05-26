@@ -1,4 +1,8 @@
 from django import forms
+import datetime
+from django.core.exceptions import ValidationError
+from django.forms.widgets import DateTimeInput
+
 
 
 class EventForm(forms.Form):
@@ -7,4 +11,3 @@ class EventForm(forms.Form):
     place = forms.CharField(label='eventPlace', max_length=50, required=False)
     person_number = forms.IntegerField(label="personNumber", min_value=2)
     datetime = forms.DateTimeField(label="datetime")
-
