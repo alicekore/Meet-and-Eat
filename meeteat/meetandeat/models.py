@@ -14,7 +14,7 @@ class Event(models.Model):
     location = models.CharField(max_length=30)
     datetime = models.DateTimeField(default=timezone.now)
     visible = models.BooleanField(default=True)
-    participants = models.IntegerField(default=2, validators=[MaxValueValidator(16), MinValueValidator(2)])
+    participants_number = models.IntegerField(default=2, validators=[MaxValueValidator(16), MinValueValidator(2)])
 
 
 class User(AbstractUser):

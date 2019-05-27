@@ -4,7 +4,6 @@ if($pageID == "create-event" || $pageID == "edit-event") {
     $datePicker = $pageBody.querySelector("#datetime");
     if(!$datePicker.value) {
         // $dateString = new Date.toLocaleString();
-        $dateString = (new Date).toJSON();
         $datePicker.value = getLocalDateTime();
     }
 }

@@ -5,8 +5,8 @@ from django.forms.widgets import DateTimeInput
 
 
 class EventForm(forms.Form):
-    event_name = forms.CharField(label='eventName', max_length=40)
+    title = forms.CharField(label='eventTitle', max_length=40)
     description = forms.CharField(label='eventDescription', max_length=160, required=False)
-    place = forms.CharField(label='eventPlace', max_length=30, required=False)
-    person_number = forms.IntegerField(label="personNumber", min_value=2, max_value=16)
+    location = forms.CharField(label='eventLocation', max_length=30, required=False)
     datetime = forms.DateTimeField(label="datetime", input_formats=['%Y-%m-%dT%H:%M'])
+    participants_number = forms.IntegerField(label="personNumber", min_value=2, max_value=16)
