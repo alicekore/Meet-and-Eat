@@ -23,7 +23,7 @@ function getLocalDateTime() {
       +zeroPadded(d.getMonth() + 1)
       +"-"
       +zeroPadded(d.getDate())
-      +"T"
+      +" "
       +zeroPadded(d.getHours())
       +":"
       +zeroPadded(d.getMinutes());
