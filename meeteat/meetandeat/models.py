@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
+
 # Create your models here.
 
 class Event(models.Model):
@@ -17,5 +18,5 @@ class Event(models.Model):
 
 
 class User(AbstractUser):
-    profilePicture = models.ImageField(upload_to='photos/%Y/%m/%d')
+    profilePicture = models.ImageField(upload_to='photos/%Y/%m/%d', null=True, blank=True)
     visible = models.BooleanField(default=True)
