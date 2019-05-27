@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load tz %}
-{% load i18n %}
 {% block main %}
     <div class="container">
         <h2 class="mb-3">{% block formTitle %}{% endblock %}</h2>
@@ -41,7 +40,7 @@
                            class="form-control form-control-lg {% if form.datetime.errors %}is-invalid{%  endif %}"
                            id="datetime"
                            name="datetime"
-                           {% if form.datetime.value %}value="{{ form.datetime.value | date:'Y-m-d'}}T{{form.datetime.value| date:'H:i'}}" {% endif %}
+                           {% if form.datetime.value %}value="{{ form.datetime.value | date:'Y-m-d'}}T{{form.datetime.value| localtime | date:'H:i'}}" {% endif %}
                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
                            required>
                     {% if form.datetime.errors %}<div class="invalid-feedback">Give a correct date and time</div>{%  endif %}

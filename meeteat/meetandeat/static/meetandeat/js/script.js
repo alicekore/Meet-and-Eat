@@ -1,6 +1,6 @@
 $pageBody = document.querySelector("body");
 $pageID = $pageBody.id;
-if($pageID == "create-event" || $pageID == "edit-event") {
+if($pageID === "create-event" || $pageID === "edit-event") {
     $datePicker = $pageBody.querySelector("#datetime");
     if(!$datePicker.value) {
         // $dateString = new Date.toLocaleString();

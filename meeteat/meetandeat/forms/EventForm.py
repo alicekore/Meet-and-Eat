@@ -1,12 +1,14 @@
 from django import forms
-import datetime
-from django.core.exceptions import ValidationError
-from django.forms.widgets import DateTimeInput
+from meetandeat.models import Event
 
 
-class EventForm(forms.Form):
-    title = forms.CharField(label='eventTitle', max_length=40)
-    description = forms.CharField(label='eventDescription', max_length=160, required=False)
-    location = forms.CharField(label='eventLocation', max_length=30, required=False)
+class EventForm(forms.ModelForm):
     datetime = forms.DateTimeField(label="datetime", input_formats=['%Y-%m-%dT%H:%M'])
-    participants_number = forms.IntegerField(label="personNumber", min_value=2, max_value=16)
+
+    class Meta:
+        model = Event
+        fields = ['title',
+                  'description',
+                  'location',
+                  'participants_number',
+                  'datetime']
