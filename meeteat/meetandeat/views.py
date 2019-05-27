@@ -1,9 +1,7 @@
-from django.shortcuts import get_object_or_404, render
 from .forms.EventForm import EventForm
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from .models import Event
 
 
@@ -11,35 +9,26 @@ class IndexView(ListView):
     model = Event
 
 
-class CreateEventView(View):
-    def get(self, request):
-        return render(request, 'meetandeat/create-event.html')
-
-    def post(self, request):
-        event = Event(user=request.user)
-        form = EventForm(request.POST, instance=event)
-        if form.is_valid():
-            # print('valid')
-            form.save()
-            return HttpResponseRedirect(reverse('meetandeat:index'))
-        else:
-            return render(request, 'meetandeat/create-event.html', {'form': form})
+# TODO: implement template for EventDetailView
+class EventDetailView(DetailView):
+    model = Event
 
 
-class EditEventView(View):
+class EventCreate(CreateView):
+    model = Event
+    template_name = 'meetandeat/create-event.html'
+    form_class = EventForm
+    success_url = reverse_lazy('meetandeat:index')
 
-    def get(self, request, event_id):
-        event = get_object_or_404(Event, pk=event_id)
-        form = EventForm(instance=event)
-        return render(request, 'meetandeat/edit-event.html', {'form': form})
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-    def post(self, request, event_id):
-        event = get_object_or_404(Event, pk=event_id)
-        form = EventForm(request.POST, instance=event)
-        if form.is_valid():
-            # save data from form
-            form.save()
 
-            return HttpResponseRedirect(reverse('meetandeat:index'))
-        else:
-            return render(request, 'meetandeat/edit-event.html', {'form': form})
+class EventUpdate(UpdateView):
+    model = Event
+    template_name = 'meetandeat/edit-event.html'
+    form_class = EventForm
+    success_url = reverse_lazy('meetandeat:index')
+
+# TODO: EventDelete view
