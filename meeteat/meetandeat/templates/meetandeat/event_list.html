@@ -13,7 +13,7 @@
             <small>{{event.location}}</small>
         </div>
     </div>
-    <small>{{event.datetime}}</small><br>
+    <small>{{event.datetime | date:"d.m.Y G:i"}}</small><br>
     <hr>
     <p>{{event.description}}</p>
     <p>Creator: <a href="#">{{event.user}}</a></p>
