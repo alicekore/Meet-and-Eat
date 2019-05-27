@@ -18,5 +18,5 @@ class Event(models.Model):
 
 
 class User(AbstractUser):
-    profilePicture = models.ImageField(required=False, upload_to='photos/%Y/%m/%d', null=True)
+    profilePicture = models.ImageField(required=False, upload_to='photos/%Y/%m/%d')
     visible = models.BooleanField(default=True)
