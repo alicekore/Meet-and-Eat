@@ -12,6 +12,8 @@ class IndexView(ListView):
 # TODO: implement template for EventDetailView
 class EventDetailView(DetailView):
     model = Event
+    template_name = 'meetandeat/event_details.html'
+    success_url = reverse_lazy('meetandeat:index')
 
 
 class EventCreate(CreateView):
