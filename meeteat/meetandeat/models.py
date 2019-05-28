@@ -11,7 +11,7 @@ from django.urls import reverse
 # Create your models here.
 
 class Event(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    super_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=40)
     description = models.CharField(max_length=160)
     location = models.CharField(max_length=30)
