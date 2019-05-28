@@ -33,4 +33,12 @@ class EventUpdate(UpdateView):
     form_class = EventForm
     success_url = reverse_lazy('meetandeat:index')
 
+class ProfileView(View):
+    def get(self,request):
+        #if logged in show profile
+        #TODO: get personal Info
+        context = {}
+        return render(request, 'meetandeat/profile.html', context)
+
 # TODO: EventDelete view
+
