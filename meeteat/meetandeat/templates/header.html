@@ -11,6 +11,9 @@
                 <li class="nav-item {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'meetandeat:index' %}">Dashboard{% if request.resolver_match.url_name == 'index' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'meetandeat:profile' %}">Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                </li>
 
             </ul>
             {# right floating items            #}

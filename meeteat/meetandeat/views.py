@@ -60,5 +60,9 @@ class EditEventView(View):
         else:
             return render(request, 'meetandeat/edit-event.html', {'form': form})
 
-
-
+class ProfileView(View):
+    def get(self,request):
+        #if logged in show profile
+        #TODO: get personal Info
+        context = {}
+        return render(request, 'meetandeat/profile.html', context)
