@@ -1,17 +1,15 @@
-from django.contrib.auth.models import AbstractUser
-from django.core.validators import *
-from django.db import models
 from django.conf import settings
-from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from django.urls import reverse
-
-
+from django.utils import timezone
 
 
 # Create your models here.
 
 class Event(models.Model):
-    super_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=40)
     description = models.CharField(max_length=160)
     location = models.CharField(max_length=30)
@@ -25,4 +23,6 @@ class Event(models.Model):
 
 class User(AbstractUser):
     profilePicture = models.ImageField(upload_to='photos/%Y/%m/%d', null=True, blank=True)
-    visible = models.BooleanField(default=True)
+
+
+visible = models.BooleanField(default=True)

@@ -11,10 +11,11 @@
                 <li class="nav-item {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'meetandeat:index' %}">Dashboard{% if request.resolver_match.url_name == 'index' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
+                {% if user.is_authenticated %}
                 <li class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'meetandeat:profile' %}">Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
-
+                {% endif %}
             </ul>
             {# right floating items            #}
             <ul class="navbar-nav ml-auto">
@@ -29,7 +30,7 @@
                 <li class="nav-item mr-auto {% if request.resolver_match.url_name == 'create-account' %}active{% endif %}">
                         <a class="nav-link" href="#">Create Account{% if request.resolver_match.url_name == 'create-account' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
-                {% endif%}
+                {% endif %}
             </ul>
         </div>
     </nav>
