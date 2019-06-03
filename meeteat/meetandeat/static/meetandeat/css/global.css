@@ -169,3 +169,7 @@
 .navbar-dark .navbar-text a:hover, .navbar-dark .navbar-text a:focus {
   color: #EBE0D7;
 }
+
+.spacing{
+  height: 1em;
+}

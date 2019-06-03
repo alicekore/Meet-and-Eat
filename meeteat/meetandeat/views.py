@@ -1,7 +1,9 @@
-from .forms.EventForm import EventForm
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView
+
+from .forms.EventForm import EventForm
 from .models import Event
 
 
@@ -41,4 +43,3 @@ class ProfileView(View):
         return render(request, 'meetandeat/profile.html', context)
 
 # TODO: EventDelete view
-
