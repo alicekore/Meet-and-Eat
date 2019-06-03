@@ -39,6 +39,29 @@ Win:
 8.Name: meet_and_eat
 
 
+
+**Admin as superuser**
+
+profile: 
+owner: can see all information and edit everything excempt from his username;
+mod:-
+
+dashboard:
+user(owner): edit, see, join, leave events
+user: see, leave,join,report events
+mod: makes events in/-visible
+
+Eventdetails:
+user: access denied
+user(joined): see, leave,join,report events
+mod: -
+user(owner): edit, see, join, leave events
+
+
+
+
+
+
 --
 
 Afterwards you can access the DB via IntelliJ or DBeaver.
