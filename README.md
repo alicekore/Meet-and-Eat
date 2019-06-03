@@ -1,25 +1,27 @@
-Meet&Eat
+# Meet&Eat #
 
 App to find people with common interests to eat together. 
 Сhoose place, time and topic and enjoy your meal with perfect companion!
 
 
-How to set up PostgreSQL (quick guide):
+### How to set up PostgreSQL (quick guide) ###
 
 Until we set up a server for our DB we have to install everything locally. Therefore I also insert the password here visibly.
 Use Version 10 or above. Make sure you also download the new settings.py.
 
-Unix:
+##### Unix: #####
 
-1. Download and install PostgreSQL and maybe pgAdmin for graphical interface
+Download and install PostgreSQL and maybe pgAdmin for graphical interface.
 
---Create DB via console--
-
+Create DB via console:
+```
 $createdb -h localhost -p 5432 -U postgres meet_and_eat
+```
+Password should be set to 'postgres' by default.
 
-password should be set to 'postgres' by default
 
---pgAdmin--
+PgAdmin:
+
 1. Create new Server
 2. Host: localhost
 3. Port: 5432
@@ -27,7 +29,7 @@ password should be set to 'postgres' by default
 5. Password: postgres
 6.Name: meet_and_eat
 
-Win:
+##### Win: #####
 
 1.Download PostgreSQL and open pgAdmin afterwards (comming with the installation)
 2.Open pgAdmin
@@ -38,7 +40,10 @@ Win:
 7.PAssword: postgres
 8.Name: meet_and_eat
 
+Afterwards you can access the DB via IntelliJ or DBeaver.
+Make you you use 'python manage.py migrate' after adding a new model.
 
+### Roles ###
 
 **Admin as superuser**
 
@@ -57,12 +62,3 @@ user(joined): see, leave,join,report events
 mod: -
 user(owner): edit, see, join, leave events
 
-
-
-
-
-
---
-
-Afterwards you can access the DB via IntelliJ or DBeaver.
-Make you you use 'python manage.py migrate' after adding a new model.
