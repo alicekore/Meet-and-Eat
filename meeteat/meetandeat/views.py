@@ -1,16 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from meetandeat import views
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from .forms.EventForm import EventForm
-from .forms.TagForm import TagForm
+from .forms import EventForm, TagForm
 from .models import Event, Tag
 
 class UserIsInGroupMixin(UserPassesTestMixin):
@@ -18,7 +15,7 @@ class UserIsInGroupMixin(UserPassesTestMixin):
         evt = Event.objects.get(pk=self.kwargs['pk'])
         u = self.request.user
         return (u in evt.eventParticipants.all())
-      
+
 class OwnerTestMixin(UserPassesTestMixin):
     def test_func(self):
         evtUser = Event.objects.get(pk=self.kwargs['pk']).user
@@ -62,10 +59,35 @@ class EventCreate(CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
+
+class EventUpdate(UpdateView):
+    model = Event
+    template_name = 'meetandeat/edit-event.html'
+    form_class = EventForm
+    success_url = reverse_lazy('meetandeat:index')
+
+
+class TagView(ListView):
+    model = Tag
+
+
 class TagCreate(CreateView):
     model = Tag
     template_name = 'meetandeat/create-tag.html'
     form_class = TagForm
+    success_url = reverse_lazy('meetandeat:index')
+
+
+class TagUpdate(UpdateView):
+    model = Tag
+    template_name = 'meetandeat/edit-tag.html'
+    form_class = TagForm
+    success_url = reverse_lazy('meetandeat:index')
+
+
+class TagDetailView(DetailView):
+    model = Tag
+    template_name = 'meetandeat/tag_details.html'
     success_url = reverse_lazy('meetandeat:index')
 
 

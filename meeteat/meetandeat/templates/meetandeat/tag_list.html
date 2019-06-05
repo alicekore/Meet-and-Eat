@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block title %} All Tags {% endblock title %}
+
+<!-- TODO - nice design -->
+{% block main %}
+<div class="container border border-dark rounded bg-light p-3 my-4">
+    
+    <h1>All Tags</h1>
+    <small>This url should be visible for admins only.</small>
+
+    {% for tag in tag_list %}
+    <div class="container border border-dark rounded bg-light p-3 my-4">
+        <h2><a href="{% url 'meetandeat:tag-view' tag.pk %}" class="stretched-link">{{ tag.title }}</a></h2>
+        <p>
+            Status: {% if tag.approved %} Approved {% else %} Pending {% endif %}
+        </p>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}
