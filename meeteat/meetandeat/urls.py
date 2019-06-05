@@ -18,5 +18,6 @@ urlpatterns = [
     path('mod/hide/<int:pk>/', modHide.as_view(), name='modHide'),
     path('mod/unhide/<int:pk>/', modUnhide.as_view(), name='modUnhide'),
     path('mod/unreport/<int:pk>/', modUnreport.as_view(), name='modUnreport'),
+    path('tag/create/', TagCreate.as_view(), name='create-tag'),
 
 ]

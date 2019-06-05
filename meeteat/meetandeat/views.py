@@ -10,7 +10,8 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from .forms.EventForm import EventForm
-from .models import Event
+from .forms.TagForm import TagForm
+from .models import Event, Tag
 
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
@@ -60,6 +61,12 @@ class EventCreate(CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+class TagCreate(CreateView):
+    model = Tag
+    template_name = 'meetandeat/create-tag.html'
+    form_class = TagForm
+    success_url = reverse_lazy('meetandeat:index')
 
 
 @method_decorator(login_required, name='dispatch')
