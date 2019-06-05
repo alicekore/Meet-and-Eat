@@ -1,9 +1,12 @@
 from django import forms
-from meetandeat.models import Event
+from meetandeat.models import Event, Tag
 
 
 class EventForm(forms.ModelForm):
     datetime = forms.DateTimeField(label="datetime", input_formats=['%Y-%m-%dT%H:%M'])
+
+    tags_queryset = Tag.objects.filter(approved=True)
+    tags = forms.ModelMultipleChoiceField(queryset=tags_queryset, widget=forms.CheckboxSelectMultiple)
 
     class Meta:
         model = Event
@@ -11,4 +14,5 @@ class EventForm(forms.ModelForm):
                   'description',
                   'location',
                   'participants_number',
-                  'datetime']
+                  'datetime',
+                  'tags']

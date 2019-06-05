@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Event,User,AbstractUser
+from .models import Event,User,AbstractUser, Tag
 
 # Register your models here.
 admin.site.register(Event)
 admin.site.register(User)
+admin.site.register(Tag)

@@ -3,45 +3,43 @@
 {% load tz %}
 
 {% block events %}
-    {% for event in event_list %}
-        {% if  event.visible == True %}
+{% for event in event_list %}
+{% if  event.visible == True %}
 
 
-            <div class="container border border-dark rounded bg-light p-3 my-4">
-                <div class="row">
-                    <div class="col">
-                        {% if event.user == user %}
+<div class="container border border-dark rounded bg-light p-3 my-4">
+  <div class="row">
+    <div class="col">
+      {% if event.user == user %}
+      <h2><a href="{% url 'meetandeat:event-view' event.pk %}" class="stretched-link">{{ event.title }}</a></h2>
+      {% else %}
+      <h2> {{ event.title }}</h2>
+      {% endif %}
+    </div>
+    <div class="col text-right">
+      <small>{{ event.participants_number }} Participants</small><br>
+      <small>{{ event.location }}</small>
+    </div>
+  </div>
+  <small>{{ event.datetime | localtime |date:"d.m.Y G:i"}}</small>
+  {% for tag in event.tags.all %}
+  <span class="badge badge-secondary">{{ tag.title }}</span>
+  {% endfor %}
+  <br>
+  <hr>
+  <p>{{ event.description }}</p>
+  <p>Creator: <a href="#">{{ event.user }}</a></p>
+  {% if  user in event.eventParticipants.all %}
+  <a href="#" class="btn btn-danger">Leave</a>
+  {% else %}
+  <a href="{% url 'meetandeat:join-event' event.pk %}" class="btn btn-primary">Join Event</a>
+  {% endif %}
+  {% if event.user == user %}
+  <a href="{% url 'meetandeat:edit-event' event.pk %}" class="btn btn-info">Edit Event</a>
+  {% endif %}
+</div>
+{% else %}
 
-
-                            <h2><a href="{% url 'meetandeat:event-view' event.pk %}"
-                                   class="stretched-link">{{ event.title }}</a></h2>
-                        {% else %}
-                            <h2>  {{ event.title }}</h2>
-                        {% endif %}
-
-                    </div>
-                    <div class="col text-right">
-                        <small>{{ event.participants_number }} Participants</small>
-                        <br>
-                        <small>{{ event.location }}</small>
-                    </div>
-                </div>
-                <small>{{ event.datetime | localtime |date:"d.m.Y G:i"}}</small>
-                <br>
-                <hr>
-                <p>{{ event.description }}</p>
-                <p>Creator: <a href="#">{{ event.user }}</a></p>
-                {% if  user in event.eventParticipants.all %}
-                    <a href="#" class="btn btn-danger">Leave</a>
-                {% else %}
-                    <a href="{% url 'meetandeat:join-event' event.pk %}" class="btn btn-primary">Join Event</a>
-                {% endif %}
-                {% if event.user == user %}
-                    <a href="{% url 'meetandeat:edit-event' event.pk %}" class="btn btn-info">Edit Event</a>
-                {% endif %}
-            </div>
-        {% else %}
-            <p>muuuuh</p>
-        {% endif %}
-    {% endfor %}
+{% endif %}
+{% endfor %}
 {% endblock %}
