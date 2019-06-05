@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Tag Details{% endblock %}
+{% block main %}
+
+<!-- TODO - better design -->
+<div class="container border border-dark rounded bg-light p-3 my-4">
+    <div class="row">
+        <div class="col">
+            <h1>Tag Details</h1>
+            <hr>
+            <p>Tag: {{ tag.title }}</p>
+            <p>Status: 
+            {% if tag.approved %}
+              Approved
+            {% else %}
+              Pending
+            {% endif %}
+            </p>
+            <h2><a href="{% url 'meetandeat:edit-tag' tag.pk %}" class="btn btn-warning">Edit Tag</a></h2>
+        </div>
+    </div>
+</div>
+{% endblock %}
