@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load tz %}
+{% block main %}
+<div class="container">
+    <h2 class="mb-3">{% block formTitle %}{% endblock %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control form-control-lg {% if form.title.errors %}is-invalid{%  endif %}"
+                id="title" name="title" maxlength="15" {% if form.title.value %}value="{{ form.title.value}}"
+                {% endif %} required>
+            <small>Submissions have to be approved by an administrator before they can be used for events.</small>
+
+            {% if form.title.errors %}<div class="invalid-feedback">Give a correct name</div>{%  endif %}
+        </div>
+        <button type="submit" class="btn btn-custom-primary">Submit Tag</button>
+    </form>
+</div>
+{% endblock %}
