@@ -1,40 +1,48 @@
 {% extends "base.html" %}
 {% block main %}
-<div align="center" class="container border border-dark rounded bg-light p-3 my-4" style="max-width: 600px">
-    <div style="max-width: 350px">
-    <form method="POST">
-        <h2>Account Login</h2>
-        {% csrf_token %}
-        <div>
-            {% if form.errors %}
-            <div class="border border-danger rounded bg-light p-3 my-4">
-           <span style="color: #ce181e; border: #dc3545">
-                    Invalid username or password. <br/>Please try again!
-                </span>
+<div class="container border border-dark rounded bg-light p-3 my-4 login-container">
+    <div class="row">
+        <div class="col-md-6 login-information-text">
+            <h2>Meet&Eat</h2>
+            <p>The app to eat and meet <br>whenever you feel like to meet and eat <br> with other students</p>
+        </div>
+        <div align="center" class="col-md-6 login-form">
+            <div class="container border-dark border-left">
+                <form method="POST">
+                    <h2>Account Login</h2>
+                    {% csrf_token %}
+                    <div>
+                        <label for="username">Username</label>
+                        <div id="username">
+                            {{ form.username }}
+                        </div>
+                    </div>
+                    <div>
+                        <label for="userpassword">Password</label>
+                        <div id="userpassword">
+                            {{ form.password }}
+                        </div>
+                    </div>
+                    <div class="spacing"></div>
+                    <div>
+                        <input class="btn btn-primary type btn-sm btn-block" type="submit" value="Login">
+                    </div>
+                    <div class="spacing"></div>
+                    <div>
+                        <span>
+                        Not account yet? <a href="#">Sign up!</a>
+                        </span>
+                    </div>
+                    {% if form.errors %}
+                    <div class="border border-danger rounded bg-light p-3 my-4 form-error-login">
+                         <span>
+                         Invalid username or password. <br/>Please try again or<br><a href="#">reset your password</a>.
+                        </span>
+                        {% endif %}
+                    </div>
+                </form>
             </div>
-            {% endif %}
         </div>
-        <div>
-            <label for="username">Username</label>
-            <div id="username">
-                {{ form.username }}
-            </div>
-        </div>
-        <div>
-            <label for="userpassword">Password</label>
-            <div id="userpassword">
-                {{ form.password }}
-            </div>
-        </div>
-        <div class="spacing"></div>
-        <div>
-            <input class="btn btn-primary type btn-sm btn-block" type="submit" value="Login">
-        </div>
-        <div class="spacing"></div>
-        <div>
-            No account yet? <a href="#">Sign up</a>
-        </div>
-    </form>
     </div>
 </div>
 {% endblock %}
