@@ -9,6 +9,8 @@ from .forms.EventForm import EventForm
 from .models import Event
 from meetandeat import views
 
+from django.http import HttpResponseRedirect
+
 from django.shortcuts import get_object_or_404
 
 @method_decorator(login_required, name='dispatch')
