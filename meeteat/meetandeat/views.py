@@ -3,14 +3,12 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView
 
 from .forms.EventForm import EventForm
 from .models import Event
 from meetandeat import views
 
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 
 @method_decorator(login_required, name='dispatch')
