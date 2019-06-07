@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -35,7 +35,8 @@ class Event(models.Model):
 
 
 class Tag(models.Model):
-    title = models.CharField(max_length=15)
+    alphabetic = RegexValidator(r'^[a-zA-Z]*$', 'Only alphabetic characters are allowed.')
+    title = models.CharField(max_length=15, validators=[alphabetic])
     approved = models.BooleanField(default=False)
 
     def approve(self):
