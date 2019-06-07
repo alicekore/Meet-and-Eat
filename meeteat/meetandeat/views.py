@@ -7,7 +7,11 @@ from django.views.generic import ListView, CreateView, UpdateView, DetailView
 
 from .forms.EventForm import EventForm
 from .models import Event
+from meetandeat import views
 
+from django.http import HttpResponseRedirect
+
+from django.shortcuts import get_object_or_404
 
 @method_decorator(login_required, name='dispatch')
 class IndexView(ListView):
@@ -48,5 +52,43 @@ class ProfileView(View):
         # TODO: get personal Info
         context = {}
         return render(request, 'meetandeat/profile.html', context)
+
+
+@method_decorator(login_required, name='dispatch')
+class modView(View):
+
+    def get(self, request):
+        context = {
+            'event_list' : Event.objects.filter(reported=True)
+            }
+        return render(request, "meetandeat/mod_event_list.html", context=context)
+
+
+@method_decorator(login_required, name='dispatch')
+class modHide(View):
+    def post(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        event.visible=False
+        event.save()
+        return HttpResponseRedirect("/mod")
+
+
+@method_decorator(login_required, name='dispatch')
+class modUnhide(View):
+
+    def post(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        event.visible=True
+        event.save()
+        return HttpResponseRedirect("/mod")
+
+@method_decorator(login_required, name='dispatch')
+class modUnreport(View):
+
+    def post(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        event.reported=False
+        event.save()
+        return HttpResponseRedirect("/mod")
 
 # TODO: EventDelete view
