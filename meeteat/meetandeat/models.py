@@ -16,6 +16,7 @@ class Event(models.Model):
     location = models.CharField(max_length=30)
     datetime = models.DateTimeField(default=timezone.now)
     visible = models.BooleanField(default=True)
+    reported = models.BooleanField(default=False)
     participants_number = models.IntegerField(default=2, validators=[MaxValueValidator(16), MinValueValidator(2)])
 
     ##add transactional func.

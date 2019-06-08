@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+{% block main %}
+<div class="container">
+    <h1 class="display-4">Reported Events</h1>
+    {% block events %}
+    {% endblock events %}
+</div>
+{% endblock %}
