@@ -40,5 +40,8 @@ class Group(Group):
     event=models.OneToOneField(Event,on_delete=models.CASCADE,blank=True,related_name='groupEvent')
     users=models.ManyToManyField(settings.AUTH_USER_MODEL)
 
-
-
+class Comment(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    datetime = models.DateTimeField(default=timezone.now)
+    text = models.CharField(max_length = 160)
+    event = models.ForeignKey(Event, on_delete = models.CASCADE)
