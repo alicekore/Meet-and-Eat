@@ -4,23 +4,44 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
-
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from .forms.EventForm import EventForm
 from .models import Event
 from meetandeat import views
-
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect
-
 from django.shortcuts import get_object_or_404
+
+class OwnerTestMixin(UserPassesTestMixin):
+    def test_func(self):
+        evtUser = Event.objects.get(pk=self.kwargs['pk']).user
+        ulUser = self.request.user
+        print(evtUser, ulUser)
+        return evtUser == ulUser
 
 @method_decorator(login_required, name='dispatch')
 class IndexView(ListView):
     model = Event
 
+    def get_queryset(self):
+        return Event.objects.filter(visible=True)
+
+
+"""
+class EventJoinView(DetailView):
+    model = Event
+    template_name = 'meetandeat/event_details.html'
+    success_url = reverse_lazy('meetandeat:index')
+    def get(self, request, *args, **kwargs):
+        u = self.request.user
+        Group.get(event_id=self.kwargs['pk']).user_set.add(u)
+"""
+
 
 # TODO: implement template for EventDetailView
 @method_decorator(login_required, name='dispatch')
-class EventDetailView(DetailView):
+class EventDetailView(OwnerTestMixin, DetailView):
     model = Event
     template_name = 'meetandeat/event_details.html'
     success_url = reverse_lazy('meetandeat:index')
@@ -39,7 +60,8 @@ class EventCreate(CreateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class EventUpdate(UpdateView):
+##@login_required(redirect_field_name='meetandeat:index')
+class EventUpdate(OwnerTestMixin, UpdateView):
     model = Event
     template_name = 'meetandeat/edit-event.html'
     form_class = EventForm
