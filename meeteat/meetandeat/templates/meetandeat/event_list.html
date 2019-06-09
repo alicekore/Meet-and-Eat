@@ -22,6 +22,7 @@
     </div>
   </div>
   <small>{{ event.datetime | localtime |date:"d.m.Y G:i"}}</small>
+  <br>
   {% for tag in event.tags.all %}
   <span class="badge badge-secondary">{{ tag.title }}</span>
   {% endfor %}

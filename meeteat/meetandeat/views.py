@@ -49,7 +49,7 @@ class EventDetailView(UserIsInGroupMixin, DetailView):
     success_url = reverse_lazy('meetandeat:index')
 
 
-#@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class EventCreate(CreateView):
     model = Event
     template_name = 'meetandeat/create-event.html'
