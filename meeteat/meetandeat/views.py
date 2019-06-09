@@ -7,7 +7,8 @@ from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from meetandeat import views
 from django.http import HttpResponseRedirect
-from .forms import EventForm, TagForm
+from .forms.EventForm import EventForm
+from .forms.TagForm import TagForm
 from .models import Event, Tag
 
 
@@ -53,7 +54,7 @@ class EventDetailView(UserIsInGroupMixin, DetailView):
     success_url = reverse_lazy('meetandeat:index')
 
 
-@method_decorator(login_required, name='dispatch')
+#@method_decorator(login_required, name='dispatch')
 class EventCreate(CreateView):
     model = Event
     template_name = 'meetandeat/create-event.html'
