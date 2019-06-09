@@ -27,10 +27,10 @@
                 <hr>
                 <p>{{ event.description }}</p>
                 <p>Creator: <a href="#">{{ event.user }}</a></p>
-                {% if event.user == user %}
+                {% if  user in event.eventParticipants.all %}
                     <a href="#" class="btn btn-danger">Leave</a>
                 {% else %}
-                    <a href="#" class="btn btn-primary">Join Event</a>
+                    <a href="{% url 'meetandeat:join-event' event.pk %}" class="btn btn-primary">Join Event</a>
                 {% endif %}
                 {% if event.user == user %}
                     <a href="{% url 'meetandeat:edit-event' event.pk %}" class="btn btn-info">Edit Event</a>
