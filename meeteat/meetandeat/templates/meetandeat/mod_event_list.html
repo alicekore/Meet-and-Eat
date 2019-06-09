@@ -1,0 +1,69 @@
+{% extends 'meetandeat/mod_dashboard.html' %}
+{% load static %}
+{% load tz %}
+
+{% block events %}
+{% for event in event_list %}
+
+{% if event.visible == True %}
+<div class="container border border-dark rounded bg-light p-3 my-4">
+  {% else %}
+<div class="container border border-dark rounded bg-secondary p-3 my-4">
+  {% endif %}
+    <div class="row">
+        <div class="col">
+            <h2><a href="{% url 'meetandeat:event-view' event.pk %}" class="stretched-link">{{event.title}}</a></h2>
+        </div>
+        <div class="col text-right">
+            <small>{{event.participants_number}} Participants</small><br>
+            <small>{{event.location}}</small>
+        </div>
+    </div>
+    <small>{{event.datetime | localtime |date:"d.m.Y G:i"}}</small><br>
+    <hr>
+    <p>{{event.description}}</p>
+    <p>Creator: <a href="#">{{event.user}}</a></p>
+
+    {% if event.visible == True %}
+    <form name="form" method="post" action="{% url 'meetandeat:modHide' event.pk %}" style="float:left;">
+    {% csrf_token %}
+    <input type="submit" class="btn btn-primary" value="Hide"/>
+    </form>
+      {% else %}
+      <form name="form" method="post" action="{% url 'meetandeat:modUnhide' event.pk %}" style="float:left;">
+      {% csrf_token %}
+      <input type="submit" class="btn btn-primary" value="Unhide"/>
+      </form>
+      {% endif %}
+
+    <form name="form" method="post" action="{% url 'meetandeat:modUnreport' event.pk %} " ">
+    {% csrf_token %}
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+      Unreport
+    </button>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to Unreport the Event removing it forever from this list?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-primary" value="Unreport"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    </form>
+
+</div>
+{% endfor %}
+{% endblock %}

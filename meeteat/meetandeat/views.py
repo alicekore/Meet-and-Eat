@@ -5,25 +5,25 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
-
+from meetandeat import views
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from .forms.EventForm import EventForm
 from .models import Event
-
 
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
         evt = Event.objects.get(pk=self.kwargs['pk'])
         u = self.request.user
         return (u in evt.eventParticipants.all())
-
-
+      
 class OwnerTestMixin(UserPassesTestMixin):
     def test_func(self):
         evtUser = Event.objects.get(pk=self.kwargs['pk']).user
         ulUser = self.request.user
         print(evtUser, ulUser)
         return evtUser == ulUser
-
 
 @method_decorator(login_required, name='dispatch')
 class IndexView(ListView):
@@ -76,6 +76,44 @@ class ProfileView(View):
     def get(self, request):
         # TODO: get personal Info
         context = {}
-        return render(request, 'meetandeat:profile', context)
+        return render(request, 'meetandeat/profile.html', context)
+
+
+@method_decorator(login_required, name='dispatch')
+class modView(View):
+
+    def get(self, request):
+        context = {
+            'event_list' : Event.objects.filter(reported=True)
+            }
+        return render(request, "meetandeat/mod_event_list.html", context=context)
+
+
+@method_decorator(login_required, name='dispatch')
+class modHide(View):
+    def post(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        event.visible=False
+        event.save()
+        return HttpResponseRedirect("/mod")
+
+
+@method_decorator(login_required, name='dispatch')
+class modUnhide(View):
+
+    def post(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        event.visible=True
+        event.save()
+        return HttpResponseRedirect("/mod")
+
+@method_decorator(login_required, name='dispatch')
+class modUnreport(View):
+
+    def post(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        event.reported=False
+        event.save()
+        return HttpResponseRedirect("/mod")
 
 # TODO: EventDelete view
