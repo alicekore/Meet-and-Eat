@@ -1,14 +1,20 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
+
 from .forms.EventForm import EventForm
 from .models import Event
-from django.contrib.auth.mixins import UserPassesTestMixin
+
+
+class UserIsInGroupMixin(UserPassesTestMixin):
+    def test_func(self):
+        evt = Event.objects.get(pk=self.kwargs['pk'])
+        u = self.request.user
+        return (u in evt.eventParticipants.all())
 
 
 class OwnerTestMixin(UserPassesTestMixin):
@@ -27,20 +33,18 @@ class IndexView(ListView):
         return Event.objects.filter(visible=True)
 
 
-"""
-class EventJoinView(DetailView):
-    model = Event
-    template_name = 'meetandeat/event_details.html'
-    success_url = reverse_lazy('meetandeat:index')
+@method_decorator(login_required, name='dispatch')
+class EventJoinView(View):
     def get(self, request, *args, **kwargs):
+        e = Event.objects.get(id=self.kwargs['pk'])
         u = self.request.user
-        Group.get(event_id=self.kwargs['pk']).user_set.add(u)
-"""
+        e.eventParticipants.add(u)
+        return redirect('meetandeat:event-view', pk=e.pk)
 
 
 # TODO: implement template for EventDetailView
 @method_decorator(login_required, name='dispatch')
-class EventDetailView(OwnerTestMixin, DetailView):
+class EventDetailView(UserIsInGroupMixin, DetailView):
     model = Event
     template_name = 'meetandeat/event_details.html'
     success_url = reverse_lazy('meetandeat:index')
@@ -72,6 +76,6 @@ class ProfileView(View):
     def get(self, request):
         # TODO: get personal Info
         context = {}
-        return render(request, 'meetandeat/profile.html', context)
+        return render(request, 'meetandeat:profile', context)
 
 # TODO: EventDelete view
