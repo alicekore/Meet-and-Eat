@@ -1,15 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
-from meetandeat import views
-from django.http import HttpResponseRedirect
+
 from .forms.EventForm import EventForm
-from .forms.TagForm import TagForm
 from .forms.TagFilterForm import TagFilterForm
+from .forms.TagForm import TagForm
 from .models import Event, Tag
 
 
@@ -77,6 +78,7 @@ class EventCreate(CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(login_required, name='dispatch')
 class EventUpdate(UpdateView):
     model = Event
     template_name = 'meetandeat/edit-event.html'
@@ -84,10 +86,12 @@ class EventUpdate(UpdateView):
     success_url = reverse_lazy('meetandeat:index')
 
 
+@method_decorator(login_required, name='dispatch')
 class TagView(ListView):
     model = Tag
 
 
+@method_decorator(login_required, name='dispatch')
 class TagCreate(CreateView):
     model = Tag
     template_name = 'meetandeat/create-tag.html'
@@ -95,6 +99,7 @@ class TagCreate(CreateView):
     success_url = reverse_lazy('meetandeat:index')
 
 
+@method_decorator(login_required, name='dispatch')
 class TagUpdate(UpdateView):
     model = Tag
     template_name = 'meetandeat/edit-tag.html'
@@ -102,6 +107,7 @@ class TagUpdate(UpdateView):
     success_url = reverse_lazy('meetandeat:index')
 
 
+@method_decorator(login_required, name='dispatch')
 class TagDetailView(DetailView):
     model = Tag
     template_name = 'meetandeat/tag_details.html'
@@ -109,7 +115,6 @@ class TagDetailView(DetailView):
 
 
 @method_decorator(login_required, name='dispatch')
-# @login_required(redirect_field_name='meetandeat:index')
 class EventUpdate(OwnerTestMixin, UpdateView):
     model = Event
     template_name = 'meetandeat/edit-event.html'
@@ -163,4 +168,31 @@ class modUnreport(View):
         event.save()
         return HttpResponseRedirect("/mod")
 
-# TODO: EventDelete view
+
+@method_decorator(login_required, name='dispatch')
+class EventLeave(View):
+    def get(self, request, *args, **kwargs):
+        event = Event.objects.get(id=kwargs['pk'])
+        user = request.user
+        event.eventParticipants.remove(user)
+        return redirect('meetandeat:index')
+
+
+@method_decorator(login_required, name='dispatch')
+class EventReport(View):
+    def get(self, request, *args, **kwargs):
+        event = Event.objects.get(id=self.kwargs['pk'])
+        user = request.user
+        event.userReportings.add(user)
+        event.reported = True
+        event.save()
+        return redirect('meetandeat:index')
+
+
+@method_decorator(login_required, name='dispatch')
+class ApproveTag(View):
+    def get(self, request, *args, **kwargs):
+        tag = Tag.objects.get(id=self.kwargs['pk'])
+        tag.approved = True
+        tag.save()
+        return redirect('meetandeat:tag-view')
