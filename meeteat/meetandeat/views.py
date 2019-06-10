@@ -1,10 +1,18 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+
+
+
+from .forms.EventForm import EventForm
+from .forms.UserRegistrationForm import UserRegistrationForm
+from .models import Event
 from meetandeat import views
 from django.http import HttpResponseRedirect
 from .forms.EventForm import EventForm
@@ -152,3 +160,17 @@ class modUnreport(View):
         return HttpResponseRedirect("/mod")
 
 # TODO: EventDelete view
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}!')
+            return redirect('/profile')
+    else:
+        form = UserRegistrationForm()
+        context =  {'form':form}
+
+    return render(request, 'meetandeat/register.html', context)

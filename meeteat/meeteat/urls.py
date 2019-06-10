@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from django.urls import include, path
+from meetandeat import views as user_views
 
 urlpatterns = [
-    path('', include('meetandeat.urls')),
     path('admin/', admin.site.urls),
-    url(r'^select2/', include('django_select2.urls')),
+    path('register/', user_views.register, name='register'),
+    path('', include('meetandeat.urls')),
 ]
