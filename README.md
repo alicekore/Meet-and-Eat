@@ -62,3 +62,9 @@ user(joined): see, leave,join,report events
 mod: -
 user(owner): edit, see, join, leave events
 
+Library: Installing 'Tag-Filter': 
+In python console:
+
+pip install django2_select
+
+
