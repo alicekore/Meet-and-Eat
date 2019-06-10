@@ -9,6 +9,8 @@ urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('event/<int:pk>/', EventDetailView.as_view(), name='event-view'),
     path('event/<int:pk>/join', EventJoinView.as_view(), name='join-event'),
+    path('event/<int:pk>/leave', EventLeave.as_view(), name='leave-event'),
+    path('event/<int:pk>/report', EventReport.as_view(), name='report-event'),
     path('event/create/', EventCreate.as_view(), name='create-event'),
     path('event/<int:pk>/edit/', EventUpdate.as_view(), name='edit-event'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
@@ -19,8 +21,9 @@ urlpatterns = [
     path('mod/unhide/<int:pk>/', modUnhide.as_view(), name='modUnhide'),
     path('mod/unreport/<int:pk>/', modUnreport.as_view(), name='modUnreport'),
     path('tag/create/', TagCreate.as_view(), name='create-tag'),
-    path('tag/<int:pk>/', TagDetailView.as_view(), name='tag-view'),
+    path('tag/<int:pk>/', TagDetailView.as_view(), name='tag-details'),
     path('tag/<int:pk>/edit/', TagUpdate.as_view(), name='edit-tag'),
+    path('tag/<int:pk>/approve/', ApproveTag.as_view(), name='approve-tag'),
     path('tag/all/', TagView.as_view(), name='tag-view'),
 
 ]
