@@ -21,9 +21,17 @@ class Event(models.Model):
     def get_absolute_url(self):
         return reverse('meetandeat:event-view', args=[str(self.pk)])
 
+    def save(self, *args, **kwargs):
+        super(Event, self).save(*args, **kwargs)
+        self.eventParticipants.add(self.user)
+
+
+    class Meta:
+        permissions = [("join_event", 'Can join event'), ("hide_event", 'Can hide event'),
+                       ('edit_event', 'Can Edit Event'), ('seeHidden_event', 'Can see hidden events')]
+
 
 class User(AbstractUser):
     profilePicture = models.ImageField(upload_to='photos/%Y/%m/%d', null=True, blank=True)
-
-
-visible = models.BooleanField(default=True)
+    visible = models.BooleanField(default=True)
+    events = models.ManyToManyField(Event, related_name='eventParticipants', blank=True)
