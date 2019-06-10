@@ -9,13 +9,16 @@ from meetandeat import views
 from django.http import HttpResponseRedirect
 from .forms.EventForm import EventForm
 from .forms.TagForm import TagForm
+from .forms.TagFilterForm import TagFilterForm
 from .models import Event, Tag
+
 
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
         evt = Event.objects.get(pk=self.kwargs['pk'])
         u = self.request.user
         return (u in evt.eventParticipants.all())
+
 
 class OwnerTestMixin(UserPassesTestMixin):
     def test_func(self):
@@ -24,12 +27,25 @@ class OwnerTestMixin(UserPassesTestMixin):
         print(evtUser, ulUser)
         return evtUser == ulUser
 
-@method_decorator(login_required, name='dispatch')
-class IndexView(ListView):
-    model = Event
 
-    def get_queryset(self):
-        return Event.objects.filter(visible=True)
+@method_decorator(login_required, name='dispatch')
+class IndexView(View):
+    def get(self, request):
+        form = TagFilterForm()
+        events = Event.objects.filter(visible=True)
+        return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
+
+    # Filter Events by Tags
+    def post(self, request):
+        form = TagFilterForm(request.POST)
+        events = Event.objects.filter(visible=True)
+        if form.is_valid():
+            tags = form.cleaned_data.get('tags')
+            if tags:
+                events = events.filter(tags__in=tags).distinct()
+            return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
+        else:
+            return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -93,7 +109,7 @@ class TagDetailView(DetailView):
 
 
 @method_decorator(login_required, name='dispatch')
-##@login_required(redirect_field_name='meetandeat:index')
+# @login_required(redirect_field_name='meetandeat:index')
 class EventUpdate(OwnerTestMixin, UpdateView):
     model = Event
     template_name = 'meetandeat/edit-event.html'
@@ -114,8 +130,8 @@ class modView(View):
 
     def get(self, request):
         context = {
-            'event_list' : Event.objects.filter(reported=True)
-            }
+            'event_list': Event.objects.filter(reported=True)
+        }
         return render(request, "meetandeat/mod_event_list.html", context=context)
 
 
@@ -123,7 +139,7 @@ class modView(View):
 class modHide(View):
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
-        event.visible=False
+        event.visible = False
         event.save()
         return HttpResponseRedirect("/mod")
 
@@ -133,16 +149,17 @@ class modUnhide(View):
 
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
-        event.visible=True
+        event.visible = True
         event.save()
         return HttpResponseRedirect("/mod")
+
 
 @method_decorator(login_required, name='dispatch')
 class modUnreport(View):
 
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
-        event.reported=False
+        event.reported = False
         event.save()
         return HttpResponseRedirect("/mod")
 
