@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_select2',
     'meetandeat.apps.MeetandeatConfig',
     'django.contrib.admin',
     'django.contrib.auth',

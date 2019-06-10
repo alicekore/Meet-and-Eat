@@ -18,5 +18,9 @@ urlpatterns = [
     path('mod/hide/<int:pk>/', modHide.as_view(), name='modHide'),
     path('mod/unhide/<int:pk>/', modUnhide.as_view(), name='modUnhide'),
     path('mod/unreport/<int:pk>/', modUnreport.as_view(), name='modUnreport'),
+    path('tag/create/', TagCreate.as_view(), name='create-tag'),
+    path('tag/<int:pk>/', TagDetailView.as_view(), name='tag-view'),
+    path('tag/<int:pk>/edit/', TagUpdate.as_view(), name='edit-tag'),
+    path('tag/all/', TagView.as_view(), name='tag-view'),
 
 ]
