@@ -2,11 +2,30 @@
 {% load static %}
 {% load tz %}
 
+{% block css %}
+{{ form.media.css }}
+<style>
+  .select2-selection__rendered {
+    line-height: 2em !important;
+  }
+</style>
+{% endblock css %}
+
 {% block events %}
+<br>
+<div class="row">
+  <div class="col text-right">
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-custom-primary mb-2">Search</button>
+      {{form.tags}}
+    </form>
+  </div>
+</div>
+
+{% if event_list %}
 {% for event in event_list %}
 {% if  event.visible == True %}
-
-
 <div class="container border border-dark rounded bg-light p-3 my-4">
   <div class="row">
     <div class="col">
@@ -40,7 +59,12 @@
   {% endif %}
 </div>
 {% else %}
-
 {% endif %}
 {% endfor %}
+{% else %}
+  <p>No Results found</p>
+{% endif %}
+
+
+{{ form.media.js }}
 {% endblock %}
