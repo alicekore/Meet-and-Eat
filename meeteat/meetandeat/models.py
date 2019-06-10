@@ -53,3 +53,4 @@ class User(AbstractUser):
     profilePicture = models.ImageField(upload_to='photos/%Y/%m/%d', null=True, blank=True)
     visible = models.BooleanField(default=True)
     events = models.ManyToManyField(Event, related_name='eventParticipants', blank=True)
+    reportedEvents = models.ManyToManyField(Event, related_name='userReportings', blank=True)
