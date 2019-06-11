@@ -3,12 +3,10 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-
-
 
 from .forms.EventForm import EventForm
 from .forms.UserRegistrationForm import UserRegistrationForm
@@ -99,16 +97,23 @@ class modUnreport(View):
 
 # TODO: EventDelete view
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
+class UserRegistrationView(FormView):
+    form_class = UserRegistrationForm
+    template_name = 'meetandeat/register.html'
+
+    def get(self, request):
+        form = self.form_class(initial = self.initial)
+        return render(request, self.template_name, {'form':form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}!')
             return redirect('/profile')
-    else:
-        form = UserRegistrationForm()
-        context =  {'form':form}
+        else:
+            form = UserRegistrationForm()
+            context =  {'form':form}
 
-    return render(request, 'meetandeat/register.html', context)
+        return render(request, self.template_name, {'form':form})
