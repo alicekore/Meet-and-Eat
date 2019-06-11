@@ -30,9 +30,6 @@ class Event(models.Model):
     def get_absolute_url(self):
         return reverse('meetandeat:event-view', args=[str(self.pk)])
 
-    def __str__(self):
-        return self.title
-
 
 class Tag(models.Model):
     alphabetic = RegexValidator(r'^[a-zA-Z]*$', 'Only alphabetic characters are allowed.')
@@ -45,12 +42,13 @@ class Tag(models.Model):
     def disapprove(self):
         self.approved = False
 
+
     def __str__(self):
         return self.title
-
 
 class User(AbstractUser):
     profilePicture = models.ImageField(upload_to='photos/%Y/%m/%d', null=True, blank=True)
     visible = models.BooleanField(default=True)
     events = models.ManyToManyField(Event, related_name='eventParticipants', blank=True)
     reportedEvents = models.ManyToManyField(Event, related_name='userReportings', blank=True)
+

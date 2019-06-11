@@ -6,12 +6,18 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
-
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 from .forms.EventForm import EventForm
+from .forms.UserRegistrationForm import UserRegistrationForm
+from .models import Event
+from meetandeat import views
 from .forms.TagFilterForm import TagFilterForm
 from .forms.TagForm import TagForm
 from .models import Event, Tag
+
 
 
 class UserIsInGroupMixin(UserPassesTestMixin):
@@ -168,6 +174,27 @@ class modUnreport(View):
         event.save()
         return HttpResponseRedirect("/mod")
 
+class UserRegistrationView(FormView):
+    form_class = UserRegistrationForm
+    template_name = 'meetandeat/register.html'
+
+    def get(self, request):
+        form = self.form_class(initial = self.initial)
+        return render(request, self.template_name, {'form':form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}!')
+            return redirect('/profile')
+        else:
+            form = UserRegistrationForm()
+            context =  {'form':form}
+
+        return render(request, self.template_name, {'form':form})
+
 
 @method_decorator(login_required, name='dispatch')
 class EventLeave(View):
@@ -196,3 +223,4 @@ class ApproveTag(View):
         tag.approved = True
         tag.save()
         return redirect('meetandeat:tag-view')
+
