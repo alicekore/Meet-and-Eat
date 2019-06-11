@@ -6,19 +6,15 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 from .forms.EventForm import EventForm
-from .forms.TagFilterForm import TagFilterForm
-from .forms.TagForm import TagForm
-from .models import Event, Tag
-
-
-class UserIsInGroupMixin(UserPassesTestMixin):
-    def test_func(self):
-        evt = Event.objects.get(pk=self.kwargs['pk'])
-        u = self.request.user
-        return (u in evt.eventParticipants.all())
+from .forms.UserRegistrationForm import UserRegistrationForm
+from .models import Event
+from meetandeat import views
 
 
 class OwnerTestMixin(UserPassesTestMixin):
@@ -169,30 +165,23 @@ class modUnreport(View):
         return HttpResponseRedirect("/mod")
 
 
-@method_decorator(login_required, name='dispatch')
-class EventLeave(View):
-    def get(self, request, *args, **kwargs):
-        event = Event.objects.get(id=kwargs['pk'])
-        user = request.user
-        event.eventParticipants.remove(user)
-        return redirect('meetandeat:index')
+class UserRegistrationView(FormView):
+    form_class = UserRegistrationForm
+    template_name = 'meetandeat/register.html'
 
+    def get(self, request):
+        form = self.form_class(initial = self.initial)
+        return render(request, self.template_name, {'form':form})
 
-@method_decorator(login_required, name='dispatch')
-class EventReport(View):
-    def get(self, request, *args, **kwargs):
-        event = Event.objects.get(id=self.kwargs['pk'])
-        user = request.user
-        event.userReportings.add(user)
-        event.reported = True
-        event.save()
-        return redirect('meetandeat:index')
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}!')
+            return redirect('/profile')
+        else:
+            form = UserRegistrationForm()
+            context =  {'form':form}
 
-
-@method_decorator(login_required, name='dispatch')
-class ApproveTag(View):
-    def get(self, request, *args, **kwargs):
-        tag = Tag.objects.get(id=self.kwargs['pk'])
-        tag.approved = True
-        tag.save()
-        return redirect('meetandeat:tag-view')
+        return render(request, self.template_name, {'form':form})
