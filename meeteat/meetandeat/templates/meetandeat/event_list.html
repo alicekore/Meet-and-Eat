@@ -2,42 +2,90 @@
 {% load static %}
 {% load tz %}
 
+{% block css %}
+{{ form.media.css }}
+<style>
+    .select2-selection__rendered {
+        line-height: 2em !important;
+    }
+</style>
+{% endblock css %}
 {% block events %}
-    {% for event in event_list %}
-        {% if  event.visible == True %}
-
-
-            <div class="container border border-dark rounded bg-light p-3 my-4">
-                <div class="row">
-                    <div class="col">
-                        {% if event.user == user %}
-                            <h2><a href="{% url 'meetandeat:event-view' event.pk %}"
-                                   class="stretched-link">{{ event.title }}</a></h2>
-                        {% else %}
-                            <h2>  {{ event.title }}</h2>
-                        {% endif %}
-                    </div>
-                    <div class="col text-right">
-                        <small>{{ event.participants_number }} Participants</small><br>
-                        <small>{{ event.location }}</small>
-                    </div>
-                </div>
-                <small>{{ event.datetime | localtime |date:"d.m.Y G:i"}}</small>
-                <br>
-                <hr>
-                <p>{{ event.description }}</p>
-                <p>Creator: <a href="#">{{ event.user }}</a></p>
-                {% if  user in event.eventParticipants.all %}
-                    <a href="#" class="btn btn-danger">Leave</a>
-                {% else %}
-                    <a href="{% url 'meetandeat:join-event' event.pk %}" class="btn btn-primary">Join Event</a>
-                {% endif %}
-                {% if event.user == user %}
-                    <a href="{% url 'meetandeat:edit-event' event.pk %}" class="btn btn-info">Edit Event</a>
-                {% endif %}
-            </div>
-        {% else %}
-            
-        {% endif %}
+<br>
+<div class="row">
+    <div class="col text-right">
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn btn-custom-primary mb-2" type="submit">Search</button>
+            {{form.tags}}
+        </form>
+    </div>
+</div>
+{% if event_list %}
+{% for event in event_list %}
+{% if  event.visible == True %}
+<div class="container border border-dark rounded bg-light p-3 my-4">
+    <div class="row">
+        <div class="col">
+            {% if user in event.eventParticipants.all %}
+            <h2><a class="stretched-link" href="{% url 'meetandeat:event-view' event.pk %}">{{ event.title }}</a></h2>
+            {% else %}
+            <h2> {{ event.title }}</h2>
+            {% endif %}
+        </div>
+        <div class="col text-right">
+            <small>{{ event.participants_number }} Participants</small>
+            <br>
+            <small>{{ event.location }}</small>
+        </div>
+    </div>
+    <small>{{ event.datetime | localtime |date:"d.m.Y G:i"}}</small>
+    <br>
+    {% for tag in event.tags.all %}
+    <span class="badge badge-secondary">{{ tag.title }}</span>
     {% endfor %}
+    <br>
+    <hr>
+    <p>{{ event.description }}</p>
+    <p>Creator: <a href="#">{{ event.user }}</a></p>
+    <div class="row">
+        <div class="col">
+            {% if user in event.eventParticipants.all %}
+            <a class="btn btn-danger" href="{% url 'meetandeat:leave-event' event.pk %}">Leave</a>
+            {% else %}
+            <a class="btn btn-primary" href="{% url 'meetandeat:join-event' event.pk %}">Join Event</a>
+            {% endif %}
+        </div>
+        <div class="col text-lg-right">
+            <div class="btn-group dropup">
+                <button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle"
+                        data-toggle="dropdown"
+                        type="button">
+                    Settings
+                </button>
+                <div class="dropdown-menu">
+                    {% if event.user == user %}
+                    <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit Event</a>
+                    {% endif %}
+                    {% if user in event.userReportings.all %}
+                    <span class="dropdown-item">Already reported!</span>
+                    {% else %}
+                    <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report Event</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+
+{% endif %}
+{% endfor %}
+{% else %}
+<p>No Results found</p>
+{% endif %}
+
+
+{{ form.media.js }}
 {% endblock %}
+
