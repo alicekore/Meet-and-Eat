@@ -51,4 +51,3 @@ class User(AbstractUser):
     visible = models.BooleanField(default=True)
     events = models.ManyToManyField(Event, related_name='eventParticipants', blank=True)
     reportedEvents = models.ManyToManyField(Event, related_name='userReportings', blank=True)
-
