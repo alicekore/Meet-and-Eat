@@ -17,6 +17,15 @@ from .models import Event
 from .forms.CommentForm import CommentForm
 from .models import Comment
 from meetandeat import views
+from .forms.TagFilterForm import TagFilterForm
+from .forms.TagForm import TagForm
+from .forms.ChangeProfilePicture import ChangeProfilePicture
+from .models import Event, Tag
+
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+
 
 
 
@@ -137,12 +146,40 @@ class EventUpdate(OwnerTestMixin, UpdateView):
     success_url = reverse_lazy('meetandeat:index')
 
 
-@method_decorator(login_required, name='get')
+@method_decorator(login_required, name='dispatch')
 class ProfileView(View):
     def get(self, request):
-        # TODO: get personal Info
-        context = {}
-        return render(request, 'meetandeat:profile', context)
+        User = get_user_model()
+        user = User.objects.get(pk=request.user.pk)
+        context = {
+            'user': user,
+        }
+        return render(request, 'meetandeat/profile.html', context)
+
+    def post(self, request):
+        User = get_user_model()
+        user = get_object_or_404(User, pk=request.user.pk)
+        if 'change-password' in request.POST:
+            form = PasswordChangeForm(user=user, data=request.POST)
+            if form.is_valid():
+                user.set_password(form.cleaned_data['new_password1'])
+                user.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, f'Password was changed')
+            else:
+                context = {
+                    'user': user,
+                    'form': form
+                }
+                return render(request, 'meetandeat/profile.html', context)
+        elif 'update-image' in request.POST:
+            print('i am trying to save a picture')
+            form = ChangeProfilePicture(request.POST, instance=user)
+            form.save()
+        context = {
+            'user': user,
+        }
+        return render(request, 'meetandeat/profile.html', context)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -205,6 +242,14 @@ class UserRegistrationView(FormView):
 
         return render(request, self.template_name, {'form':form})
 
+class UserUpdateView(UpdateView):
+    model = get_user_model()
+    fields = ['username', 'email', 'first_name', 'last_name']
+    template_name = 'meetandeat/edit-profile.html'
+    success_url = reverse_lazy('meetandeat:profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 @method_decorator(login_required, name='dispatch')
 class EventLeave(View):
