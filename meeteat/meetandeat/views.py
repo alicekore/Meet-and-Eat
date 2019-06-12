@@ -92,7 +92,7 @@ class EventCreate(CreateView):
     model = Event
     template_name = 'meetandeat/create-event.html'
     form_class = EventForm
-    # success_url = reverse_lazy('meetandeat:index')
+    success_url = reverse_lazy('meetandeat:index')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
