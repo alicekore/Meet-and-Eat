@@ -29,9 +29,6 @@ class UserIsInGroupMixin(UserPassesTestMixin):
         return (u in evt.eventParticipants.all())
 
 
-from django.conf import settings
-from django.utils import timezone
-from django.contrib.auth.models import AbstractUser
 
 class OwnerTestMixin(UserPassesTestMixin):
     def test_func(self):
@@ -73,41 +70,22 @@ class EventJoinView(View):
 # TODO: implement template for EventDetailView
 @method_decorator(login_required, name='dispatch')
 class EventDetailView(UserIsInGroupMixin, DetailView):
-    model = Event
-    template_name = 'meetandeat/event_details.html'
-    form_class = CommentForm
-    success_url = reverse_lazy('meetandeat:index')
+    def get(self, request,pk):
+        form = CommentForm
+        event = get_object_or_404(Event, pk=pk)
+        comments = Comment.objects.filter(event = pk)
+        return render(request, 'meetandeat/event_details.html', context={'comment_list': comments, 'event': event, 'form':form})
 
-    def form_valid(self,form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-    # def post(self, request, pk):
-    #     event = get_object_or_404(Event, pk=pk)
-    #     form = CommentForm(request.POST)
-    #     print(self.request.user)
-    #     if form.is_valid():
-    #         text = form.cleaned_data['text']
-    #         print("valid")
-    #         print(text)
-    #         comment = Comment(author = request.user, datetime = timezone.now,
-    #                             text = "text", event = get_object_or_404(Event, pk=pk))
-    #         comment.save()
-
-            # return HttpResponseRedirect(self.succes_url)
-    # def post(self, request, pk):
-    #     form = CommentForm(request.POST)
-    #     if form.is_valid():
-    #         text = form.cleaned_data['text']
-    #         comment = Comment(author = settings.AUTH_USER_MODEL, datetime = timezone.now,
-    #                             text = text, event = get_object_or_404(Event, pk=pk))
-    #         comment.save()
-    #         form = CommentForm()
-    #         return HttpResponseRedirect("meetandeat/event_details.html")
-    # #     return Comment.objects.filter()
-    #     else:
-    #             print("form not valid")
-    #             print(form.errors)
+    def post(self, request, pk):
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            print("valid")
+            text = form.cleaned_data.get('text')
+            author = request.user
+            event = get_object_or_404(Event, pk=pk)
+            c = Comment(author = author, text = text, event= event)
+            c.save()
+            return redirect('meetandeat:event-view', pk = pk)
 
 @method_decorator(login_required, name='dispatch')
 class EventCreate(CreateView):
@@ -260,4 +238,3 @@ class ApproveTag(View):
         tag.approved = True
         tag.save()
         return redirect('meetandeat:tag-view')
-

@@ -39,21 +39,20 @@ class Tag(models.Model):
     def approve(self):
         self.approved = True
 
+    def disapprove(self):
+        self.approved = False
+
+    def __str__(self):
+        return self.title
+
 class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     datetime = models.DateTimeField(default=timezone.now)
     text = models.CharField(max_length = 160)
     event = models.ForeignKey(Event, on_delete = models.CASCADE)
-    def disapprove(self):
-        self.approved = False
-
-
-    def __str__(self):
-        return self.title
 
 class User(AbstractUser):
     profilePicture = models.ImageField(upload_to='photos/%Y/%m/%d', null=True, blank=True)
     visible = models.BooleanField(default=True)
     events = models.ManyToManyField(Event, related_name='eventParticipants', blank=True)
     reportedEvents = models.ManyToManyField(Event, related_name='userReportings', blank=True)
-
