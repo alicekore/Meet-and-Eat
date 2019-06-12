@@ -8,10 +8,16 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from .forms.EventForm import EventForm
 from .models import Event
+from .forms.CommentForm import CommentForm
+from .models import Comment
 from meetandeat import views
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+
+from django.conf import settings
+from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 
 class OwnerTestMixin(UserPassesTestMixin):
     def test_func(self):
@@ -44,15 +50,46 @@ class EventJoinView(DetailView):
 class EventDetailView(OwnerTestMixin, DetailView):
     model = Event
     template_name = 'meetandeat/event_details.html'
+    form_class = CommentForm
     success_url = reverse_lazy('meetandeat:index')
 
+    def form_valid(self,form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    # def post(self, request, pk):
+    #     event = get_object_or_404(Event, pk=pk)
+    #     form = CommentForm(request.POST)
+    #     print(self.request.user)
+    #     if form.is_valid():
+    #         text = form.cleaned_data['text']
+    #         print("valid")
+    #         print(text)
+    #         comment = Comment(author = request.user, datetime = timezone.now,
+    #                             text = "text", event = get_object_or_404(Event, pk=pk))
+    #         comment.save()
+
+            # return HttpResponseRedirect(self.succes_url)
+    # def post(self, request, pk):
+    #     form = CommentForm(request.POST)
+    #     if form.is_valid():
+    #         text = form.cleaned_data['text']
+    #         comment = Comment(author = settings.AUTH_USER_MODEL, datetime = timezone.now,
+    #                             text = text, event = get_object_or_404(Event, pk=pk))
+    #         comment.save()
+    #         form = CommentForm()
+    #         return HttpResponseRedirect("meetandeat/event_details.html")
+    # #     return Comment.objects.filter()
+    #     else:
+    #             print("form not valid")
+    #             print(form.errors)
 
 @method_decorator(login_required, name='dispatch')
 class EventCreate(CreateView):
     model = Event
     template_name = 'meetandeat/create-event.html'
     form_class = EventForm
-    success_url = reverse_lazy('meetandeat:index')
+    # success_url = reverse_lazy('meetandeat:index')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
