@@ -13,6 +13,8 @@ from django.contrib import messages
 from .forms.EventForm import EventForm
 from .forms.UserRegistrationForm import UserRegistrationForm
 from .models import Event
+from .forms.CommentForm import CommentForm
+from .models import Comment
 from meetandeat import views
 from .forms.TagFilterForm import TagFilterForm
 from .forms.TagForm import TagForm
@@ -25,6 +27,7 @@ class UserIsInGroupMixin(UserPassesTestMixin):
         evt = Event.objects.get(pk=self.kwargs['pk'])
         u = self.request.user
         return (u in evt.eventParticipants.all())
+
 
 
 class OwnerTestMixin(UserPassesTestMixin):
@@ -67,10 +70,22 @@ class EventJoinView(View):
 # TODO: implement template for EventDetailView
 @method_decorator(login_required, name='dispatch')
 class EventDetailView(UserIsInGroupMixin, DetailView):
-    model = Event
-    template_name = 'meetandeat/event_details.html'
-    success_url = reverse_lazy('meetandeat:index')
+    def get(self, request,pk):
+        form = CommentForm
+        event = get_object_or_404(Event, pk=pk)
+        comments = Comment.objects.filter(event = pk)
+        return render(request, 'meetandeat/event_details.html', context={'comment_list': comments, 'event': event, 'form':form})
 
+    def post(self, request, pk):
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            print("valid")
+            text = form.cleaned_data.get('text')
+            author = request.user
+            event = get_object_or_404(Event, pk=pk)
+            c = Comment(author = author, text = text, event= event)
+            c.save()
+            return redirect('meetandeat:event-view', pk = pk)
 
 @method_decorator(login_required, name='dispatch')
 class EventCreate(CreateView):
@@ -223,4 +238,3 @@ class ApproveTag(View):
         tag.approved = True
         tag.save()
         return redirect('meetandeat:tag-view')
-

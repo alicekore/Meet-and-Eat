@@ -50,10 +50,25 @@
         <p>Place: {{event.location}}</p>
         <p>Time: {{event.datetime | date:"d.m.Y G:i"}}</p>
         <hr>
-        <div class="form-group">
-            <input class="form-control" placeholder="Leave your comment here" type="comment">
+        <form method='POST'>
+        {% csrf_token %}
+          <div class="form-group">
+              {{form.text}}
+          </div>
+          <button type="submit" class="btn btn-primary">Post</button>
+        </form>
+
+        {% for comment in comment_list %}
+        <div class="container border border-dark rounded bg-light p-3 my-4">
+          <div class="col">
+            <p>{{comment.text}}</p>
+          </div>
+          <div class="col text-left">
+              <small><a href="#">{{comment.author}}</a></small>
+              <small><p>{{comment.datetime}}</p></small>
+          </div>
         </div>
-        <a class="btn btn-primary" href="#">Send</a>
+        {%endfor%}
     </div>
 </div>
 {% endblock %}
