@@ -5,18 +5,78 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4 img">
-      <img src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"  alt="" class="img-rounded">
+      <img {% if request.user.profilePicture %}{% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %} alt="" class="img-rounded">
+        <form method="post" enctype='multipart/form-data'>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="profileImageUpdate">Choose new image:</label>
+                <input class="form-control {% if form.profileImage.errors %}is-invalid{%  endif %}"
+                    id="profileImageUpdate" type="file" accept="image/*"
+                    name="profilePicture">
+                {% if form.profileImage.errors %}<div class="invalid-feedback">Give an image</div>
+                {%  endif %}
+            </div>
+            <button type="submit" class="btn btn-custom-primary" name="update-image">Update Image</button>
+
+        </form>
     </div>
-    <div class="col-md-6 details">
-      <blockquote>
-        <h5>Nickname</h5>
-        <small>username</small>
-      </blockquote>
-      <p>
-        other profile info <br>
-        other profile info <br>
-        other profile info
-      </p>
+    <div class="col-md-6 details-container">
+        <div class="clearfix">
+            <h1 class="float-lg-left">Profile</h1>
+            <a href="{% url 'meetandeat:edit-profile' %}" class="btn btn-custom-primary float-lg-right">Edit Profile</a>
+        </div>
+      <div class="details">
+          <div class="details-tile">
+              <span class="details-header">Username:</span>
+              <span class="details-info">{{ request.user.username }}</span>
+          </div>
+          <div class="details-tile">
+              <span class="details-header">First name: </span>
+              <span class="details-info">{% if not request.user.first_name %}-{% else %}{{ request.user.first_name }}{% endif %}</span>
+          </div>
+          <div class="details-tile">
+              <span class="details-header">Last name: </span>
+              <span class="details-info">{% if not request.user.last_name %}-{% else %}{{ request.user.last_name }}{% endif %}</span>
+          </div>
+          <div class="details-tile">
+              <span class="details-header">Email: </span>
+              <span class="details-info">{% if not request.user.email %}-{% else %}{{ request.user.email }}{% endif %}</span>
+          </div>
+      </div>
+    <div>
+        <h5>Change Password:</h5>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="oldPassword">Old Password:</label>
+                <input class="form-control {% if form.old_password.errors %}is-invalid{%  endif %}"
+                    id="old_password" type="password" placeholder="Old Password"
+                    name="old_password">
+                {% if form.old_password.errors %}<div class="invalid-feedback">Give a correct password</div>
+                {%  endif %}
+            </div>
+            <div class="form-group">
+                <label for="newPassword">New Password:</label>
+                <input class="form-control {% if form.new_password1.errors %}is-invalid{%  endif %}"
+                    id="newPassword" type="password" placeholder="New Password"
+                    name="new_password1" >
+                {% if form.new_password1.errors %}<div class="invalid-feedback">Give a correct password</div>
+                {%  endif %}
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input class="form-control {% if form.new_password2.errors %}is-invalid{%  endif %}"
+                    id="confirmPassword" type="password" placeholder="Confirm Password"
+                    name="new_password2">
+                {% if form.new_password2.errors %}<div class="invalid-feedback">Give a correct password</div>
+                {%  endif %}
+            </div>
+
+
+            <button type="submit" class="btn btn-custom-primary" name="change-password">Change password</button>
+
+        </form>
+    </div>
     </div>
   </div>
 </div>
