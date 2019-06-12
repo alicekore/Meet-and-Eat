@@ -27,6 +27,10 @@ class OwnerTestMixin(UserPassesTestMixin):
         print(evtUser, ulUser)
         return evtUser == ulUser
 
+class UserIsStuffMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
+
 
 @method_decorator(login_required, name='dispatch')
 class IndexView(View):
@@ -98,12 +102,12 @@ class EventUpdate(UpdateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class TagView(ListView):
+class TagView(UserIsStuffMixin, ListView):
     model = Tag
 
 
 @method_decorator(login_required, name='dispatch')
-class TagCreate(CreateView):
+class TagCreate(UserIsStuffMixin, CreateView):
     model = Tag
     template_name = 'meetandeat/create-tag.html'
     form_class = TagForm
@@ -111,7 +115,7 @@ class TagCreate(CreateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class TagUpdate(UpdateView):
+class TagUpdate(UserIsStuffMixin, UpdateView):
     model = Tag
     template_name = 'meetandeat/edit-tag.html'
     form_class = TagForm
@@ -119,7 +123,7 @@ class TagUpdate(UpdateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class TagDetailView(DetailView):
+class TagDetailView(UserIsStuffMixin, DetailView):
     model = Tag
     template_name = 'meetandeat/tag_details.html'
     success_url = reverse_lazy('meetandeat:index')
@@ -142,17 +146,17 @@ class ProfileView(View):
 
 
 @method_decorator(login_required, name='dispatch')
-class modView(View):
+class modView(UserIsStuffMixin, View):
 
     def get(self, request):
         context = {
-            'event_list': Event.objects.filter(reported=True)
+            'event_list': Event.objects.filter(reported=True).order_by("pk")
         }
         return render(request, "meetandeat/mod_event_list.html", context=context)
 
 
 @method_decorator(login_required, name='dispatch')
-class modHide(View):
+class modHide(UserIsStuffMixin, View):
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
         event.visible = False
@@ -161,7 +165,7 @@ class modHide(View):
 
 
 @method_decorator(login_required, name='dispatch')
-class modUnhide(View):
+class modUnhide(UserIsStuffMixin, View):
 
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
@@ -171,7 +175,7 @@ class modUnhide(View):
 
 
 @method_decorator(login_required, name='dispatch')
-class modUnreport(View):
+class modUnreport(UserIsStuffMixin, View):
 
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
@@ -223,7 +227,7 @@ class EventReport(View):
 
 
 @method_decorator(login_required, name='dispatch')
-class ApproveTag(View):
+class ApproveTag(UserIsStuffMixin, View):
     def get(self, request, *args, **kwargs):
         tag = Tag.objects.get(id=self.kwargs['pk'])
         tag.approved = True
