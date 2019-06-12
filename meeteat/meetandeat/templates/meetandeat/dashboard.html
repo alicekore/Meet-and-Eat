@@ -6,6 +6,7 @@
 <div class="container">
     <h1 class="display-4">Latest Events</h1>
     <a href="{% url 'meetandeat:create-event' %}" class="btn btn-custom-primary">Create Event</a>
+    <a href="{% url 'meetandeat:create-tag' %}" class="btn btn-custom-primary">Submit Tag</a>
     {% block events %}
     {% endblock events %}
 </div>

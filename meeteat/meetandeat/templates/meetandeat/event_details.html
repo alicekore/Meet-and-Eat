@@ -6,11 +6,31 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <a href="{% url 'meetandeat:index' %}" class="btn btn-primary">Back to Dashboard</a>
+            <a class="btn btn-primary" href="{% url 'meetandeat:index' %}">Back to Dashboard</a>
         </div>
         <div class="col text-right">
-            <a href="#" class="btn btn-primary">Join Event</a>
-            <a href="{% url 'meetandeat:edit-event' event.pk %}" class="btn btn-info">Edit Event</a>
+            {% if user in event.eventParticipants.all %}
+            <a class="btn btn-danger" href="{% url 'meetandeat:leave-event' event.pk %}">Leave</a>
+            {% else %}
+            <a class="btn btn-primary" href="{% url 'meetandeat:join-event' event.pk %}">Join Event</a>
+            {% endif %}
+            <div class="btn-group dropdown">
+                <button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle"
+                        data-toggle="dropdown"
+                        type="button">
+                    Settings
+                </button>
+                <div class="dropdown-menu">
+                    {% if event.user == user %}
+                    <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit Event</a>
+                    {% endif %}
+                    {% if user in event.userReportings.all %}
+                    <span class="dropdown-item">Already reported!</span>
+                    {% else %}
+                    <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report Event</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
     <div class="container border border-dark rounded bg-light p-3 my-4">
@@ -19,11 +39,13 @@
                 <h2>{{event.title}} </h2>
             </div>
             <div class="col text-right">
-                <small>Creator: <a href="#">{{event.user}}</a></small><br>
+                <small>Creator: <a href="#">{{event.user}}</a></small>
+                <br>
                 <small>{{event.participants_number}} Participants</small>
             </div>
         </div>
-        <small>{{event.description}}</small><br>
+        <small>{{event.description}}</small>
+        <br>
         <hr>
         <p>Place: {{event.location}}</p>
         <p>Time: {{event.datetime | date:"d.m.Y G:i"}}</p>
