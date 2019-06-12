@@ -107,7 +107,7 @@ class TagView(UserIsStuffMixin, ListView):
 
 
 @method_decorator(login_required, name='dispatch')
-class TagCreate(UserIsStuffMixin, CreateView):
+class TagCreate(CreateView):
     model = Tag
     template_name = 'meetandeat/create-tag.html'
     form_class = TagForm
