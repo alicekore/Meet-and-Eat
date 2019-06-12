@@ -50,10 +50,18 @@
         <p>Place: {{event.location}}</p>
         <p>Time: {{event.datetime | date:"d.m.Y G:i"}}</p>
         <hr>
-        <div class="form-group">
-            <input class="form-control" placeholder="Leave your comment here" type="comment">
-        </div>
-        <a class="btn btn-primary" href="#">Send</a>
+
+        <form method="post">
+        {% csrf_token %}
+          <div class="form-group">
+            <label for="text">Comment:</label>
+              <input type="text" class="form-control form-control-lg {% if form.text.errors %}is-invalid{%  endif %}" id="text" name="text" maxlength="160" {% if form.text.value %}value="{{ form.text.value}}"{% endif %} required>
+              {% if form.text.errors %}<div class="invalid-feedback">Invalid</div>{%  endif %}
+
+          </div>
+          <button type="submit" class="btn btn-primary">Post</button>
+
+        </form>
     </div>
 </div>
 {% endblock %}
