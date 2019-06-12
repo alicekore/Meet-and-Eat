@@ -50,18 +50,25 @@
         <p>Place: {{event.location}}</p>
         <p>Time: {{event.datetime | date:"d.m.Y G:i"}}</p>
         <hr>
-
-        <form method="post">
+        <form method='POST'>
         {% csrf_token %}
           <div class="form-group">
-            <label for="text">Comment:</label>
-              <input type="text" class="form-control form-control-lg {% if form.text.errors %}is-invalid{%  endif %}" id="text" name="text" maxlength="160" {% if form.text.value %}value="{{ form.text.value}}"{% endif %} required>
-              {% if form.text.errors %}<div class="invalid-feedback">Invalid</div>{%  endif %}
-
+              {{form.text}}
           </div>
           <button type="submit" class="btn btn-primary">Post</button>
-
         </form>
+
+        {% for comment in comment_list %}
+        <div class="container border border-dark rounded bg-light p-3 my-4">
+          <div class="col">
+            <p>{{comment.text}}</p>
+          </div>
+          <div class="col text-left">
+              <small><a href="#">{{comment.author}}</a></small>
+              <small><p>{{comment.datetime}}</p></small>
+          </div>
+        </div>
+        {%endfor%}
     </div>
 </div>
 {% endblock %}
