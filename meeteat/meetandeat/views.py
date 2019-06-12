@@ -246,5 +246,5 @@ class ApproveTag(UserIsStuffMixin, View):
 @method_decorator(login_required, name='dispatch')
 class OwnEventsView(View):
     def get(self, request):
-        return render(request, 'meatandeat/own_events_list.html')
+        return render(request, 'meetandeat/own_events_list.html')
 
