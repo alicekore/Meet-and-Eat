@@ -16,9 +16,14 @@
                     <a class="nav-link" href="{% url 'meetandeat:profile' %}">Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 {% endif %}
+                {% if user.is_staff %}
+                <li class="nav-item {% if request.resolver_match.url_name == 'modView' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'meetandeat:modView' %}">Mod{% if request.resolver_match.url_name == 'modView' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                </li>
                 <li class="nav-item {% if request.resolver_match.url_name == 'tag-view' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'meetandeat:tag-view' %}">Tags{% if request.resolver_match.url_name == 'tag-view' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
+                {%endif %}
             </ul>
             {# right floating items            #}
             <ul class="navbar-nav ml-auto">
