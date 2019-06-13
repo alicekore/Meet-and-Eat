@@ -16,8 +16,9 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
     path('profile/', ProfileView.as_view(), name='profile'),
+    path('my_events/', OwnEventsView.as_view(), name='own_events_list'),
     path('profile/edit', UserUpdateView.as_view(), name='edit-profile'),
-    path('register/', UserRegistrationView.as_view(), name='register'),
+    path('register/', UserCreateView.as_view(), name='register'),
     path('mod/dashboard', modView.as_view(), name='modView'),
     path('mod/hide/<int:pk>/', modHide.as_view(), name='modHide'),
     path('mod/unhide/<int:pk>/', modUnhide.as_view(), name='modUnhide'),
@@ -27,6 +28,5 @@ urlpatterns = [
     path('mod/tag/<int:pk>/edit/', TagUpdate.as_view(), name='edit-tag'),
     path('mod/tag/<int:pk>/approve/', ApproveTag.as_view(), name='approve-tag'),
     path('mod/tag/all/', TagView.as_view(), name='tag-view'),
-
 
 ]
