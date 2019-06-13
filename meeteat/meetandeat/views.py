@@ -205,7 +205,7 @@ class modHide(UserIsStuffMixin, View):
         event = get_object_or_404(Event, pk=pk)
         event.visible = False
         event.save()
-        return HttpResponseRedirect("/mod")
+        return redirect('meetandeat:modView')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -215,7 +215,7 @@ class modUnhide(UserIsStuffMixin, View):
         event = get_object_or_404(Event, pk=pk)
         event.visible = True
         event.save()
-        return HttpResponseRedirect("/mod")
+        return redirect('meetandeat:modView')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -225,7 +225,7 @@ class modUnreport(UserIsStuffMixin, View):
         event = get_object_or_404(Event, pk=pk)
         event.reported = False
         event.save()
-        return HttpResponseRedirect("/mod")
+        return redirect('meetandeat:modView')
 
 
 class UserRegistrationView(FormView):
