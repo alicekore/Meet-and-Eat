@@ -1,4 +1,8 @@
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -6,25 +10,16 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView
-from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
-from django.contrib import messages
-from .forms.EventForm import EventForm
-from .forms.UserRegistrationForm import UserRegistrationForm
-from .models import Event
+from django.views.generic import ListView, CreateView, UpdateView, DetailView
+
+from .forms.ChangeProfilePicture import ChangeProfilePicture
 from .forms.CommentForm import CommentForm
-from .models import Comment
-from meetandeat import views
+from .forms.EventForm import EventForm
 from .forms.TagFilterForm import TagFilterForm
 from .forms.TagForm import TagForm
-from .forms.ChangeProfilePicture import ChangeProfilePicture
+from .forms.UserRegistrationForm import UserRegistrationForm
+from .models import Comment
 from .models import Event, Tag
-
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-
 
 
 class UserIsInGroupMixin(UserPassesTestMixin):
@@ -34,13 +29,13 @@ class UserIsInGroupMixin(UserPassesTestMixin):
         return (u in evt.eventParticipants.all())
 
 
-
 class OwnerTestMixin(UserPassesTestMixin):
     def test_func(self):
         evtUser = Event.objects.get(pk=self.kwargs['pk']).user
         ulUser = self.request.user
         print(evtUser, ulUser)
         return evtUser == ulUser
+
 
 class UserIsStuffMixin(UserPassesTestMixin):
     def test_func(self):
@@ -79,11 +74,12 @@ class EventJoinView(View):
 # TODO: implement template for EventDetailView
 @method_decorator(login_required, name='dispatch')
 class EventDetailView(UserIsInGroupMixin, DetailView):
-    def get(self, request,pk):
+    def get(self, request, pk):
         form = CommentForm
         event = get_object_or_404(Event, pk=pk)
-        comments = Comment.objects.filter(event = pk)
-        return render(request, 'meetandeat/event_details.html', context={'comment_list': comments, 'event': event, 'form':form})
+        comments = Comment.objects.filter(event=pk)
+        return render(request, 'meetandeat/event_details.html',
+                      context={'comment_list': comments, 'event': event, 'form': form})
 
     def post(self, request, pk):
         form = CommentForm(request.POST)
@@ -92,9 +88,10 @@ class EventDetailView(UserIsInGroupMixin, DetailView):
             text = form.cleaned_data.get('text')
             author = request.user
             event = get_object_or_404(Event, pk=pk)
-            c = Comment(author = author, text = text, event= event)
+            c = Comment(author=author, text=text, event=event)
             c.save()
-            return redirect('meetandeat:event-view', pk = pk)
+            return redirect('meetandeat:event-view', pk=pk)
+
 
 @method_decorator(login_required, name='dispatch')
 class EventCreate(CreateView):
@@ -226,6 +223,14 @@ class modUnreport(UserIsStuffMixin, View):
         event.save()
         return HttpResponseRedirect("/mod")
 
+
+class UserCreateView(CreateView):
+    template_name = 'meetandeat/register.html'
+    form_class = UserRegistrationForm
+    success_url = reverse_lazy('meetandeat:login')
+
+
+"""
 class UserRegistrationView(FormView):
     form_class = UserRegistrationForm
     template_name = 'meetandeat/register.html'
@@ -246,7 +251,10 @@ class UserRegistrationView(FormView):
             context =  {'form':form}
 
         return render(request, self.template_name, {'form':form})
+"""
 
+
+@method_decorator(login_required, name='dispatch')
 class UserUpdateView(UpdateView):
     model = get_user_model()
     fields = ['username', 'email', 'first_name', 'last_name']
@@ -255,6 +263,7 @@ class UserUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
 
 @method_decorator(login_required, name='dispatch')
 class EventLeave(View):
@@ -283,3 +292,9 @@ class ApproveTag(UserIsStuffMixin, View):
         tag.approved = True
         tag.save()
         return redirect('meetandeat:tag-view')
+
+
+@method_decorator(login_required, name='dispatch')
+class OwnEventsView(View):
+    def get(self, request):
+        return render(request, 'meetandeat/own_events_list.html')
