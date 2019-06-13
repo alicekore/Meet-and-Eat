@@ -26,13 +26,11 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
 
-
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
         evt = Event.objects.get(pk=self.kwargs['pk'])
         u = self.request.user
         return (u in evt.eventParticipants.all())
-
 
 
 class OwnerTestMixin(UserPassesTestMixin):
@@ -41,6 +39,7 @@ class OwnerTestMixin(UserPassesTestMixin):
         ulUser = self.request.user
         print(evtUser, ulUser)
         return evtUser == ulUser
+
 
 class UserIsStuffMixin(UserPassesTestMixin):
     def test_func(self):
@@ -79,11 +78,12 @@ class EventJoinView(View):
 # TODO: implement template for EventDetailView
 @method_decorator(login_required, name='dispatch')
 class EventDetailView(UserIsInGroupMixin, DetailView):
-    def get(self, request,pk):
+    def get(self, request, pk):
         form = CommentForm
         event = get_object_or_404(Event, pk=pk)
-        comments = Comment.objects.filter(event = pk)
-        return render(request, 'meetandeat/event_details.html', context={'comment_list': comments, 'event': event, 'form':form})
+        comments = Comment.objects.filter(event=pk)
+        return render(request, 'meetandeat/event_details.html',
+                      context={'comment_list': comments, 'event': event, 'form': form})
 
     def post(self, request, pk):
         form = CommentForm(request.POST)
@@ -92,9 +92,10 @@ class EventDetailView(UserIsInGroupMixin, DetailView):
             text = form.cleaned_data.get('text')
             author = request.user
             event = get_object_or_404(Event, pk=pk)
-            c = Comment(author = author, text = text, event= event)
+            c = Comment(author=author, text=text, event=event)
             c.save()
-            return redirect('meetandeat:event-view', pk = pk)
+            return redirect('meetandeat:event-view', pk=pk)
+
 
 @method_decorator(login_required, name='dispatch')
 class EventCreate(CreateView):
@@ -226,13 +227,14 @@ class modUnreport(UserIsStuffMixin, View):
         event.save()
         return HttpResponseRedirect("/mod")
 
+
 class UserRegistrationView(FormView):
     form_class = UserRegistrationForm
     template_name = 'meetandeat/register.html'
 
     def get(self, request):
-        form = self.form_class(initial = self.initial)
-        return render(request, self.template_name, {'form':form})
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -243,9 +245,10 @@ class UserRegistrationView(FormView):
             return redirect('/profile')
         else:
             form = UserRegistrationForm()
-            context =  {'form':form}
+            context = {'form': form}
 
-        return render(request, self.template_name, {'form':form})
+        return render(request, self.template_name, {'form': form})
+
 
 class UserUpdateView(UpdateView):
     model = get_user_model()
@@ -255,6 +258,7 @@ class UserUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
 
 @method_decorator(login_required, name='dispatch')
 class EventLeave(View):
@@ -284,8 +288,29 @@ class ApproveTag(UserIsStuffMixin, View):
         tag.save()
         return redirect('meetandeat:tag-view')
 
+
 @method_decorator(login_required, name='dispatch')
 class OwnEventsView(View):
     def get(self, request):
-        return render(request, 'meetandeat/own_events_list.html')
+        user = self.request.user
+        own_events = Event.objects.filter(visible=True, user=user)
+        joined_events = user.events.all()
+        joined_events = joined_events.exclude(user=user)
+        form = TagFilterForm()
+        return render(request, 'meetandeat/own_events_list.html',
+                      context={'own_event_list': own_events, 'form': form, 'joined_event_list': joined_events})
 
+    # Filter Events by Tags
+    def post(self, request):
+        user = self.request.user
+        own_events = Event.objects.filter(visible=True, user=user)
+        joined_events = user.events.all()
+        joined_events = joined_events.exclude(user=user)
+        form = TagFilterForm()
+        if form.is_valid():
+            tags = form.cleaned_data.get('tags')
+            if tags:
+                own_events = own_events.filter(tags__in=tags).distinct()
+                joined_events = joined_events.filter(tags__in=tags).distinct()
+            return render(request, 'meetandeat/own_events_list.html',
+                          context={'own_event_list': own_events, 'form': form, 'joined_event_list': joined_events})
