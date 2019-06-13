@@ -20,6 +20,9 @@ from .forms.TagForm import TagForm
 from .forms.UserRegistrationForm import UserRegistrationForm
 from .models import Comment
 from .models import Event, Tag
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 
 class UserIsInGroupMixin(UserPassesTestMixin):
@@ -223,21 +226,18 @@ class modUnreport(UserIsStuffMixin, View):
         event.save()
         return redirect('meetandeat:modView')
 
-
 class UserCreateView(CreateView):
     template_name = 'meetandeat/register.html'
     form_class = UserRegistrationForm
     success_url = reverse_lazy('meetandeat:login')
 
-
-"""
 class UserRegistrationView(FormView):
     form_class = UserRegistrationForm
     template_name = 'meetandeat/register.html'
 
     def get(self, request):
-        form = self.form_class(initial = self.initial)
-        return render(request, self.template_name, {'form':form})
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -248,10 +248,10 @@ class UserRegistrationView(FormView):
             return redirect('/profile')
         else:
             form = UserRegistrationForm()
-            context =  {'form':form}
+            context = {'form': form}
 
-        return render(request, self.template_name, {'form':form})
-"""
+        return render(request, self.template_name, {'form': form})
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -293,9 +293,28 @@ class ApproveTag(UserIsStuffMixin, View):
         tag.save()
         return redirect('meetandeat:tag-view')
 
-      
 @method_decorator(login_required, name='dispatch')
 class OwnEventsView(View):
     def get(self, request):
-        return render(request, 'meetandeat/own_events_list.html')
+        user = self.request.user
+        own_events = Event.objects.filter(visible=True, user=user)
+        joined_events = user.events.all()
+        joined_events = joined_events.exclude(user=user)
+        form = TagFilterForm()
+        return render(request, 'meetandeat/own_events_list.html',
+                      context={'own_event_list': own_events, 'form': form, 'joined_event_list': joined_events})
 
+    # Filter Events by Tags
+    def post(self, request):
+        user = self.request.user
+        own_events = Event.objects.filter(visible=True, user=user)
+        joined_events = user.events.all()
+        joined_events = joined_events.exclude(user=user)
+        form = TagFilterForm()
+        if form.is_valid():
+            tags = form.cleaned_data.get('tags')
+            if tags:
+                own_events = own_events.filter(tags__in=tags).distinct()
+                joined_events = joined_events.filter(tags__in=tags).distinct()
+            return render(request, 'meetandeat/own_events_list.html',
+                          context={'own_event_list': own_events, 'form': form, 'joined_event_list': joined_events})

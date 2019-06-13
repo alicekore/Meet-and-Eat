@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tz %}
 
 {% block title %}Your events{% endblock %}
+
 {% block main %}
 <div class="container border border-dark rounded bg-light p-3 my-4">
     <h1 class="display-4">My events</h1>
+
+
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -18,6 +22,9 @@
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane container active" id="own">
+            {% if own_event_list %}
+            {% for event in own_event_list %}
+            {% if  event.visible == True %}
             <div class="container border border-dark rounded bg-light p-3 my-4">
                 <div class="row">
                     <div class="col">
@@ -33,8 +40,20 @@
                 <br>
                 <hr>
             </div>
+            {% endif %}
+            {% endfor %}
+            {% else %}
+            <div class="container border border-dark rounded bg-light p-3 my-4">
+                <p>No Results found</p>
+            </div>
+            {% endif %}
+
+
         </div>
         <div class="tab-pane container fade" id="joined">
+            {% if joined_event_list %}
+            {% for event in joined_event_list %}
+            {% if  event.visible == True %}
             <div class="container border border-dark rounded bg-light p-3 my-4">
                 <div class="row">
                     <div class="col">
@@ -50,6 +69,13 @@
                 <br>
                 <hr>
             </div>
+            {% endif %}
+            {% endfor %}
+            {% else %}
+            <div class="container border border-dark rounded bg-light p-3 my-4">
+                <p>No Results found</p>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
