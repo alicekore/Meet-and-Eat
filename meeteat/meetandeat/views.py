@@ -293,8 +293,9 @@ class ApproveTag(UserIsStuffMixin, View):
         tag.save()
         return redirect('meetandeat:tag-view')
 
-
+      
 @method_decorator(login_required, name='dispatch')
 class OwnEventsView(View):
     def get(self, request):
         return render(request, 'meetandeat/own_events_list.html')
+

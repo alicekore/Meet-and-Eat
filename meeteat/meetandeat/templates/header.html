@@ -15,6 +15,9 @@
                 <li class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'meetandeat:profile' %}">Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'own_events_list' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'meetandeat:own_events_list' %}">My events{% if request.resolver_match.url_name == 'own_events_list' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                </li>
                 {% endif %}
                 {% if user.is_staff %}
                 <li class="nav-item {% if request.resolver_match.url_name == 'modView' %}active{% endif %}">
