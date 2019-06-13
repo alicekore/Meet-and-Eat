@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Your events{% endblock %}
+{% block main %}
+<div class="container border border-dark rounded bg-light p-3 my-4">
+    <h1 class="display-4">My events</h1>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#own">Own events</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " data-toggle="tab" href="#joined">Joined events</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane container active" id="own">
+            <div class="container border border-dark rounded bg-light p-3 my-4">
+                <div class="row">
+                    <div class="col">
+                        <h2><a class="stretched-link" href="#">{{event.title}}</a></h2>
+                    </div>
+                    <div class="col text-right">
+                        <small>{{event.participants_number}} Participants</small>
+                        <br>
+                        <small>{{event.location}}</small>
+                    </div>
+                </div>
+                <small>{{event.datetime |date:"d.m.Y G:i"}}</small>
+                <br>
+                <hr>
+            </div>
+        </div>
+        <div class="tab-pane container fade" id="joined">
+            <div class="container border border-dark rounded bg-light p-3 my-4">
+                <div class="row">
+                    <div class="col">
+                        <h2><a class="stretched-link" href="#">{{event.title}}</a></h2>
+                    </div>
+                    <div class="col text-right">
+                        <small>{{event.participants_number}} Participants</small>
+                        <br>
+                        <small>{{event.location}}</small>
+                    </div>
+                </div>
+                <small>{{event.datetime |date:"d.m.Y G:i"}}</small>
+                <br>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

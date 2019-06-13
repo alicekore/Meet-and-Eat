@@ -16,6 +16,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
     path('profile/', ProfileView.as_view(), name='profile'),
+    path('my_events/', OwnEventsView.as_view(), name='own_events_list'),    
     path('profile/edit', UserUpdateView.as_view(), name='edit-profile'),
     path('register/', UserRegistrationView.as_view(), name='register'),
     path('mod/dashboard', modView.as_view(), name='modView'),
