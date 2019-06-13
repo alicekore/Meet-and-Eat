@@ -4,15 +4,16 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
-
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView, DeleteView
+from django.contrib.auth import logout
 from .forms.ChangeProfilePicture import ChangeProfilePicture
+from .forms.DeleteProfileForm import DeleteProfileForm
 from .forms.CommentForm import CommentForm
 from .forms.EventForm import EventForm
 from .forms.TagFilterForm import TagFilterForm
@@ -24,7 +25,7 @@ from .models import Event, Tag
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-
+import json
 
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
@@ -260,6 +261,30 @@ class UserUpdateView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user
 
+
+@method_decorator(login_required, name='dispatch')
+class UserDeleteView(View):
+    def post(self, request):
+        form = DeleteProfileForm(request.POST)
+        User = get_user_model()
+        user = User.objects.get(pk=request.user.pk)
+        print('I have got a password')
+        print(request.POST.get('password'))
+        if form.is_valid():
+            print('form is valid')
+            if user.check_password(form.cleaned_data['password']):
+                logout(request)
+                user.delete()
+                response = {'status': 0, 'message': "Ok", "url": reverse('meetandeat:index')}
+                return HttpResponse(json.dumps(response), content_type='application/json')
+            else:
+                print('password invalid')
+                response = {'status': 1, 'message': "Invalid password"}
+                return HttpResponse(json.dumps(response), content_type='application/json')
+        else:
+            print('password invalid')
+            response = {'status': 2, 'message': "Invalid form data"}
+            return HttpResponse(json.dumps(response), content_type='application/json')
 
 @method_decorator(login_required, name='dispatch')
 class EventLeave(View):

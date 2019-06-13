@@ -23,6 +23,9 @@
     <div class="col-md-6 details-container">
         <div class="clearfix">
             <h1 class="float-lg-left">Profile</h1>
+            <button type="button" class="btn btn-custom-primary ml-lg-2 float-lg-right" data-toggle="modal" data-target="#deleteModal">
+              Delete Profile
+            </button>
             <a href="{% url 'meetandeat:edit-profile' %}" class="btn btn-custom-primary float-lg-right">Edit Profile</a>
         </div>
       <div class="details">
@@ -77,6 +80,37 @@
 
         </form>
     </div>
+    </div>
+  </div>
+</div><!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content bg-custom-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <form id="deleteAccountForm" action="{% url "meetandeat:delete-profile" %}">
+        {% csrf_token %}
+      <div class="modal-body">
+        <p>Do you really want to delete your account? Your account data will be lost.</p>
+
+              <div class="form-group">
+                <label for="deleteAccountPassword">Confirm Delete:</label>
+                <input class="form-control {% if form.password.errors %}is-invalid{%  endif %}"
+                    id="deleteAccountPassword" type="password" placeholder="Confirm Delete with your Password"
+                    name="password">
+                {% if form.password.errors %}<div class="invalid-feedback">Give a correct password</div>
+                {%  endif %}
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" onclick="create_post()">Delete</button>
+      </div>
+        </form>
     </div>
   </div>
 </div>
