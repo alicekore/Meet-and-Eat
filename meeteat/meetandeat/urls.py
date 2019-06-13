@@ -18,6 +18,7 @@ urlpatterns = [
     path('profile/', ProfileView.as_view(), name='profile'),
     path('my_events/', OwnEventsView.as_view(), name='own_events_list'),
     path('profile/edit', UserUpdateView.as_view(), name='edit-profile'),
+    path('profile/delete', UserDeleteView.as_view(), name='delete-profile'),
     path('register/', UserCreateView.as_view(), name='register'),
     path('mod/dashboard', modView.as_view(), name='modView'),
     path('mod/hide/<int:pk>/', modHide.as_view(), name='modHide'),
