@@ -1,20 +1,23 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth import logout
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView, DeleteView
-from django.contrib.auth import logout
+from django.views.generic import ListView, CreateView, UpdateView, DetailView
+
 from .forms.ChangeProfilePicture import ChangeProfilePicture
-from .forms.DeleteProfileForm import DeleteProfileForm
 from .forms.CommentForm import CommentForm
+from .forms.DeleteProfileForm import DeleteProfileForm
 from .forms.EventForm import EventForm
 from .forms.TagFilterForm import TagFilterForm
 from .forms.TagForm import TagForm
@@ -22,10 +25,6 @@ from .forms.UserRegistrationForm import UserRegistrationForm
 from .models import Comment
 from .models import Event, Tag
 
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-import json
 
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
@@ -221,34 +220,20 @@ class modUnhide(UserIsStuffMixin, View):
 
 @method_decorator(login_required, name='dispatch')
 class modUnreport(UserIsStuffMixin, View):
-
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
+        eventReporter = event.userReportings.all()
+        for reporter in eventReporter:
+            event.userReportings.remove(reporter)
         event.reported = False
         event.save()
         return redirect('meetandeat:modView')
 
 
-class UserRegistrationView(FormView):
-    form_class = UserRegistrationForm
+class UserCreateView(CreateView):
     template_name = 'meetandeat/register.html'
-
-    def get(self, request):
-        form = self.form_class(initial=self.initial)
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}!')
-            return redirect('/profile')
-        else:
-            form = UserRegistrationForm()
-            context = {'form': form}
-
-        return render(request, self.template_name, {'form': form})
+    form_class = UserRegistrationForm
+    success_url = reverse_lazy('meetandeat:login')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -285,6 +270,7 @@ class UserDeleteView(View):
             print('password invalid')
             response = {'status': 2, 'message': "Invalid form data"}
             return HttpResponse(json.dumps(response), content_type='application/json')
+
 
 @method_decorator(login_required, name='dispatch')
 class EventLeave(View):
