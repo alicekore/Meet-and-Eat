@@ -169,16 +169,23 @@ class ProfileView(View):
                 }
                 return render(request, 'meetandeat/profile.html', context)
         elif 'update-image' in request.POST:
-            if request.FILES['profilePicture']:
-                print('i have smth')
-            print('i am trying to save a picture')
             form = ChangeProfilePictureForm(request.POST, request.FILES, instance=user)
             if form.is_valid():
                 form.save()
+            else:
+                context = {
+                    'form': form,
+                }
+                return render(request, 'meetandeat/profile.html', context)
+
+        elif 'delete-image' in request.POST:
+            user.profilePicture.delete()
         context = {
             'user': user,
         }
         return render(request, 'meetandeat/profile.html', context)
+
+
 
 
 @method_decorator(login_required, name='dispatch')

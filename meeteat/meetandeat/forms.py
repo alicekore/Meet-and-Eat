@@ -7,10 +7,17 @@ from django.core.exceptions import ValidationError
 
 
 class ChangeProfilePictureForm(forms.ModelForm):
-
     class Meta:
         model = User
         fields = ['profilePicture', ]
+
+    def clean_profilePicture(self):
+        profilePicture = self.cleaned_data.get("profilePicture")
+        file_size = profilePicture.size
+        limit_mb = 8
+        if file_size > limit_mb * 1024 * 1024:
+            raise ValidationError("Max size of file is %s MB" % limit_mb)
+        return profilePicture
 
 
 class CommentForm(forms.ModelForm):
@@ -68,4 +75,10 @@ class UserRegistrationForm(UserCreationForm):
         model = get_user_model()
         fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'profilePicture']
 
-
+    def clean_profilePicture(self):
+        profilePicture = self.cleaned_data.get("profilePicture")
+        file_size = profilePicture.size
+        limit_mb = 8
+        if file_size > limit_mb * 1024 * 1024:
+            raise ValidationError("Max size of file is %s MB" % limit_mb)
+        return profilePicture

@@ -66,6 +66,7 @@ class User(AbstractUser):
     def user_directory_path(self, filename):
         # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
         return 'user_{0}/{1}'.format(self.id, filename)
+
     profilePicture = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     visible = models.BooleanField(default=True)
     events = models.ManyToManyField(Event, related_name='eventParticipants', blank=True)
