@@ -194,3 +194,17 @@
     color: #ce181e;
     border: #dc3545;
 }
+
+/*##### Profile STYLES #####*/
+#profile .details-tile-header {
+    font-weight: bold;
+}
+
+#profile .details-tile {
+    margin-bottom: 10px;
+}
+
+#profile label {
+    font-weight: 500;
+}
+/*#########################*/
