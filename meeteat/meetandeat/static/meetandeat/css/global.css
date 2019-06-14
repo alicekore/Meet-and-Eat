@@ -207,4 +207,9 @@
 #profile label {
     font-weight: 500;
 }
+
+#profile .profile-img img{
+    max-width: 220px;
+    max-height: 260px;
+}
 /*#########################*/
