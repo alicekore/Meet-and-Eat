@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load tz %}
+
+
+{% block main %}
+    <div class="container">
+      <div class="">
+        <h5 class="" id="exampleModalLabel">Delete Profile</h5>
+      </div>
+        <form id="deleteAccountForm" method="post" action="{% url "meetandeat:delete-profile" %}">
+        {% csrf_token %}
+      <div class="">
+        <p>Do you really want to delete your account? Your account data will be lost.</p>
+
+              <div class="form-group">
+                <label for="deleteAccountPassword">Confirm Delete:</label>
+                <input class="form-control {% if form.password.errors %}is-invalid{%  endif %}"
+                    id="deleteAccountPassword" type="password" placeholder="Confirm Delete with your Password"
+                    name="password">
+                {% if form.password.errors %}<div class="invalid-feedback">Give a correct password</div>
+                {%  endif %}
+            </div>
+      </div>
+      <div class="">
+        <a href="{% url 'meetandeat:profile' %}"  class="btn btn-secondary" data-dismiss="modal">Back</a>
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </div>
+        </form>
+    </div>
+{% endblock main %}

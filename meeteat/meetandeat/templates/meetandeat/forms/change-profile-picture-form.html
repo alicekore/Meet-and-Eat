@@ -1,0 +1,13 @@
+<form method="post" enctype='multipart/form-data'>
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="profileImageUpdate">Choose new image:</label>
+        <input class="form-control {% if form.profileImage.errors %}is-invalid{%  endif %}"
+            id="profileImageUpdate" type="file" accept="image/*"
+            name="profilePicture">
+        {% if form.profileImage.errors %}<div class="invalid-feedback">{{ form.profileImage.errors }}</div>
+        {%  endif %}
+    </div>
+    <button type="submit" class="btn btn-custom-primary" name="update-image">Update Image</button>
+
+</form>

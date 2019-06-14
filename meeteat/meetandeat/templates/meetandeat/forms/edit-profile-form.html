@@ -1,0 +1,46 @@
+<form method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="participants_number">Username:</label>
+                <input type="text" id="username" class="form-control form-control-lg"
+                    name="username"
+
+                    value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
+                {% if form.username.errors %}<div class="invalid-feedback">{{ form.username.errors }}</div>
+                {%  endif %}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="email">Email:</label>
+                <input type="email" id="email" class="form-control form-control-lg"
+                    name="email"
+
+                    value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+                {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors }}</div>
+                {%  endif %}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" class="form-control form-control-lg"
+                    name="first_name"
+
+                    value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}">
+                {% if form.first_name.errors %}<div class="invalid-feedback">{{ form.first_name.errors }}</div>
+                {%  endif %}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="last_name">Last Name:</label>
+                <input type="last_name" id="last_name" class="form-control form-control-lg"
+                    name="last_name"
+
+                    value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
+                {% if form.last_name.errors %}<div class="invalid-feedback">{{ form.last_name.errors }}</div>
+                {%  endif %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-custom-primary">Save Event</button>
+
+    </form>
