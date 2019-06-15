@@ -226,6 +226,7 @@ class modUnreport(UserIsStuffMixin, View):
         for reporter in eventReporter:
             event.userReportings.remove(reporter)
         event.reported = False
+        event.visible = True
         event.save()
         return redirect('meetandeat:modView')
 
