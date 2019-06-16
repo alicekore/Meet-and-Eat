@@ -10,7 +10,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView, DeleteView
 from .forms import *
-from .models import Event, Tag
+from .models import Event, Tag, Comment
 import json
 
 
@@ -217,10 +217,13 @@ class modUnhide(UserIsStuffMixin, View):
 
 @method_decorator(login_required, name='dispatch')
 class modUnreport(UserIsStuffMixin, View):
-
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
+        eventReporter = event.userReportings.all()
+        for reporter in eventReporter:
+            event.userReportings.remove(reporter)
         event.reported = False
+        event.visible = True
         event.save()
         return redirect('meetandeat:modView')
 
@@ -229,6 +232,7 @@ class UserCreateView(CreateView):
     template_name = 'meetandeat/register.html'
     form_class = UserRegistrationForm
     success_url = reverse_lazy('meetandeat:login')
+
 
 
 class UserRegistrationView(FormView):
@@ -324,6 +328,7 @@ class ApproveTag(UserIsStuffMixin, View):
         tag.approved = True
         tag.save()
         return redirect('meetandeat:tag-view')
+
 
 @method_decorator(login_required, name='dispatch')
 class OwnEventsView(View):
