@@ -1,109 +1,68 @@
 {# dummy profile, fill with personal info of logged in user#}
 {% extends "base.html" %}
+{% load static %}
 {% block title %} Profile{% endblock %}
 {%block main%}
 <div class="container">
   <div class="row">
-    <div class="col-md-4 img">
-      <img {% if request.user.profilePicture %}{% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %} alt="" class="img-rounded">
-        <form method="post" enctype='multipart/form-data'>
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="profileImageUpdate">Choose new image:</label>
-                <input class="form-control {% if form.profileImage.errors %}is-invalid{%  endif %}"
-                    id="profileImageUpdate" type="file" accept="image/*"
-                    name="profilePicture">
-                {% if form.profileImage.errors %}<div class="invalid-feedback">Give an image</div>
-                {%  endif %}
-            </div>
-            <button type="submit" class="btn btn-custom-primary" name="update-image">Update Image</button>
-
-        </form>
+    <div class="col-md-4 profile-img">
+      <img {% if request.user.profilePicture %}src="{{ request.user.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %} alt="" class="img-rounded">
+        {% include 'meetandeat/forms/change-profile-picture-form.html' %}
     </div>
     <div class="col-md-6 details-container">
         <div class="clearfix">
             <h1 class="float-lg-left">Profile</h1>
-            <button type="button" class="btn btn-custom-primary ml-lg-2 float-lg-right" data-toggle="modal" data-target="#deleteModal">
+            <a href="{% url 'meetandeat:delete-profile' %}" id="deleteAccountButton"  class="btn btn-custom-primary ml-lg-2 float-lg-right" data-toggle="modal" data-target="#deleteModal">
               Delete Profile
-            </button>
+            </a>
             <a href="{% url 'meetandeat:edit-profile' %}" class="btn btn-custom-primary float-lg-right">Edit Profile</a>
         </div>
-      <div class="details">
+      <div class="details mt-2 mb-4">
           <div class="details-tile">
-              <span class="details-header">Username:</span>
-              <span class="details-info">{{ request.user.username }}</span>
+              <span class="details-tile-header">Username:</span>
+              <span class="details-tile-info">{{ request.user.username }}</span>
           </div>
           <div class="details-tile">
-              <span class="details-header">First name: </span>
-              <span class="details-info">{% if not request.user.first_name %}-{% else %}{{ request.user.first_name }}{% endif %}</span>
+              <span class="details-tile-header">First name: </span>
+              <span class="details-tile-info">{% if not request.user.first_name %}-{% else %}{{ request.user.first_name }}{% endif %}</span>
           </div>
           <div class="details-tile">
-              <span class="details-header">Last name: </span>
-              <span class="details-info">{% if not request.user.last_name %}-{% else %}{{ request.user.last_name }}{% endif %}</span>
+              <span class="details-tile-header">Last name: </span>
+              <span class="details-tile-info">{% if not request.user.last_name %}-{% else %}{{ request.user.last_name }}{% endif %}</span>
           </div>
           <div class="details-tile">
-              <span class="details-header">Email: </span>
-              <span class="details-info">{% if not request.user.email %}-{% else %}{{ request.user.email }}{% endif %}</span>
+              <span class="details-tile-header">Email: </span>
+              <span class="details-tile-info">{% if not request.user.email %}-{% else %}{{ request.user.email }}{% endif %}</span>
           </div>
       </div>
     <div>
         <h5>Change Password:</h5>
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="oldPassword">Old Password:</label>
-                <input class="form-control {% if form.old_password.errors %}is-invalid{%  endif %}"
-                    id="old_password" type="password" placeholder="Old Password"
-                    name="old_password">
-                {% if form.old_password.errors %}<div class="invalid-feedback">Give a correct password</div>
-                {%  endif %}
-            </div>
-            <div class="form-group">
-                <label for="newPassword">New Password:</label>
-                <input class="form-control {% if form.new_password1.errors %}is-invalid{%  endif %}"
-                    id="newPassword" type="password" placeholder="New Password"
-                    name="new_password1" >
-                {% if form.new_password1.errors %}<div class="invalid-feedback">Give a correct password</div>
-                {%  endif %}
-            </div>
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password:</label>
-                <input class="form-control {% if form.new_password2.errors %}is-invalid{%  endif %}"
-                    id="confirmPassword" type="password" placeholder="Confirm Password"
-                    name="new_password2">
-                {% if form.new_password2.errors %}<div class="invalid-feedback">Give a correct password</div>
-                {%  endif %}
-            </div>
-
-
-            <button type="submit" class="btn btn-custom-primary" name="change-password">Change password</button>
-
-        </form>
+        {% include 'meetandeat/forms/change-password-form.html' %}
     </div>
     </div>
   </div>
-</div><!-- Modal -->
+</div>
+<!-- Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content bg-custom-light">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Delete Profile</h5>
+        <h5 class="modal-title" id="deleteModalLabel">Delete Profile</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        <form id="deleteAccountForm" action="{% url "meetandeat:delete-profile" %}">
+        <form id="deleteAccountForm" action="{% url "meetandeat:delete-profile-ajax" %}">
         {% csrf_token %}
       <div class="modal-body">
         <p>Do you really want to delete your account? Your account data will be lost.</p>
 
               <div class="form-group">
                 <label for="deleteAccountPassword">Confirm Delete:</label>
-                <input class="form-control {% if form.password.errors %}is-invalid{%  endif %}"
+                <input class="form-control"
                     id="deleteAccountPassword" type="password" placeholder="Confirm Delete with your Password"
                     name="password">
-                {% if form.password.errors %}<div class="invalid-feedback">Give a correct password</div>
-                {%  endif %}
+                <div id="deleteAccountInvalidFeedback" class="invalid-feedback invisible">Give a correct password</div>
             </div>
       </div>
       <div class="modal-footer">

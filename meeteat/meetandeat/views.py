@@ -1,36 +1,24 @@
-import json
-
 from django.contrib import messages
-from django.contrib.auth import get_user_model
-from django.contrib.auth import logout
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import get_user_model, update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
-
-from .forms.ChangeProfilePicture import ChangeProfilePicture
-from .forms.CommentForm import CommentForm
-from .forms.DeleteProfileForm import DeleteProfileForm
-from .forms.EventForm import EventForm
-from .forms.TagFilterForm import TagFilterForm
-from .forms.TagForm import TagForm
-from .forms.UserRegistrationForm import UserRegistrationForm
-from .models import Comment
-from .models import Event, Tag
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView, DeleteView
+from .forms import *
+from .models import Event, Tag, Comment
+import json
 
 
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
         evt = Event.objects.get(pk=self.kwargs['pk'])
         u = self.request.user
-        return (u in evt.eventParticipants.all())
+        return u in evt.eventParticipants.all()
 
 
 class OwnerTestMixin(UserPassesTestMixin):
@@ -164,8 +152,7 @@ class ProfileView(View):
         return render(request, 'meetandeat/profile.html', context)
 
     def post(self, request):
-        User = get_user_model()
-        user = get_object_or_404(User, pk=request.user.pk)
+        user = request.user
         if 'change-password' in request.POST:
             form = PasswordChangeForm(user=user, data=request.POST)
             if form.is_valid():
@@ -180,13 +167,23 @@ class ProfileView(View):
                 }
                 return render(request, 'meetandeat/profile.html', context)
         elif 'update-image' in request.POST:
-            print('i am trying to save a picture')
-            form = ChangeProfilePicture(request.POST, instance=user)
-            form.save()
+            form = ChangeProfilePictureForm(request.POST, request.FILES, instance=user)
+            if form.is_valid():
+                form.save()
+            else:
+                context = {
+                    'form': form,
+                }
+                return render(request, 'meetandeat/profile.html', context)
+
+        elif 'delete-image' in request.POST:
+            user.profilePicture.delete()
         context = {
             'user': user,
         }
         return render(request, 'meetandeat/profile.html', context)
+
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -237,6 +234,29 @@ class UserCreateView(CreateView):
     success_url = reverse_lazy('meetandeat:login')
 
 
+
+class UserRegistrationView(FormView):
+    form_class = UserRegistrationForm
+    template_name = 'meetandeat/register.html'
+
+    def get(self, request):
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}!')
+            return redirect('/profile')
+        else:
+            form = UserRegistrationForm()
+            context = {'form': form}
+
+        return render(request, self.template_name, {'form': form})
+
+
 @method_decorator(login_required, name='dispatch')
 class UserUpdateView(UpdateView):
     model = get_user_model()
@@ -249,28 +269,36 @@ class UserUpdateView(UpdateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class UserDeleteView(View):
+class UserDeleteAjax(View):
     def post(self, request):
-        form = DeleteProfileForm(request.POST)
-        User = get_user_model()
-        user = User.objects.get(pk=request.user.pk)
-        print('I have got a password')
-        print(request.POST.get('password'))
+        form = DeleteProfileForm(request.POST, instance=request.user)
         if form.is_valid():
-            print('form is valid')
-            if user.check_password(form.cleaned_data['password']):
-                logout(request)
-                user.delete()
-                response = {'status': 0, 'message': "Ok", "url": reverse('meetandeat:index')}
-                return HttpResponse(json.dumps(response), content_type='application/json')
-            else:
-                print('password invalid')
-                response = {'status': 1, 'message': "Invalid password"}
-                return HttpResponse(json.dumps(response), content_type='application/json')
+            logout(request)
+            form.instance.delete()
+            response = {'status': 0, 'message': "Ok", "url": reverse('meetandeat:index')}
+            return HttpResponse(json.dumps(response), content_type='application/json')
         else:
             print('password invalid')
-            response = {'status': 2, 'message': "Invalid form data"}
+            response = {'status': 1, 'message': "Invalid password"}
             return HttpResponse(json.dumps(response), content_type='application/json')
+
+
+@method_decorator(login_required, name='dispatch')
+class UserDeleteView(View):
+    def get(self, request):
+        return render(request, 'meetandeat/delete-profile.html')
+
+    def post(self, request):
+        form = DeleteProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            print('form is valid')
+            logout(request)
+            form.instance.delete()
+            return redirect(reverse("meetandeat:index"))
+        else:
+            print('form is not valid')
+            context = {'form': form}
+            return render(request, 'meetandeat/delete-profile.html', context)
 
 
 @method_decorator(login_required, name='dispatch')

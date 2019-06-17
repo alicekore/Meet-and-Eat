@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles'
+    'django.contrib.staticfiles',
+    'django_cleanup.apps.CleanupConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -131,6 +133,7 @@ LOGIN_REDIRECT_URL = 'meetandeat:index'
 
 AUTH_USER_MODEL='meetandeat.User'
 
-MEDIA_ROOT='meeteat/meetandeat/Media'
+MEDIA_ROOT='meetandeat/media'
+MEDIA_URL = '/media/'
 
 #MEDIA_URL

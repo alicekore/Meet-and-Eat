@@ -4,7 +4,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator, RegexVa
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from django.contrib.auth import get_user_model
 
 
 # Create your models here.
@@ -46,14 +45,21 @@ class Tag(models.Model):
     def __str__(self):
         return self.title
 
+
 class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     datetime = models.DateTimeField(default=timezone.now)
     text = models.CharField(max_length = 160)
     event = models.ForeignKey(Event, on_delete = models.CASCADE)
 
+
 class User(AbstractUser):
-    profilePicture = models.ImageField(upload_to='photos/%Y/%m/%d', null=True, blank=True)
+    # TODO: create a function to name files unique
+    def user_directory_path(self, filename):
+        # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+        return 'user_{0}/{1}'.format(self.id, filename)
+
+    profilePicture = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     visible = models.BooleanField(default=True)
     events = models.ManyToManyField(Event, related_name='eventParticipants', blank=True)
     reportedEvents = models.ManyToManyField(Event, related_name='userReportings', blank=True)

@@ -1,0 +1,16 @@
+<form id="changeProfilePictureForm" method="post" enctype='multipart/form-data'>
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="profilePictureUpdate">Choose new image:</label>
+        <input class="form-control {% if form.profilePicture.errors %}is-invalid{%  endif %}"
+            id="profilePictureUpdate" type="file" accept="image/*"
+            name="profilePicture" required>
+        {% if form.profilePicture.errors %}<div class="invalid-feedback">{{ form.profilePicture.errors }}</div>
+        {%  endif %}
+    </div>
+</form>
+<form id="deleteProfilePictureForm" method="post">
+        {% csrf_token %}
+</form>
+<button type="submit" form="changeProfilePictureForm" class="btn btn-custom-primary" name="update-image">Update Image</button>
+<button type="submit" form="deleteProfilePictureForm" class="btn btn-custom-primary" name="delete-image">Delete Image</button>
