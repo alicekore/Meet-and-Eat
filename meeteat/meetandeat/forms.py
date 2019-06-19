@@ -77,6 +77,8 @@ class UserRegistrationForm(UserCreationForm):
 
     def clean_profilePicture(self):
         profilePicture = self.cleaned_data.get("profilePicture")
+        if profilePicture is None:
+            return profilePicture
         file_size = profilePicture.size
         limit_mb = 8
         if file_size > limit_mb * 1024 * 1024:
