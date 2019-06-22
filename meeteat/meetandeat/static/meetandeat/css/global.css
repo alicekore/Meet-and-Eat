@@ -81,7 +81,7 @@
 .form-control:focus {
     color: #060606;
     background-color: #ffffff;
-    border-color: #db4646;
+    border-color: #dc3545;
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(219, 70, 70, 0.25);
 }
@@ -90,11 +90,11 @@
 /*### CUSTOM NAVBAR ###*/
 
 .navbar-dark .navbar-brand {
-    color: #EBE0D7;
+    color: #dd5549;
 }
 
 .navbar-dark .navbar-brand:hover, .navbar-dark .navbar-brand:focus {
-    color: #EBE0D7;
+    color: #dd5549;
 }
 
 .navbar-dark .navbar-nav .nav-link {
@@ -116,12 +116,19 @@
     color: #EBE0D7;
 }
 
+.navbar .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #dc3545;
+    text-decoration: #dc3545;
+}
+
 .navbar-dark .navbar-toggler {
-    color: rgba(255, 255, 255, 0.5);
+    color: #484848;
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-.navbar-dark .navbar-toggler-icon {
+.navbar-dark {
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
@@ -146,11 +153,11 @@
 }
 
 .navbar-dark .navbar-nav .nav-link {
-    color: rgba(255, 255, 255, 0.5);
+    color: #dd5549;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
-    color: rgba(255, 255, 255, 0.75);
+    color: #dd5549;
 }
 
 .navbar-dark .navbar-nav .nav-link.disabled {
@@ -161,11 +168,11 @@
 .navbar-dark .navbar-nav .active > .nav-link,
 .navbar-dark .navbar-nav .nav-link.show,
 .navbar-dark .navbar-nav .nav-link.active {
-    color: #EBE0D7;
+    color: #dd5549;
 }
 
 .navbar-dark .navbar-toggler {
-    color: rgba(255, 255, 255, 0.5);
+    color: #484848;
     border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -182,7 +189,7 @@
 }
 
 .navbar-dark .navbar-text a:hover, .navbar-dark .navbar-text a:focus {
-    color: #EBE0D7;
+    color: #dd5549;
 }
 
 .spacing {
@@ -196,7 +203,7 @@
 }
 
 .login-form {
-    padding-left: 12%;
+    max-width: 300px;
 }
 
 .login-container {
@@ -303,4 +310,44 @@
 
 .text-custom-hyperlink:active{
     color: #dd5549;
+}
+
+/*####################*/
+
+/*####COMMENT STYLES##### */
+
+.col-right-comment{
+    max-width: 100px;
+    margin-top: -16px;
+    margin-bottom: -16px;
+    margin-right: -5px;
+    background-color: #efeeee;
+}
+.col-left-comment{
+    max-width: 100px;
+    margin-top: -16px;
+    margin-bottom: -16px;
+    margin-left: -5px;
+    background-color: #efeeee;
+}
+
+.col-send-comment{
+    max-width: 100px;
+}
+
+a{
+    color: #484848;
+}
+
+a:hover{
+    color: #dc3545;
+}
+
+a:active{
+    color: #dc3545;
+    text-decoration: #dc3545;
+}
+
+.col-right-mod{
+    max-width: 250px;
 }

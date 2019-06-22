@@ -1,9 +1,9 @@
 <header>
-    <nav class="shadow navbar navbar-expand-md p-3 mb-5 bg-white rounded bg-custom-secondary text-color-dark" style="box-shadow: #484848;">
+    <nav class="shadow navbar navbar-expand-md p-3 mb-5 rounded bg-custom-secondary" style="box-shadow: #484848;">
         <span class="navbar-brand unselectable" style="color: #dd5549">Meet&Eat</span>
         <span class="spacing border-right"></span>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <span class="material-icons">menu</span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -11,13 +11,13 @@
             <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
                 <li class="nav-item {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
-                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:index' %}">Dashboard{% if request.resolver_match.url_name == 'index' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                    <a class="nav-link" href="{% url 'meetandeat:index' %}">Dashboard{% if request.resolver_match.url_name == 'index' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 <li class="nav-item  {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
-                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:profile' %}">Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                    <a class="nav-link" href="{% url 'meetandeat:profile' %}">Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 <li class="nav-item {% if request.resolver_match.url_name == 'own_events_list' %}active{% endif %}">
-                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:own_events_list' %}">My events{% if request.resolver_match.url_name == 'own_events_list' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                    <a class="nav-link" href="{% url 'meetandeat:own_events_list' %}">My events{% if request.resolver_match.url_name == 'own_events_list' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 {% endif %}
                 {% if user.is_staff %}

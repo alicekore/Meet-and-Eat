@@ -6,13 +6,13 @@
 
 <!-- TODO - nice design -->
 {% block main %}
-<div class="container border border-dark rounded bg-light p-3 my-4">
+<div class="container bg-custom-primary rounded p-3 my-4">
 
     <h1>All Tags</h1>
     <small>This url should be visible for admins only.</small>
 
     {% for tag in tag_list %}
-    <div class="container border border-dark rounded bg-light p-3 my-4">
+    <div class="container bg-custom-secondary rounded  p-3 my-4">
         <h2><a class="stretched-link" href="{% url 'meetandeat:tag-details' tag.pk %}">{{ tag.title }}</a></h2>
         <p>
             Status: {% if tag.approved %} Approved {% else %} Pending {% endif %}

@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block main %}
-<div class="container border border-dark rounded bg-light p-3 my-4 login-container text-color-dark">
+<div class="container bg-custom-secondary rounded p-3 my-4 login-container text-color-dark">
     <div class="row">
-        <div class="col-md-6 login-information-text">
+        <div class="col login-information-text">
             <h2>Meet&Eat</h2>
             <p>The app to eat and meet <br>whenever you feel like to meet and eat <br> with other students</p>
         </div>
-        <div align="center" class="col-md-6 login-form">
-            <div class="container border-dark border-left">
+        <div align="center" class="col login-form">
+            <div class="container border-left">
                 <form method="POST">
                     <h2>Account Login</h2>
                     {% csrf_token %}
@@ -25,7 +25,7 @@
                     </div>
                     <div class="spacing"></div>
                     <div>
-                        <input class="btn btn-primary type btn-sm btn-block" type="submit" value="Login">
+                        <input class="btn btn-custom-primary type btn-sm btn-block" type="submit" value="Login">
                     </div>
                     <div class="spacing"></div>
                     <div>

@@ -34,7 +34,7 @@
             </div>
         </div>
     </div>
-    <div class="container bg-custom-secondary rounded p-3 my-4">
+    <div class="container bg-custom-primary rounded p-3 my-4">
         <div class="row">
             <div class="col">
                 <h2>{{event.title}} </h2>
@@ -48,28 +48,57 @@
         <small>{{event.description}}</small>
         <br>
         <hr>
-        <p>Place: {{event.location}}</p>
-        <p>Time: {{event.datetime | date:"d.m.Y G:i"}}</p>
+        <p><span class="material-icons">room</span> {{event.location}}</p>
+        <p><p><span class="material-icons">schedule</span> {{event.datetime | date:"d.m.Y G:i"}}</p>
         <hr>
-        <form method='POST'>
-            {% csrf_token %}
-            <div class="form-group">
-                {{form.text}}
-            </div>
-            <button class="btn btn-primary" type="submit">Post</button>
-        </form>
-
-        {% for comment in comment_list %}
-        <div class="container rounded bg-custom-primary p-3 my-4">
-            <div class="col">
-                <p>{{comment.text}}</p>
-            </div>
-            <div class="col text-left">
-                <small><a href="#">{{comment.author}}</a></small>
-                <small><p>{{comment.datetime}}</p></small>
+        {% for comment in comment_list reversed %}
+        {% if comment.author == user %}
+        <div class="container rounded bg-custom-secondary p-3 my-4">
+            <div class="row">
+                <div class="col col-left-comment border-right bg-custom-secondary">
+                    <div class="container">
+                        <!-- TODO: <div class="row">{{ comment.profilepciture }}</div> -->
+                        <div class="row pt-1">{{ comment.author }}</div>
+                        <div class="row border-top pt-1"><small>{{ comment.datetime |date:"d.m G:i"}}</small></small></div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="container">
+                        {{ comment.text }}
+                    </div>
+                </div>
             </div>
         </div>
+        {% else %}
+        <div class="container rounded bg-custom-secondary p-3 my-4">
+            <div class="row">
+                <div class="col">
+                    <div class="container">
+                        {{ comment.text }}
+                    </div>
+                </div>
+                <div class="col col-right-comment border-left bg-custom-secondary">
+                    <div class="container">
+                            <!-- TODO: <div class="row">{{ comment.profilepciture }}</div> -->
+                            <div class="row pt-1">{{ comment.author }}</div>
+                            <div class="row border-top pt-1"><small>{{ comment.datetime |date:"d.m G:i"}}</small></small></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         {%endfor%}
+        <form method='POST' class="border-top pt-4">
+            {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        {{form.text}}
+                    </div>
+                    <div class="col col-send-comment">
+                        <button class="btn btn-custom-primary material-icons" type="submit">send</button>
+                    </div>
+                </div>
+        </form>
     </div>
 </div>
 {% endblock %}
