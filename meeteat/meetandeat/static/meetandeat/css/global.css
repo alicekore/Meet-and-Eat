@@ -1,9 +1,10 @@
 .bg-custom-light {
-    background-color: #EBE0D7;
+    background-color:#f6f6f6;
+    color: #484848;
 }
 
 .text-color-light {
-    background-color: #EBE0D7;
+    color: #ffffff;
 }
 
 .bg-custom-dark {
@@ -11,28 +12,40 @@
 }
 
 .text-color-dark {
-    background-color: #1F1C22;
+
+    color: #484848;
 }
 
 .bg-custom-primary {
-    background-color: #CE181E !important;
+    background-color: #f6f6f6 !important;
 }
 
 .bg-custom-secondary {
-    background-color: #E27F62;
+    background-color: #ffffff;
 }
 
 /*### CUSTOM BUTTONS ###*/
 .btn-custom-primary {
-    color: #EBE0D7;
-    background-color: #E27F62 !important;
-    border-color: #E27F62;
+    color: #ffffff;
+    background-color: #5094ed !important;
+    border-color:#5094ed;
 }
 
 .btn-custom-primary:hover {
-    color: #EBE0D7;
-    background-color: #c26b51 !important;
-    border-color: #b05f46;
+    color: #ffffff;
+    background-color: #4f7fc9 !important;
+    border-color: #4f7fc9;
+}
+.btn-custom-secondary {
+    color: #ffffff;
+    background-color: #dd5549 !important;
+    border-color:#dd5549;
+}
+
+.btn-custom-secondary:hover {
+    color: #ffffff;
+    background-color: #f95e51 !important;
+    border-color: #f95e51;
 }
 
 .btn-custom-primary:active {
@@ -66,8 +79,8 @@
 /*### CUSTOM FORM*/
 
 .form-control:focus {
-    color: #1F1C22;
-    background-color: #fff;
+    color: #060606;
+    background-color: #ffffff;
     border-color: #db4646;
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(219, 70, 70, 0.25);
@@ -212,4 +225,82 @@
     max-width: 220px;
     max-height: 260px;
 }
+
 /*#########################*/
+
+/*##### Event Styles ####*/
+.datefield{
+    max-width: 70px;
+    background-color: #efeeee;
+    margin-top: -16px;
+    margin-bottom: -16px ;
+    margin-left: -1px;
+    padding-top: 15px;
+    padding-bottom: 4px;
+}
+.headline{
+    max-width: 85%;
+}
+
+.right-col{
+    max-width: 85px;
+    margin-top: -16px;
+    margin-bottom: -16px ;
+}
+
+.btn-custom-add {
+    color: #34a853;
+    font-size: 48px;
+    background-color: #f6f6f6;
+    border-radius: 30px;
+}
+
+.btn-custom-add:hover{
+    color: #22b23b;
+    text-decoration: none;
+    border-radius: 5px;
+
+
+}.btn-custom-leave{
+    color: #dd5549;
+    font-size: 48px;
+    background-color: #f6f6f6;
+    border-radius: 30px;
+}
+
+.btn-custom-leave:hover{
+    color: #f95e51;
+    text-decoration: none;
+    background-color: #f6f6f6;
+    border-radius: 5px;
+}
+
+.btn-custom-dots{
+    font-size: 36px;
+}
+
+.btn-custom-dots:hover{
+    background-color: #f6f6f6;
+    border-radius: 5px;
+}
+
+.btn-custom-dots-dark {
+    font-size: 36px;
+    border-radius: 5px;
+}
+
+.btn-custom-dots-dark:hover{
+    background-color:  #ffffff;
+    border-radius: 5px;
+}
+
+.text-custom-hyperlink{
+    color: #484848;
+
+}.text-custom-hyperlink:hover{
+    color: #dd5549;
+}
+
+.text-custom-hyperlink:active{
+    color: #dd5549;
+}
