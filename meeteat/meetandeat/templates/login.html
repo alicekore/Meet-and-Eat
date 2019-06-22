@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 {% block main %}
 <div class="container bg-custom-secondary rounded p-3 my-4 login-container text-color-dark">
+    {% if messages %}
+         <div>
+            <ul class="messages">
+                {% for msg in messages %}
+                <li>
+                    <div class="alert alert-{{msg.level_tag}}" role="alert">
+                        {{msg.message}}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+         </div>
+    {% endif %}
     <div class="row">
         <div class="col login-information-text">
             <h2>Meet&Eat</h2>
@@ -11,17 +24,29 @@
                 <form method="POST">
                     <h2>Account Login</h2>
                     {% csrf_token %}
+
                     <div>
                         <label for="username">Username</label>
                         <div id="username">
                             {{ form.username }}
                         </div>
+                        {% if form.username.errors %}
+                            <div class="invalid-feedback">
+                            {{ form.username.errors }}
+                            </div>
+                        {% endif %}
                     </div>
-                    <div>
+                    <div >
                         <label for="userpassword">Password</label>
-                        <div id="userpassword">
+                        <div id="userpassword" >
                             {{ form.password }}
+
                         </div>
+                        {% if form.password.errors %}
+                            <div class="invalid-feedback">
+                            {{ form.password.errors }}
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="spacing"></div>
                     <div>
@@ -33,13 +58,35 @@
                         No account yet? <a href="{% url 'meetandeat:register' %}">Sign up!</a>
                         </span>
                     </div>
-                    {% if form.errors %}
+
+
+                    {% if form.non_field_errors %}
                     <div class="border border-danger rounded bg-light p-3 my-4 form-error-login">
-                         <span>
-                         Invalid username or password. <br/>Please try again or<br><a href="#">reset your password</a>.
-                        </span>
-                        {% endif %}
+                        {% for key, key_errors in form.errors.as_data.items %}
+                            {% for error in key_errors %}
+                                {% if error.code == 'invalid_login'%}
+                                    <p>
+                                        Invalid username or password. <br/>Please try again or<br><a href="{% url 'meetandeat:password-reset-request' %}">reset your password</a>.
+                                    </p>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        {% for key, key_errors in form.errors.as_data.items %}
+                            {% for error in key_errors %}
+                                {% if error.code == 'inactive'%}
+                                    <p>
+                                        Your account isn't active <br/>
+                                        Please check your email inbox or <br>
+                                        <a href="{% url 'meetandeat:request-activation' %}">Request Activation Link</a>
+                                    </p>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+
+
                     </div>
+                    {% endif %}
+
                 </form>
             </div>
         </div>

@@ -4,6 +4,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator, RegexVa
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from datetime import datetime, timedelta
 
 
 # Create your models here.
@@ -50,7 +51,7 @@ class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     datetime = models.DateTimeField(default=timezone.now)
     text = models.CharField(max_length = 160)
-    event = models.ForeignKey(Event, on_delete = models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
 
 
 class User(AbstractUser):
@@ -63,3 +64,33 @@ class User(AbstractUser):
     visible = models.BooleanField(default=True)
     events = models.ManyToManyField(Event, related_name='eventParticipants', blank=True)
     reportedEvents = models.ManyToManyField(Event, related_name='userReportings', blank=True)
+    last_activation_attempt = models.DateTimeField(null=True, blank=True)
+    activation_attempts_number = models.IntegerField(default=0)
+    old_email = models.EmailField('old email address', null=True, blank=True)
+    is_email_confirmed = models.BooleanField(default=False)
+
+    def confirm_email(self):
+        self.is_active = True
+        self.activation_attempts_number = 0
+        self.old_email = None
+        self.is_email_confirmed = True
+        self.last_activation_attempt = timezone.now() - timedelta(hours=1)
+
+    def new_activation_attempt(self):
+        self.last_activation_attempt = timezone.now()
+        self.activation_attempts_number += 1
+
+    def new_email(self):
+        self.old_email = self.email
+        self.is_email_confirmed = False
+
+    def set_old_email(self):
+        self.email = self.old_email
+        self.is_email_confirmed = True
+
+    def activation_attempt_failed(self):
+        self.activation_attempts_number -= 1
+        self.last_activation_attempt = timezone.now() - timedelta(hours=1)
+
+
+

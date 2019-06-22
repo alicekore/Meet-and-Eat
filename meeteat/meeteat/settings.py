@@ -107,6 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -137,3 +138,11 @@ MEDIA_ROOT='meetandeat/media'
 MEDIA_URL = '/media/'
 
 #MEDIA_URL
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.mail.yahoo.com'
+EMAIL_HOST_USER = 'meetandeatmailing@yahoo.com'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 587
+
+PASSWORD_RESET_TIMEOUT_DAYS = 1

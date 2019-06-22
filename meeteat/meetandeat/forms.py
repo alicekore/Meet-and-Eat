@@ -4,6 +4,38 @@ from django_select2.forms import Select2MultipleWidget
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from datetime import timedelta, datetime
+
+
+class RequestActivationLinkForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username']
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise ValidationError({'username': ["This username does not exist",]})
+        if user.activation_attempts_number >= 3:
+            raise ValidationError({'username': ["You have requested too many links",]})
+        if user.last_activation_attempt is not None \
+                and user.last_activation_attempt + timedelta(hours=1) > timezone.now():
+            raise ValidationError({'username': ["You have requested an activation link recently",]})
+
+
+class RequestPasswordResetLinkForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username']
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        try:
+            User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise ValidationError({'username': ["This username does not exist",]})
 
 
 class ChangeProfilePictureForm(forms.ModelForm):
@@ -15,6 +47,8 @@ class ChangeProfilePictureForm(forms.ModelForm):
         profilePicture = self.cleaned_data.get("profilePicture")
         file_size = profilePicture.size
         limit_mb = 8
+        if profilePicture is None:
+            return profilePicture
         if file_size > limit_mb * 1024 * 1024:
             raise ValidationError("Max size of file is %s MB" % limit_mb)
         return profilePicture
@@ -69,6 +103,10 @@ class TagForm(forms.ModelForm):
 
 
 class UserRegistrationForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super(UserRegistrationForm, self).__init__(*args, **kwargs)
+        # make user email field required
+        self.fields['email'].required = True
 
     class Meta:
 
