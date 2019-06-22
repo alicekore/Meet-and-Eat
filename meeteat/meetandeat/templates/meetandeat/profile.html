@@ -4,6 +4,21 @@
 {% block title %} Profile{% endblock %}
 {%block main%}
 <div class="container">
+    <div>
+        {% if messages %}
+             <div>
+                <ul class="messages">
+                    {% for msg in messages %}
+                    <li>
+                        <div class="alert alert-{{msg.level_tag}}" role="alert">
+                            {{msg.message}}
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+             </div>
+        {% endif %}
+    </div>
   <div class="row">
     <div class="col-md-4 profile-img">
       <img {% if request.user.profilePicture %}src="{{ request.user.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %} alt="" class="img-rounded">
@@ -31,6 +46,12 @@
               <span class="details-tile-info">{% if not request.user.last_name %}-{% else %}{{ request.user.last_name }}{% endif %}</span>
           </div>
           <div class="details-tile">
+              {% if not request.user.is_email_confirmed %}
+                  <div class="text-danger">
+                     You have changed your email, please check your emails for activation link <br>
+                  or <a href="{% url 'meetandeat:request-email-confirm' %}">request new link</a>
+                  </div>
+                {% endif %}
               <span class="details-tile-header">Email: </span>
               <span class="details-tile-info">{% if not request.user.email %}-{% else %}{{ request.user.email }}{% endif %}</span>
           </div>

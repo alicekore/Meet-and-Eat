@@ -1,16 +1,24 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash, logout
+from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView, DeleteView
 from .forms import *
 from .models import Event, Tag, Comment
+from .helpers import *
+from meetandeat.tokens import account_activation_token
+from django.template.loader import render_to_string
 import json
 
 
@@ -184,10 +192,8 @@ class ProfileView(View):
         return render(request, 'meetandeat/profile.html', context)
 
 
-
-
 @method_decorator(login_required, name='dispatch')
-class modView(UserIsStuffMixin, View):
+class ModView(UserIsStuffMixin, View):
 
     def get(self, request):
         context = {
@@ -197,7 +203,7 @@ class modView(UserIsStuffMixin, View):
 
 
 @method_decorator(login_required, name='dispatch')
-class modHide(UserIsStuffMixin, View):
+class ModHide(UserIsStuffMixin, View):
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
         event.visible = False
@@ -206,7 +212,7 @@ class modHide(UserIsStuffMixin, View):
 
 
 @method_decorator(login_required, name='dispatch')
-class modUnhide(UserIsStuffMixin, View):
+class ModUnHide(UserIsStuffMixin, View):
 
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
@@ -216,7 +222,7 @@ class modUnhide(UserIsStuffMixin, View):
 
 
 @method_decorator(login_required, name='dispatch')
-class modUnreport(UserIsStuffMixin, View):
+class ModUnReport(UserIsStuffMixin, View):
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
         eventReporter = event.userReportings.all()
@@ -228,10 +234,173 @@ class modUnreport(UserIsStuffMixin, View):
         return redirect('meetandeat:modView')
 
 
-class UserCreateView(CreateView):
-    template_name = 'meetandeat/register.html'
+class UserCreateView(View):
     form_class = UserRegistrationForm
-    success_url = reverse_lazy('meetandeat:login')
+    template_name = 'meetandeat/register.html'
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.new_activation_attempt()
+            user.save()
+            sent_emails = send_activation_email(request, user)
+            if sent_emails == 0:
+                messages.error(request, "Something went wrong, try again")
+                user.delete()
+                return redirect(reverse('meetandeat:register'), {'form': form})
+
+            messages.success(request, "You have successfully signed up, we have sent you an activation email", fail_silently=True)
+            return redirect(reverse('meetandeat:login'))
+        else:
+            return render(request, self.template_name, {'form': form})
+
+
+class UserActivateAccountView(View):
+    def get(self, request, uidb64, token):
+        User = get_user_model()
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            user.confirm_email()
+            user.save()
+            messages.success(request, "You have activated your account. You can now sign in")
+            return redirect('meetandeat:profile')
+        else:
+            messages.error(request, "Activation link is invalid")
+            return redirect('meetandeat:profile')
+
+
+class RequestActivateAccountView(View):
+    def get(self, request):
+        return render(request, 'meetandeat/request-activation.html')
+
+    def post(self, request):
+        form = RequestActivationLinkForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username=form.cleaned_data['username'])
+            if user.is_email_confirmed:
+                messages.error(request, "Your account is already activated",
+                                 fail_silently=True)
+                return redirect(reverse('meetandeat:login'))
+            user.new_activation_attempt()
+            user.save()
+            sent_emails = send_activation_email(request, user)
+            if sent_emails == 0:
+                messages.error(request, "Something went wrong, try again")
+                user.activation_attempt_failed()
+                user.save()
+                return redirect(reverse('meetandeat:login'))
+
+            messages.success(request, "We have sent you a new activation link. Check your emails.",
+                             fail_silently=True)
+            return redirect(reverse('meetandeat:login'))
+        else:
+            return render(request, 'meetandeat/request-activation.html', {'form': form})
+
+
+@method_decorator(login_required, name='dispatch')
+class RequestEmailConfirmView(View):
+    def get(self, request):
+        user = request.user
+        if user.activation_attempts_number >= 3:
+            messages.error(request, "You have requested too many activation emails")
+            return redirect(reverse('meetandeat:profile'))
+        if user.last_activation_attempt + timedelta(hours=1) > timezone.now():
+            messages.error(request, "You have requested an activation email recently")
+            return redirect(reverse('meetandeat:profile'))
+
+        if user.is_email_confirmed:
+            messages.error(request, "Your account is already activated",
+                             fail_silently=True)
+            return redirect(reverse('meetandeat:profile'))
+        user.new_activation_attempt()
+        user.save()
+        sent_emails = send_activation_email(request, user)
+        if sent_emails == 0:
+            messages.error(request, "Something went wrong, try again")
+            user.activation_attempt_failed()
+            user.save()
+            return redirect(reverse('meetandeat:profile'))
+
+        messages.success(request, "We have sent you a new activation link. Check your emails.",
+                         fail_silently=True)
+        return redirect(reverse('meetandeat:profile'))
+
+
+class RequestPasswordResetView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect(request, reverse('meetandeat:index'))
+        return render(request, 'meetandeat/password_reset.html')
+
+    def post(self, request):
+        if request.user.is_authenticated:
+            return redirect(request, reverse('meetandeat:index'))
+        form = RequestPasswordResetLinkForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username=form.cleaned_data['username'])
+            if not user.is_active:
+                messages.error(request, "Your account is not activated",
+                               fail_silently=True)
+                return redirect(reverse('meetandeat:login'))
+            sent_emails = send_password_reset_email(request, user)
+            if sent_emails == 0:
+                messages.error(request, "Something went wrong, try again")
+                return redirect(reverse('meetandeat:login'))
+
+            messages.success(request, "We have sent you a password reset link. Check your emails.",
+                             fail_silently=True)
+            return redirect(reverse('meetandeat:login'))
+        else:
+            return render(request, 'meetandeat/password_reset.html', {'form': form})
+
+
+class PasswordResetConfirmView(View):
+    def get(self, request, uidb64, token):
+        User = get_user_model()
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            return render(request, 'meetandeat/password_reset_confirm.html')
+        else:
+            messages.error(request, "Password reset link is invalid")
+            return redirect('meetandeat:profile')
+
+    def post(self, request, uidb64, token):
+        User = get_user_model()
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            form = SetPasswordForm(user, request.POST)
+            print('token is valid')
+            if form.is_valid():
+                print('form is valid')
+                form.save()
+                messages.success(request, "You have successfully changed your password")
+                return redirect('meetandeat:login')
+            else:
+                print('form is invalid')
+
+                return render(request, 'meetandeat/password_reset_confirm.html', {'form': form})
+        else:
+            print('form is invalid')
+            messages.error(request, "Password reset link is invalid")
+            return redirect('meetandeat:profile')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -243,6 +412,26 @@ class UserUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+    def form_valid(self, form):
+        if 'email' in form.changed_data:
+            form.instance.new_email()
+            user = form.save(commit=False)
+            request = self.request
+            user.new_activation_attempt()
+            user.save()
+            sent_emails = send_activation_email(request, user)
+            if sent_emails == 0:
+                messages.error(request, "Something went wrong, request an activation link")
+                user.set_old_email()
+                user.save()
+                return redirect(reverse('meetandeat:profile'), {'form': form})
+
+            messages.success(request, "We have sent you an activation link. Check your emails.",
+                             fail_silently=True)
+            return redirect(reverse('meetandeat:profile'))
+        super().form_valid(form)
+        return redirect(reverse('meetandeat:profile'))
 
 
 @method_decorator(login_required, name='dispatch')
