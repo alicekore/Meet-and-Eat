@@ -65,8 +65,20 @@ class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
         fields = [
-            'title']
+            'title', 'description']
 
+class TagDisapprovalForm(forms.ModelForm):
+    CHOICES= (
+    ('Tag already exists.', 'Tag already exists.'),
+    ('Tag is inappropriate.', 'Tag is inappropriate.'),
+    ('Description not clear.', 'Description not clear.'),
+    )
+    disapprovalMsg = forms.CharField(widget=forms.Select(choices=CHOICES))
+
+    class Meta:
+        model = Tag
+        fields = [
+            'disapprovalMsg']
 
 class UserRegistrationForm(UserCreationForm):
 

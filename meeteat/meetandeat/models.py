@@ -40,9 +40,14 @@ class Event(models.Model):
                        ('edit_event', 'Can Edit Event'), ('seeHidden_event', 'Can see hidden events')]
 
 class Tag(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     alphabetic = RegexValidator(r'^[a-zA-Z]*$', 'Only alphabetic characters are allowed.')
+
     title = models.CharField(max_length=15, validators=[alphabetic])
+    description = models.CharField(max_length=160)
+    disapprovalMsg = models.CharField(max_length=160)
     approved = models.BooleanField(default=False)
+    pending = models.BooleanField(default=True)
 
     def approve(self):
         self.approved = True
@@ -52,7 +57,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.title
-
 
 class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

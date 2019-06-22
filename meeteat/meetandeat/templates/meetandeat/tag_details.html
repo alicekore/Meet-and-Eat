@@ -11,6 +11,8 @@
             <h1>Tag Details</h1>
             <hr>
             <p>Tag: {{ tag.title }}</p>
+            <p>Description: {{ tag.description }}</p>
+            <p>Submitted by {{ tag.user }}</p>
             <p>Status:
                 {% if tag.approved %}
                 Approved
@@ -18,7 +20,7 @@
                 Pending
                 {% endif %}
             </p>
-            <a class="btn btn-warning" href="{% url 'meetandeat:edit-tag' tag.pk %}">Edit Tag</a>
+            <a class="btn btn-warning" href="{% url 'meetandeat:edit-tag' tag.pk %}">Disapprove Tag</a>
             {% if tag.approved != True %}
             <a class="btn btn-success" href="{% url 'meetandeat:approve-tag' tag.pk%}">Approve Tag</a>
             {% endif %}

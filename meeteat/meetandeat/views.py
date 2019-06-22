@@ -119,14 +119,22 @@ class TagCreate(CreateView):
     form_class = TagForm
     success_url = reverse_lazy('meetandeat:index')
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 @method_decorator(login_required, name='dispatch')
 class TagUpdate(UserIsStuffMixin, UpdateView):
     model = Tag
     template_name = 'meetandeat/edit-tag.html'
-    form_class = TagForm
-    success_url = reverse_lazy('meetandeat:index')
+    form_class = TagDisapprovalForm
+    success_url = reverse_lazy('meetandeat:tag-view')
 
+    def form_valid(self, form):
+        form.instance.approved = False
+        form.instance.pending = False
+        form.instance.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 @method_decorator(login_required, name='dispatch')
 class TagDetailView(UserIsStuffMixin, DetailView):
