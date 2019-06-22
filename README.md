@@ -27,7 +27,7 @@ PgAdmin:
 3. Port: 5432
 4. User: postgres
 5. Password: postgres
-6.Name: meet_and_eat
+6. Name: meet_and_eat
 
 ##### Win: #####
 
