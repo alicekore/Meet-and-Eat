@@ -6,34 +6,35 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <a class="btn btn-primary" href="{% url 'meetandeat:index' %}">Back to Dashboard</a>
+            <a class="btn btn-custom-primary" href="{% url 'meetandeat:index' %}">Back to Dashboard</a>
         </div>
         <div class="col text-right">
             {% if user in event.eventParticipants.all %}
-            <a class="btn btn-danger" href="{% url 'meetandeat:leave-event' event.pk %}">Leave</a>
+            <a class="btn btn-custom-secondary" href="{% url 'meetandeat:leave-event' event.pk %}">Leave</a>
             {% else %}
             <a class="btn btn-primary" href="{% url 'meetandeat:join-event' event.pk %}">Join Event</a>
             {% endif %}
             <div class="btn-group dropdown">
-                <button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle"
-                        data-toggle="dropdown"
-                        type="button">
-                    Settings
-                </button>
-                <div class="dropdown-menu">
+                <a aria-expanded="false" aria-haspopup="true" class="material-icons md-light btn-custom-dots-dark"
+                   data-toggle="dropdown" id="dropdownMenuLink" role="button">
+                    more_horiz
+                </a>
+                <div aria-labelledby="dropdownMenuLink" class="dropdown-menu">
                     {% if event.user == user %}
-                    <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit Event</a>
+                    <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit
+                        Event</a>
                     {% endif %}
                     {% if user in event.userReportings.all %}
                     <span class="dropdown-item">Already reported!</span>
                     {% else %}
-                    <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report Event</a>
+                    <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report
+                        Event</a>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
-    <div class="container border border-dark rounded bg-light p-3 my-4">
+    <div class="container bg-custom-primary rounded p-3 my-4">
         <div class="row">
             <div class="col">
                 <h2>{{event.title}} </h2>
@@ -47,28 +48,57 @@
         <small>{{event.description}}</small>
         <br>
         <hr>
-        <p>Place: {{event.location}}</p>
-        <p>Time: {{event.datetime | date:"d.m.Y G:i"}}</p>
+        <p><span class="material-icons">room</span> {{event.location}}</p>
+        <p><p><span class="material-icons">schedule</span> {{event.datetime | date:"d.m.Y G:i"}}</p>
         <hr>
-        <form method='POST'>
-        {% csrf_token %}
-          <div class="form-group">
-              {{form.text}}
-          </div>
-          <button type="submit" class="btn btn-primary">Post</button>
-        </form>
-
-        {% for comment in comment_list %}
-        <div class="container border border-dark rounded bg-light p-3 my-4">
-          <div class="col">
-            <p>{{comment.text}}</p>
-          </div>
-          <div class="col text-left">
-              <small><a href="#">{{comment.author}}</a></small>
-              <small><p>{{comment.datetime}}</p></small>
-          </div>
+        {% for comment in comment_list reversed %}
+        {% if comment.author == user %}
+        <div class="container rounded bg-custom-secondary p-3 my-4">
+            <div class="row">
+                <div class="col col-left-comment border-right bg-custom-secondary">
+                    <div class="container">
+                        <!-- TODO: <div class="row">{{ comment.profilepciture }}</div> -->
+                        <div class="row pt-1">{{ comment.author }}</div>
+                        <div class="row border-top pt-1"><small>{{ comment.datetime |date:"d.m G:i"}}</small></small></div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="container">
+                        {{ comment.text }}
+                    </div>
+                </div>
+            </div>
         </div>
+        {% else %}
+        <div class="container rounded bg-custom-secondary p-3 my-4">
+            <div class="row">
+                <div class="col">
+                    <div class="container">
+                        {{ comment.text }}
+                    </div>
+                </div>
+                <div class="col col-right-comment border-left bg-custom-secondary">
+                    <div class="container">
+                            <!-- TODO: <div class="row">{{ comment.profilepciture }}</div> -->
+                            <div class="row pt-1">{{ comment.author }}</div>
+                            <div class="row border-top pt-1"><small>{{ comment.datetime |date:"d.m G:i"}}</small></small></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         {%endfor%}
+        <form method='POST' class="border-top pt-4">
+            {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        {{form.text}}
+                    </div>
+                    <div class="col col-send-comment">
+                        <button class="btn btn-custom-primary material-icons" type="submit">send</button>
+                    </div>
+                </div>
+        </form>
     </div>
 </div>
 {% endblock %}

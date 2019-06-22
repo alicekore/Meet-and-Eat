@@ -6,69 +6,181 @@
 {% for event in event_list %}
 
 {% if event.visible == True %}
-<div class="container border border-dark rounded bg-light p-3 my-4">
+<div class="container rounded p-3 my-4 bg-custom-secondary">
     {% else %}
-    <div class="container border border-dark rounded bg-secondary p-3 my-4">
+    <div class="container rounded p-3 my-4 bg-custom-secondary">
         {% endif %}
         <div class="row">
+            <div class="col datefield border-right">
+                <div class="container">
+                    <div class="row"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
+                    <div class="row border-bottom border-dark"><h3>{{ event.datetime | localtime | date:"M"}}</h3></div>
+                    <div class="row pt-1">{{ event.datetime | localtime | date:"G.i"}}</div>
+                </div>
+            </div>
             <div class="col">
-                <h2><a class="stretched-link" href="{% url 'meetandeat:event-view' event.pk %}">{{event.title}}</a></h2>
-            </div>
-            <div class="col text-right">
-                <small>{{event.participants_number}} Participants</small>
-                <br>
-                <small>{{event.location}}</small>
-            </div>
-        </div>
-        <small>{{event.datetime | localtime |date:"d.m.Y G:i"}}</small>
-        <br>
-        <hr>
-        <p>{{event.description}}</p>
-        <p>Creator: <a href="#">{{event.user}}</a></p>
-
-        {% if event.visible == True %}
-        <form action="{% url 'meetandeat:modHide' event.pk %}" method="post" name="form" style="float:left;">
-            {% csrf_token %}
-            <input class="btn btn-primary" type="submit" value="Hide"/>
-        </form>
-        {% else %}
-        <form action="{% url 'meetandeat:modUnhide' event.pk %}" method="post" name="form" style="float:left;">
-            {% csrf_token %}
-            <input class="btn btn-primary" type="submit" value="Unhide"/>
-        </form>
-        {% endif %}
-
-        <form action="{% url 'meetandeat:modUnreport' event.pk %} " method="post" name="form"
-        ">
-        {% csrf_token %}
-        <!-- Button trigger modal -->
-        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
-            Unreport
-        </button>
-        <!-- Modal -->
-        <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
-             tabindex="-1">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
-                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            {% if user in event.eventParticipants.all %}
+                            <h3><a class="text-custom-hyperlink" href="{% url 'meetandeat:event-view' event.pk %}">{{ event.title }}
+                                <small>({{ event.participants_number }}/{{ event.participants_number }})</small>
+                            </a></h3>
+                            {% else %}
+                            <h3>{{ event.title }}
+                                <small>({{ event.participants_number }}/{{ event.participants_number }})</small>
+                            </h3>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <p>Are you sure you want to Unreport the Event removing it forever from this list?</p>
+                    <div class="spacing"></div>
+                    <div class="row">
+                        <div class="col"><h5><span class="material-icons">room</span>{{ event.location }}</h5></div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                        <input class="btn btn-primary" type="submit" value="Unreport"/>
+                </div>
+            </div>
+            <div class="col col-right-mod">
+                <div class="container">
+                    <div class="row pb-4  ml-5">
+                        <div class="col pl-5 ml-5">
+                            <div class="dropdown">
+                                <a aria-expanded="false" aria-haspopup="true" class="material-icons btn-custom-dots"
+                                   data-toggle="dropdown" id="dropdownMenuLink" role="button">
+                                    more_horiz
+                                </a>
+                                <div aria-labelledby="dropdownMenuLink" class="dropdown-menu">
+                                    {% if event.user == user %}
+                                    <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit
+                                        Event</a>
+                                    {% endif %}
+                                    {% if user in event.userReportings.all %}
+                                    <span class="dropdown-item">Already reported!</span>
+                                    {% else %}
+                                    <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report
+                                        Event</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pt-2 pl-2">
+                        <div class="col ml-2">
+                            {% if event.visible == True %}
+                            <form action="{% url 'meetandeat:modHide' event.pk %}" method="post" name="form"
+                                  style="float:left;">
+                                {% csrf_token %}
+                                <input class="btn btn-custom-primary" type="submit" value="Hide"/>
+                            </form>
+                            {% else %}
+                            <form action="{% url 'meetandeat:modUnhide' event.pk %}" method="post" name="form"
+                                  style="float:left;">
+                                {% csrf_token %}
+                                <input class="btn btn-custom-primary" type="submit" value="Unhide"/>
+                            </form>
+                            {% endif %}
+                            <form action="{% url 'meetandeat:modUnreport' event.pk %} " method="post" name="form"
+                            ">
+                            {% csrf_token %}
+
+                            <button class="btn btn-custom-secondary ml-1" data-target="#exampleModal" data-toggle="modal"
+                                    type="button">
+                                Unreport
+                            </button>
+
+                            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade"
+                                 id="exampleModal" role="dialog"
+                                 tabindex="-1">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+                                            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to Unreport the Event removing it forever from this
+                                                list?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-custom-secondary" data-dismiss="modal" type="button">Close
+                                            </button>
+                                            <input class="btn btn-custom-primary" type="submit" value="Unreport"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        </form>
-
     </div>
-    {% endfor %}
-    {% endblock %}
+
+
+    <!--
+    <div class="row">
+        <div class="col">
+            <h2><a class="stretched-link" href="{% url 'meetandeat:event-view' event.pk %}">{{event.title}}</a></h2>
+        </div>
+        <div class="col text-right">
+            <small>{{event.participants_number}} Participants</small>
+            <br>
+            <small>{{event.location}}</small>
+        </div>
+    </div>
+    <small>{{event.datetime | localtime |date:"d.m.Y G:i"}}</small>
+    <br>
+    <hr>
+    <p>{{event.description}}</p>
+    <p>Creator: <a href="#">{{event.user}}</a></p>
+
+    {% if event.visible == True %}
+    <form action="{% url 'meetandeat:modHide' event.pk %}" method="post" name="form" style="float:left;">
+        {% csrf_token %}
+        <input class="btn btn-primary" type="submit" value="Hide"/>
+    </form>
+    {% else %}
+    <form action="{% url 'meetandeat:modUnhide' event.pk %}" method="post" name="form" style="float:left;">
+        {% csrf_token %}
+        <input class="btn btn-primary" type="submit" value="Unhide"/>
+    </form>
+    {% endif %}
+
+    <form action="{% url 'meetandeat:modUnreport' event.pk %} " method="post" name="form"
+    ">
+    {% csrf_token %}
+
+    <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
+        Unreport
+    </button>
+
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to Unreport the Event removing it forever from this list?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                    <input class="btn btn-primary" type="submit" value="Unreport"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+
+    -->
+</div>
+{% endfor %}
+{% endblock %}
 </div>

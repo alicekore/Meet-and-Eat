@@ -5,12 +5,12 @@
 {% block main %}
 
 <!-- TODO - better design -->
-<div class="container border border-dark rounded bg-light p-3 my-4">
+<div class="container bg-custom-primary rounded p-3 my-4">
+    <h1>Tag Details</h1>
     <div class="row">
+        <div class="container bg-custom-secondary rounded p-3 my-4">
         <div class="col">
-            <h1>Tag Details</h1>
-            <hr>
-            <p>Tag: {{ tag.title }}</p>
+            <h2> {{ tag.title }}  </h2>
             <p>Status:
                 {% if tag.approved %}
                 Approved
@@ -18,10 +18,11 @@
                 Pending
                 {% endif %}
             </p>
-            <a class="btn btn-warning" href="{% url 'meetandeat:edit-tag' tag.pk %}">Edit Tag</a>
+            <a class="btn btn-custom-secondary" href="{% url 'meetandeat:edit-tag' tag.pk %}">Edit Tag</a>
             {% if tag.approved != True %}
-            <a class="btn btn-success" href="{% url 'meetandeat:approve-tag' tag.pk%}">Approve Tag</a>
+            <a class="btn btn-custom-primary" href="{% url 'meetandeat:approve-tag' tag.pk%}">Approve Tag</a>
             {% endif %}
+        </div>
         </div>
     </div>
 </div>

@@ -5,17 +5,17 @@
 {% block title %}Your events{% endblock %}
 
 {% block main %}
-<div class="container border border-dark rounded bg-light p-3 my-4">
+<div class="container bg-custom-primary rounded p-3 my-4">
     <h1 class="display-4">My events</h1>
 
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#own">Own events</a>
+            <a class="nav-link active text-custom-hyperlink" data-toggle="tab" href="#own">Own events</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " data-toggle="tab" href="#joined">Joined events</a>
+            <a class="nav-link text-custom-hyperlink" data-toggle="tab" href="#joined">Joined events</a>
         </li>
     </ul>
 
@@ -24,59 +24,72 @@
         <div class="tab-pane container active" id="own">
             {% if own_event_list %}
             {% for event in own_event_list %}
-            {% if  event.visible == True %}
-            <div class="container border border-dark rounded bg-light p-3 my-4">
-                <div class="row">
-                    <div class="col">
-                        <h2><a class="stretched-link" href="{% url 'meetandeat:event-view' event.pk %}">{{ event.title }}</a></h2>
-                    </div>
-                    <div class="col text-right">
-                        <small>{{event.participants_number}} Participants</small>
-                        <br>
-                        <small>{{event.location}}</small>
-                    </div>
-                </div>
-                <small>{{event.datetime |date:"d.m.Y G:i"}}</small>
-                <br>
-                <hr>
-                {% for tag in event.tags.all %}
-                <span class="badge badge-secondary">{{ tag.title }}</span>
-                {% endfor %}
-                <br>
-                <hr>
-                <p>{{ event.description }}</p>
-                <p>Creator: <a href="#">{{ event.user }}</a></p>
-
+            {% if event.visible == True %}
+            <div class="container rounded p-3 my-4 bg-custom-secondary">
+    <div class="row">
+        <div class="col datefield border-right">
+            <div class="container">
+                <div class="row"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
+                <div class="row border-bottom border-dark"><h3>{{ event.datetime | localtime | date:"M"}}</h3></div>
+                <div class="row pt-1">{{ event.datetime | localtime | date:"G.i"}}</div>
+            </div>
+        </div>
+        <div class="col headline">
+            <div class="container">
                 <div class="row">
                     <div class="col">
                         {% if user in event.eventParticipants.all %}
-                        <a class="btn btn-danger" href="{% url 'meetandeat:leave-event' event.pk %}">Leave</a>
+                        <h3><a class="text-custom-hyperlink" href="{% url 'meetandeat:event-view' event.pk %}">{{ event.title }} <small>({{ event.participants_number }}/{{ event.participants_number }})</small></a></h3>
                         {% else %}
-                        <a class="btn btn-primary" href="{% url 'meetandeat:join-event' event.pk %}">Join Event</a>
+                        <h3>{{ event.title }} <small>({{ event.participants_number }}/{{ event.participants_number }})</small></h3>
                         {% endif %}
                     </div>
-                    <div class="col text-lg-right">
-                        <div class="btn-group dropup">
-                            <button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle"
-                                    data-toggle="dropdown"
-                                    type="button">
-                                Settings
-                            </button>
-                            <div class="dropdown-menu">
+                </div>
+                <div class="spacing"></div>
+                <div class="row">
+                    <div class="col"><h5><span class="material-icons">room</span>{{ event.location }}</h5></div>
+                </div>
+            </div>
+        </div>
+        <div class="col right-col">
+            <div class="container">
+                <div class="row pt-1 pl-4">
+                    <div class="col">
+                        <div class="dropdown">
+                            <a aria-expanded="false" aria-haspopup="true" class="material-icons btn-custom-dots"
+                               data-toggle="dropdown" id="dropdownMenuLink" role="button">
+                                more_horiz
+                            </a>
+                            <div aria-labelledby="dropdownMenuLink" class="dropdown-menu">
                                 {% if event.user == user %}
-                                <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit Event</a>
+                                <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit
+                                    Event</a>
                                 {% endif %}
                                 {% if user in event.userReportings.all %}
                                 <span class="dropdown-item">Already reported!</span>
                                 {% else %}
-                                <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report Event</a>
+                                <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report
+                                    Event</a>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
-
+                <div class="row pt-2 pl-2 pr-2">
+                    <div class="col">
+                        {% if user in event.eventParticipants.all %}
+                        <a class="material-icons btn-custom-leave"
+                           href="{% url 'meetandeat:leave-event' event.pk %}">remove</a>
+                        {% else %}
+                        <a class="material-icons btn-custom-add"
+                           href="{% url 'meetandeat:join-event' event.pk %}">add</a>
+                        {% endif %}
+                    </div>
+                </div>
+                </div>
             </div>
+         </div>
+        </div>
             {% endif %}
             {% endfor %}
             {% else %}
@@ -84,66 +97,76 @@
                 <p>No Results found</p>
             </div>
             {% endif %}
-
-
         </div>
         <div class="tab-pane container fade" id="joined">
             {% if joined_event_list %}
             {% for event in joined_event_list %}
-            {% if  event.visible == True %}
-            <div class="container border border-dark rounded bg-light p-3 my-4">
-                <div class="row">
-                    <div class="col">
-                        <h2><a class="stretched-link" href="{% url 'meetandeat:event-view' event.pk %}">{{ event.title }}</a></h2>
-                    </div>
-
-                    <div class="col text-right">
-                        <small>{{event.participants_number}} Participants</small>
-                        <br>
-                        <small>{{event.location}}</small>
-                    </div>
-                </div>
-                <small>{{event.datetime |date:"d.m.Y G:i"}}</small>
-                <br>
-                <hr>
-                {% for tag in event.tags.all %}
-                <span class="badge badge-secondary">{{ tag.title }}</span>
-                {% endfor %}
-                <br>
-                <hr>
-                <p>{{ event.description }}</p>
-                <p>Creator: <a href="#">{{ event.user }}</a></p>
-
+            {% if event.visible == True %}
+            <div class="container rounded p-3 my-4 bg-custom-secondary">
+    <div class="row">
+        <div class="col datefield border-right">
+            <div class="container">
+                <div class="row"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
+                <div class="row border-bottom border-dark"><h3>{{ event.datetime | localtime | date:"M"}}</h3></div>
+                <div class="row pt-1">{{ event.datetime | localtime | date:"G.i"}}</div>
+            </div>
+        </div>
+        <div class="col headline">
+            <div class="container">
                 <div class="row">
                     <div class="col">
                         {% if user in event.eventParticipants.all %}
-                        <a class="btn btn-danger" href="{% url 'meetandeat:leave-event' event.pk %}">Leave</a>
+                        <h3><a class="text-custom-hyperlink" href="{% url 'meetandeat:event-view' event.pk %}">{{ event.title }} <small>({{ event.participants_number }}/{{ event.participants_number }})</small></a></h3>
                         {% else %}
-                        <a class="btn btn-primary" href="{% url 'meetandeat:join-event' event.pk %}">Join Event</a>
+                        <h3>{{ event.title }} <small>({{ event.participants_number }}/{{ event.participants_number }})</small></h3>
                         {% endif %}
                     </div>
-                    <div class="col text-lg-right">
-                        <div class="btn-group dropup">
-                            <button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle"
-                                    data-toggle="dropdown"
-                                    type="button">
-                                Settings
-                            </button>
-                            <div class="dropdown-menu">
+                </div>
+                <div class="spacing"></div>
+                <div class="row">
+                    <div class="col"><h5><span class="material-icons">room</span>{{ event.location }}</h5></div>
+                </div>
+            </div>
+        </div>
+        <div class="col right-col">
+            <div class="container">
+                <div class="row pt-1 pl-4">
+                    <div class="col">
+                        <div class="dropdown">
+                            <a aria-expanded="false" aria-haspopup="true" class="material-icons btn-custom-dots"
+                               data-toggle="dropdown" id="dropdownMenuLink2" role="button">
+                                more_horiz
+                            </a>
+                            <div aria-labelledby="dropdownMenuLink2" class="dropdown-menu">
                                 {% if event.user == user %}
-                                <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit Event</a>
+                                <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit
+                                    Event</a>
                                 {% endif %}
                                 {% if user in event.userReportings.all %}
                                 <span class="dropdown-item">Already reported!</span>
                                 {% else %}
-                                <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report Event</a>
+                                <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report
+                                    Event</a>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
-
+                <div class="row pt-2 pl-2 pr-2">
+                    <div class="col">
+                        {% if user in event.eventParticipants.all %}
+                        <a class="material-icons btn-custom-leave"
+                           href="{% url 'meetandeat:leave-event' event.pk %}">remove</a>
+                        {% else %}
+                        <a class="material-icons btn-custom-add"
+                           href="{% url 'meetandeat:join-event' event.pk %}">add</a>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
             {% endif %}
             {% endfor %}
             {% else %}
