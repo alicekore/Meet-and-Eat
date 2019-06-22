@@ -1,7 +1,19 @@
 {% extends "base.html" %}
 {% block main %}
 <div class="container border border-dark rounded bg-light p-3 my-4 login-container">
-
+    {% if messages %}
+         <div>
+            <ul class="messages">
+                {% for msg in messages %}
+                <li>
+                    <div class="alert alert-{{msg.level_tag}}" role="alert">
+                        {{msg.message}}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+         </div>
+    {% endif %}
     <form method='POST'>
       {% csrf_token %}
       <fieldset class='form-group'>
