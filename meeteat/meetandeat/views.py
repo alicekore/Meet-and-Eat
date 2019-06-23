@@ -25,7 +25,6 @@ from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from meetandeat.tokens import account_activation_token
 
-
 from .forms import *
 from .models import Event, Tag, Comment
 from .helpers import *
@@ -61,10 +60,11 @@ class IndexView(View):
     def get(self, request, *args, **kwargs):
         form = TagFilterForm()
         ids = Report.objects.filter(reporter=request.user).values_list('event', flat=True).distinct()
-        reportedEvents= Event.objects.filter(id__in=ids)
+        reportedEvents = Event.objects.filter(id__in=ids)
 
         events = Event.objects.filter(visible=True).difference(reportedEvents).order_by('pk')
-        return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form,'reportedEvents':reportedEvents})
+        return render(request, 'meetandeat/event_list.html',
+                      context={'event_list': events, 'form': form, 'reportedEvents': reportedEvents})
 
     # Filter Events by Tags
     def post(self, request):
@@ -219,6 +219,7 @@ class ModView(UserIsStuffMixin, ListView):
             num_reports=1)[:5]
         return events
 
+
 @method_decorator(login_required, name='dispatch')
 class ModHide(UserIsStuffMixin, View):
     def post(self, request, pk):
@@ -227,13 +228,12 @@ class ModHide(UserIsStuffMixin, View):
         return redirect('meetandeat:modView')
 
 
-
 @method_decorator(login_required, name='dispatch')
 class ModUnReport(UserIsStuffMixin, View):
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
         event.reports.update(valid=False)
-        event.visible=True
+        event.visible = True
         event.save()
         return redirect('meetandeat:modView')
 
@@ -259,7 +259,8 @@ class UserCreateView(View):
                 user.delete()
                 return redirect(reverse('meetandeat:register'), {'form': form})
 
-            messages.success(request, "You have successfully signed up, we have sent you an activation email", fail_silently=True)
+            messages.success(request, "You have successfully signed up, we have sent you an activation email",
+                             fail_silently=True)
             return redirect(reverse('meetandeat:login'))
         else:
             return render(request, self.template_name, {'form': form})
@@ -293,7 +294,7 @@ class RequestActivateAccountView(View):
             user = User.objects.get(username=form.cleaned_data['username'])
             if user.is_email_confirmed:
                 messages.error(request, "Your account is already activated",
-                                 fail_silently=True)
+                               fail_silently=True)
                 return redirect(reverse('meetandeat:login'))
             user.new_activation_attempt()
             user.save()
@@ -324,7 +325,7 @@ class RequestEmailConfirmView(View):
 
         if user.is_email_confirmed:
             messages.error(request, "Your account is already activated",
-                             fail_silently=True)
+                           fail_silently=True)
             return redirect(reverse('meetandeat:profile'))
         user.new_activation_attempt()
         user.save()
@@ -495,7 +496,6 @@ class EventReport(View):
             event.save()
         """
         ##leave event if user is part of event
-
 
         return redirect('meetandeat:index')
 
