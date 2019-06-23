@@ -377,22 +377,6 @@ a:active {
         max-width: 270px;
     }
 
-    .btn-custom-leave {
-        color: #dd5549;
-        font-size: 48px;
-        background-color: #f6f6f6;
-        border-radius: 30px;
-        margin-left: -5px;
-    }
-
-    .btn-custom-add {
-        color: #34a853;
-        font-size: 48px;
-        background-color: #f6f6f6;
-        border-radius: 30px;
-        margin-left: -5px;
-    }
-
 }
 
 

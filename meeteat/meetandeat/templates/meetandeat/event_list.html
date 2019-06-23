@@ -49,14 +49,14 @@
                 <div class="row">
                     <div class="col"><h5><span class="material-icons">room</span>{{ event.location }}</h5></div>
                 <div class="col text-right">
-                        <span style="color: #dc3545"><b>80%</b></span>
+                        <span style="color: #dc3545"><span class="material-icons">whatshot</span><b>80%</b></span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col right-col">
             <div class="container">
-                <div class="row pt-1 pl-4">
+                <div class="row pl-2 pt-1">
                     <div class="col">
                         <div class="dropdown">
                             <a aria-expanded="false" aria-haspopup="true" class="material-icons btn-custom-dots"
@@ -78,7 +78,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row pt-3 pl-3 pr-2">
+                <div class="spacing"></div>
+                <div class="row">
                     <div class="col">
                         {% if user in event.eventParticipants.all %}
                         <a class="material-icons btn-custom-leave"
