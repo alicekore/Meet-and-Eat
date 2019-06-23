@@ -90,8 +90,6 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': config('DATABASE_HOST'),
-        # for docker container
-        # 'HOST': 'db',
         'PORT': '5432',
     }
 }
@@ -134,7 +132,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-
+# for docker container
 STATIC_ROOT = config('STATIC_ROOT')
 
 STATIC_URL = '/static/'
