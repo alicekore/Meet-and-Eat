@@ -14,8 +14,8 @@
             <div class="col datefield border-right">
                 <div class="container">
                     <div class="row"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
-                    <div class="row border-bottom border-dark"><h3>{{ event.datetime | localtime | date:"M"}}</h3></div>
-                    <div class="row pt-1">{{ event.datetime | localtime | date:"G.i"}}</div>
+                    <div class="row border-bottom border-dark pb-1" style="margin-top: -2px"><h4>{{ event.datetime | localtime | date:"M"}}</h4></div>
+                    <div class="row pt-2">{{ event.datetime | localtime | date:"G:i"}}</div>
                 </div>
             </div>
             <div class="col">
