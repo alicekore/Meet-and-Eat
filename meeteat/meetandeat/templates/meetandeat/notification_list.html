@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+{% load tz %}
+
+{% block main %}
+<br>
+
+
+<p>blablalb</p>
+            {% for tag in tags %}
+            <p>{{ tag.user }}</p>
+            {% endfor %}
+
+{{ form.media.js }}
+{% endblock %}

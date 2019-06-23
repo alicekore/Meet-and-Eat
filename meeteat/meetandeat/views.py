@@ -342,3 +342,9 @@ class OwnEventsView(View):
                 joined_events = joined_events.filter(tags__in=tags).distinct()
             return render(request, 'meetandeat/own_events_list.html',
                           context={'own_event_list': own_events, 'form': form, 'joined_event_list': joined_events})
+
+class NotificationView(View):
+    def get(self, request):
+        User = self.request.user
+        tags = Tag.objects.filter(user=User)
+        return render(request, 'meetandeat/notification_list.html', context={'tags': tags})
