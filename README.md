@@ -77,3 +77,24 @@ pip install django-cleanup
 ##### python-decouple #####
 pip install python-decouple
 
+
+### Dockerisation ###
+**Note:** you can still run the app with:  
+`python manage.py runserver`  
+Docker shouldn't affect the development process.  
+Dockerfile and docker-compose.yml let you run the app in the docker container. You need to have docker and docker-compose  
+To build and run the containers run following commands in the folder with Dockerfile:  
+  
+`sudo docker-compose build`  
+`sudo docker-compose up -d`  
+  
+You should be able to access application on 127.0.0.1:8000 after it.  
+For debug purposes you can enter following commands:  
+#Nginx  
+`docker-compose logs nginx`  
+#Web  
+`docker-compose logs web`  
+#DB  
+`docker-compose logs db`  
+You will see then logs of the corresponding containers  
+**Note:** Email password is not in the docker config, because of security reasons. So if you want to test docker application set environment to development in the Dockerfile.    
