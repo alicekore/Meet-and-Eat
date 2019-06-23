@@ -4,12 +4,32 @@
 
 {% block main %}
 <br>
+<div class="container border border-dark rounded bg-light p-3 my-4">
+<h1>Notifications:</h1>
+{% for tag in tags %}
 
+    {% if tag.approved == False and tag.pending == True %}
+    <div class="container border border-dark rounded bg-light p-3 my-4">
+    <p>Your Tag {{ tag.title }} is pending.</p>
+    </div>
+    {% endif %}
 
-<p>blablalb</p>
-            {% for tag in tags %}
-            <p>{{ tag.user }}</p>
-            {% endfor %}
+    {% if tag.approved == False and tag.pending == False %}
+    <div class="container border border-dark rounded bg-light p-3 my-4">
+    <p>Your Tag {{ tag.title }} with the description:</p><br>
+    <p>{{ tag.description }}</p><br>
+    <p>Was disapproved because of the following cause: {{ tag.disapprovalMsg }}</p>
+    </div>
+    {% endif %}
+
+    {% if tag.approved == True and tag.pending == False %}
+    <div class="container border border-dark rounded bg-light p-3 my-4">
+    <p>Your Tag {{ tag.title }} was approved.</p>
+    </div>
+    {% endif %}
+
+{% endfor %}
+</div>
 
 {{ form.media.js }}
 {% endblock %}

@@ -313,6 +313,7 @@ class ApproveTag(UserIsStuffMixin, View):
     def get(self, request, *args, **kwargs):
         tag = Tag.objects.get(id=self.kwargs['pk'])
         tag.approved = True
+        tag.pending = False
         tag.save()
         return redirect('meetandeat:tag-view')
 
@@ -346,5 +347,5 @@ class OwnEventsView(View):
 class NotificationView(View):
     def get(self, request):
         User = self.request.user
-        tags = Tag.objects.filter(user=User)
+        tags = Tag.objects.filter(user=User).order_by("pk")
         return render(request, 'meetandeat/notification_list.html', context={'tags': tags})
