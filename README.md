@@ -78,6 +78,8 @@ pip install django-cleanup
 pip install python-decouple
 
 
+### Python Decouple and Environments ###
+python-decouple package provides an ability to set settings dynamic for different application environments. Some values in settings.py is set with python-decouple, the settings for different environments stored in /meeteat/meeteat/env
 ### Dockerisation ###
 **Note:** you can still run the app with:  
 `python manage.py runserver`  
