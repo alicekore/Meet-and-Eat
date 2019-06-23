@@ -74,4 +74,6 @@ pip install django2_select
 ##### Django-cleanup #####
 pip install django-cleanup
 
+##### python-decouple #####
+pip install python-decouple
 
