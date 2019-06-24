@@ -24,13 +24,13 @@
 {% if event_list %}
 {% for event in event_list %}
 {% if  event.visible == True %}
-<div class="container rounded p-3 my-4 bg-custom-secondary">
+<div class="container container-no-border border-0 rounded p-3 my-4 bg-custom-secondary">
     <div class="row">
         <div class="col datefield border-right">
             <div class="container">
-                <div class="row"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
-                <div class="row border-bottom border-dark"><h3>{{ event.datetime | localtime | date:"M"}}</h3></div>
-                <div class="row pt-1">{{ event.datetime | localtime | date:"G.i"}}</div>
+                <div class="row pl-0"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
+                <div class="row border-bottom border-dark" style="margin-top: -8px"> <h4>{{ event.datetime | localtime | date:"M"}}</h4></div>
+                <div class="row pt-1" style="text-align: center">{{ event.datetime | localtime | date:"G:i"}}</div>
             </div>
         </div>
         <div class="col headline">
@@ -47,12 +47,15 @@
                 <div class="spacing"></div>
                 <div class="row">
                     <div class="col"><h5><span class="material-icons">room</span>{{ event.location }}</h5></div>
+                <div class="col text-right">
+                        <span style="color: #dc3545"><span class="material-icons">whatshot</span><b>80%</b></span>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col right-col">
             <div class="container">
-                <div class="row pt-1 pl-4">
+                <div class="row pl-2 pt-1">
                     <div class="col">
                         <div class="dropdown">
                             <a aria-expanded="false" aria-haspopup="true" class="material-icons btn-custom-dots"
@@ -74,7 +77,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row pt-3 pl-3 pr-2">
+                <div class="spacing"></div>
+                <div class="row">
                     <div class="col">
                         {% if user in event.eventParticipants.all %}
                         <a class="material-icons btn-custom-leave"
