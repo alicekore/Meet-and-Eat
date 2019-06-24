@@ -10,12 +10,14 @@
         {% else %}
             <div class="container rounded p-3 my-4 bg-custom-secondary">
         {% endif %}
-    <div class="row">
-        <div class="col datefield border-right">
-            <div class="container">
-                <div class="row"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
-                <div class="row border-bottom border-dark"><h3>{{ event.datetime | localtime | date:"M"}}</h3></div>
-                <div class="row pt-1">{{ event.datetime | localtime | date:"G.i"}}</div>
+
+        <div class="row">
+            <div class="col datefield border-right">
+                <div class="container">
+                    <div class="row"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
+                    <div class="row border-bottom border-dark pb-1" style="margin-top: -2px"><h4>{{ event.datetime | localtime | date:"M"}}</h4></div>
+                    <div class="row pt-2">{{ event.datetime | localtime | date:"G:i"}}</div>
+                </div>
             </div>
         </div>
         <div class="col">
@@ -39,6 +41,7 @@
                     <div class="col"><h5><span class="material-icons">room</span>{{ event.location }}</h5></div>
                 </div>
             </div>
+
         </div>
 
         <div class="row pt-md" style="margin-right: 1%">
@@ -107,76 +110,6 @@
                 </div>
             </div>
         </form>
-
-
-
-
-
-
-
-
-
-        <!--
-    <div class="row">
-        <div class="col">
-            <h2><a class="stretched-link" href="{% url 'meetandeat:event-view' event.pk %}">{{event.title}}</a></h2>
-        </div>
-        <div class="col text-right">
-            <small>{{event.participants_number}} Participants</small>
-            <br>
-            <small>{{event.location}}</small>
-        </div>
-    </div>
-    <small>{{event.datetime | localtime |date:"d.m.Y G:i"}}</small>
-    <br>
-    <hr>
-    <p>{{event.description}}</p>
-    <p>Creator: <a href="#">{{event.user}}</a></p>
-
-    {% if event.visible == True %}
-    <form action="{% url 'meetandeat:modHide' event.pk %}" method="post" name="form" style="float:left;">
-        {% csrf_token %}
-        <input class="btn btn-primary" type="submit" value="Hide"/>
-    </form>
-    {% else %}
-    <form action="{% url 'meetandeat:modUnhide' event.pk %}" method="post" name="form" style="float:left;">
-        {% csrf_token %}
-        <input class="btn btn-primary" type="submit" value="Unhide"/>
-    </form>
-    {% endif %}
-
-    <form action="{% url 'meetandeat:modUnreport' event.pk %} " method="post" name="form"
-    ">
-    {% csrf_token %}
-
-    <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
-        Unreport
-    </button>
-
-    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
-         tabindex="-1">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to Unreport the Event removing it forever from this list?</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                    <input class="btn btn-primary" type="submit" value="Unreport"/>
-                </div>
-            </div>
-        </div>
-    </div>
-    </form>
-
-
-    -->
         </div>
     {% endfor %}
 {% endblock %}

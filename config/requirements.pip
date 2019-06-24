@@ -1,0 +1,8 @@
+Django==2.2
+Pillow==6.0
+gunicorn==19.9.0
+psycopg2==2.8.3
+django-select2==7.0.5
+django-cleanup==3.2.0
+python-decouple==3.1
+

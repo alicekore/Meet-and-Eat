@@ -30,8 +30,8 @@
         <div class="col datefield border-right">
             <div class="container">
                 <div class="row"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
-                <div class="row border-bottom border-dark"><h3>{{ event.datetime | localtime | date:"M"}}</h3></div>
-                <div class="row pt-1">{{ event.datetime | localtime | date:"G.i"}}</div>
+                <div class="row border-bottom border-dark" style="margin-top: -8px"><h4>{{ event.datetime | localtime | date:"M"}}</h4></div>
+                <div class="row pt-1">{{ event.datetime | localtime | date:"G:i"}}</div>
             </div>
         </div>
         <div class="col headline">
@@ -53,7 +53,7 @@
         </div>
         <div class="col right-col">
             <div class="container">
-                <div class="row pt-1 pl-4">
+                <div class="row pl-2">
                     <div class="col">
                         <div class="dropdown">
                             <a aria-expanded="false" aria-haspopup="true" class="material-icons btn-custom-dots"
@@ -75,7 +75,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row pt-2 pl-2 pr-2">
+                <div class="spacing"></div>
+                <div class="row">
                     <div class="col">
                         {% if user in event.eventParticipants.all %}
                         <a class="material-icons btn-custom-leave"
@@ -107,8 +108,8 @@
         <div class="col datefield border-right">
             <div class="container">
                 <div class="row"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
-                <div class="row border-bottom border-dark"><h3>{{ event.datetime | localtime | date:"M"}}</h3></div>
-                <div class="row pt-1">{{ event.datetime | localtime | date:"G.i"}}</div>
+                <div class="row border-bottom border-dark" style="margin-top: -8px"><h4>{{ event.datetime | localtime | date:"M"}}</h4></div>
+                <div class="row pt-1">{{ event.datetime | localtime | date:"G:i"}}</div>
             </div>
         </div>
         <div class="col headline">
@@ -130,7 +131,7 @@
         </div>
         <div class="col right-col">
             <div class="container">
-                <div class="row pt-1 pl-4">
+                <div class="row pl-2">
                     <div class="col">
                         <div class="dropdown">
                             <a aria-expanded="false" aria-haspopup="true" class="material-icons btn-custom-dots"
@@ -152,7 +153,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row pt-2 pl-2 pr-2">
+                <div class="spacing"></div>
+                <div class="row">
                     <div class="col">
                         {% if user in event.eventParticipants.all %}
                         <a class="material-icons btn-custom-leave"
