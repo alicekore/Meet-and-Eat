@@ -8,11 +8,11 @@ from meeteat import settings
 
 
 def send_activation_email(request, user):
-    current_site = get_current_site(request)
+    # current_site = get_current_site(request)
     mail_subject = 'Activate your account.'
     message = render_to_string('emails/acc_active_email.html', {
         'user': user,
-        'domain': current_site,
+        'domain': request.get_host(),
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
     })
@@ -32,11 +32,11 @@ def send_activation_email(request, user):
 
 
 def send_password_reset_email(request, user):
-    current_site = get_current_site(request)
+    # current_site = get_current_site(request)
     mail_subject = 'Password reset'
     message = render_to_string('emails/acc_password_reset_email.html', {
         'user': user,
-        'domain': current_site,
+        'domain': request.get_host(),
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
     })
