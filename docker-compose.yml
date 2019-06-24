@@ -21,8 +21,6 @@ services:
       - ./meeteat:/meeteat
       - static:/static
       - media:/media/meetandeat
-    ports:
-      - "8000:8000"
     expose:
       - "8000"
     restart: on-failure
