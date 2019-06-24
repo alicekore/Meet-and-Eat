@@ -12,7 +12,7 @@ def send_activation_email(request, user):
     mail_subject = 'Activate your account.'
     message = render_to_string('emails/acc_active_email.html', {
         'user': user,
-        'domain': 'nginx',
+        'domain': current_site,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
     })
