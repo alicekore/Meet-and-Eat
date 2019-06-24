@@ -6,9 +6,10 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./config/nginx:/etc/nginx/conf.d
       - static:/static
       - media:/media/meetandeat
+    configs:
+      - nginx_config
     depends_on:
       - web
     restart: on-failure
@@ -40,3 +41,7 @@ volumes:
     meeteat:
     static:
     media:
+configs:
+  nginx_config:
+    file: ./config/nginx/nginx.conf
+  
