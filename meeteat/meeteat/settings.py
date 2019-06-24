@@ -156,8 +156,8 @@ EMAIL_PORT = 587
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 
+USE_X_FORWARDED_HOST = config('USE_X_FORWARDED_HOST', default=False, cast=bool)
 HOST_ADDR = config('HOST_ADDR', default='')
-if HOST_ADDR != '':
-    ALLOWED_HOSTS += HOST_ADDR
+
 
 
