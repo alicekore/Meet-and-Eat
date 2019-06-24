@@ -28,7 +28,6 @@ urlpatterns = [
     path('password_reset/confirm/<str:uidb64>/<str:token>', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
     path('mod/dashboard', ModView.as_view(), name='modView'),
     path('mod/hide/<int:pk>/', ModHide.as_view(), name='modHide'),
-    path('mod/unhide/<int:pk>/', ModUnHide.as_view(), name='modUnhide'),
     path('mod/unreport/<int:pk>/', ModUnReport.as_view(), name='modUnreport'),
     path('tag/create/', TagCreate.as_view(), name='create-tag'),
     path('mod/tag/<int:pk>/', TagDetailView.as_view(), name='tag-details'),

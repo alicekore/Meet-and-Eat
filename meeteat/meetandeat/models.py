@@ -16,7 +16,6 @@ class Event(models.Model):
     location = models.CharField(max_length=30)
     datetime = models.DateTimeField(default=timezone.now)
     visible = models.BooleanField(default=True)
-    reported = models.BooleanField(default=False)
     participants_number = models.IntegerField(default=2, validators=[MaxValueValidator(16), MinValueValidator(2)])
     tags = models.ManyToManyField(to='meetandeat.Tag')
 
@@ -30,6 +29,17 @@ class Event(models.Model):
 
     def get_absolute_url(self):
         return reverse('meetandeat:event-view', args=[str(self.pk)])
+
+    def hide_by_enough_reports(self):
+        reportNumber = self.reports.filter(valid=None).count()
+        if reportNumber >= 5:
+            self.visible = False
+            self.save()
+
+    def leave(self, user):
+        if user in self.eventParticipants.all():
+            self.eventParticipants.remove(user)
+            self.save()
 
 
 class Tag(models.Model):
@@ -47,10 +57,17 @@ class Tag(models.Model):
         return self.title
 
 
+class Report(models.Model):
+    reportReason = models.TextField(blank=True, null=True)
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='reports')
+    valid = models.BooleanField(null=True, blank=True, default=None)
+
+
 class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     datetime = models.DateTimeField(default=timezone.now)
-    text = models.CharField(max_length = 160)
+    text = models.CharField(max_length=160)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
 
 
@@ -63,7 +80,8 @@ class User(AbstractUser):
     profilePicture = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     visible = models.BooleanField(default=True)
     events = models.ManyToManyField(Event, related_name='eventParticipants', blank=True)
-    reportedEvents = models.ManyToManyField(Event, related_name='userReportings', blank=True)
+    ##reports = models.ManyToManyField(Report, related_name='users', blank=True)
+    ##reportedEvents = models.ManyToManyField(Event, related_name='userReportings', blank=True)
     last_activation_attempt = models.DateTimeField(null=True, blank=True)
     activation_attempts_number = models.IntegerField(default=0)
     old_email = models.EmailField('old email address', null=True, blank=True)
@@ -91,6 +109,3 @@ class User(AbstractUser):
     def activation_attempt_failed(self):
         self.activation_attempts_number -= 1
         self.last_activation_attempt = timezone.now() - timedelta(hours=1)
-
-
-
