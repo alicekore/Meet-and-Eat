@@ -11,8 +11,7 @@ services:
       - media:/media/meetandeat
     depends_on:
       - web
-    restart:
-      - on-failure
+    restart: on-failure
   web:
     build: .
     container_name: dg01
@@ -26,8 +25,7 @@ services:
       - "8000:8000"
     expose:
       - "8000"
-    restart:
-      - on-failure
+    restart: on-failure
 
   db:
     image: postgres:latest
@@ -36,11 +34,9 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=meet_and_eat
-    restart:
-      - on-failure
+    restart: on-failure
 
 volumes:
     meeteat:
     static:
     media:
-hostname: 35.246.255.134
