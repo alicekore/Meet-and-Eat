@@ -1,5 +1,6 @@
 FROM python:3.7
 ENV PYTHONUNBUFFERED 1
+ENV DECOUPLE_CONFIGURATION="production"
 RUN mkdir /config
 ADD config/requirements.pip /config/
 RUN pip install -r /config/requirements.pip
