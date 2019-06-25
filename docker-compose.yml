@@ -6,7 +6,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./config/nginx:/etc/nginx/conf.d
+      - ./config/nginx:/etc/nginx/conf.d:ro
       - static:/static
       - media:/media/meetandeat
     depends_on:
