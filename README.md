@@ -15,7 +15,7 @@ Download and install PostgreSQL and maybe pgAdmin for graphical interface.
 
 Create DB via console:
 ```
-$createdb -h localhost -p 5432 -U postgres meet_and_eat
+createdb -h localhost -p 5432 -U postgres meet_and_eat
 ```
 Password should be set to 'postgres' by default.
 
@@ -31,17 +31,17 @@ PgAdmin:
 
 ##### Win: #####
 
-1.Download PostgreSQL and open pgAdmin afterwards (comming with the installation)
-2.Open pgAdmin
-3.Create new DB/Server
-4.Port:5432
-5.Host: localhost
-6.User: postgres
-7.PAssword: postgres
-8.Name: meet_and_eat
+1. Download PostgreSQL and open pgAdmin afterwards (comming with the installation)
+2. Open pgAdmin
+3. Create new DB/Server
+4. Port:5432
+5. Host: localhost
+6. User: postgres
+7. PAssword: postgres
+8. Name: meet_and_eat
 
 Afterwards you can access the DB via IntelliJ or DBeaver.
-Make you you use 'python manage.py migrate' after adding a new model.
+Make you you use `python manage.py migrate` after adding a new model.
 
 ### Roles ###
 
@@ -69,15 +69,15 @@ user(owner): edit, see, join, leave events
 Library: Installing 'Tag-Filter': 
 In python console:
 ```
-$pip install django_select2
+pip install django_select2
 ```
 ##### Django-cleanup #####
 ```
-$pip install django-cleanup
+pip install django-cleanup
 ```
 ##### python-decouple #####
 ```
-$pip install python-decouple
+pip install python-decouple
 ```
 
 ### Python Decouple and Environments ###
