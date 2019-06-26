@@ -32,6 +32,9 @@
             {# right floating items            #}
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
+                <li class="nav-item {% if request.resolver_match.url_name == 'NotificationView' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'meetandeat:NotificationView' %}">Notifications{% if request.resolver_match.url_name == 'NotificationView' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                </li>
                 <li class="nav-item {% if request.resolver_match.url_name == 'logout' %}active{% endif %}">
                         <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:logout' %}">Logout{% if request.resolver_match.url_name == 'logout' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
