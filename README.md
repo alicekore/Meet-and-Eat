@@ -68,15 +68,17 @@ user(owner): edit, see, join, leave events
 
 Library: Installing 'Tag-Filter': 
 In python console:
-
-pip install django_select2
-
+```
+$pip install django_select2
+```
 ##### Django-cleanup #####
-pip install django-cleanup
-
+```
+$pip install django-cleanup
+```
 ##### python-decouple #####
-pip install python-decouple
-
+```
+$pip install python-decouple
+```
 
 ### Python Decouple and Environments ###
 **Note:** you can still run the app with:  
