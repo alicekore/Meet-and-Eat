@@ -18,6 +18,7 @@ class Event(models.Model):
     visible = models.BooleanField(default=True)
     participants_number = models.IntegerField(default=2, validators=[MaxValueValidator(16), MinValueValidator(2)])
     tags = models.ManyToManyField(to='meetandeat.Tag')
+    matching = models.IntegerField(default=100)
 
     class Meta:
         permissions = [("join_event", 'Can join event'), ("hide_event", 'Can hide event'),
@@ -40,6 +41,9 @@ class Event(models.Model):
         if user in self.eventParticipants.all():
             self.eventParticipants.remove(user)
             self.save()
+    def set_matching(self, matching):
+        self.matching = matching
+        self.save()
 
 
 class Tag(models.Model):
