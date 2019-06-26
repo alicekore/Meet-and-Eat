@@ -40,9 +40,16 @@ PgAdmin:
 7. PAssword: postgres
 8. Name: meet_and_eat
 
-Afterwards you can access the DB via IntelliJ or DBeaver.
-Make you you use `python manage.py migrate` after adding a new model.
-
+Afterwards you can access the DB via IntelliJ or DBeaver.  
+Make you you use `python manage.py migrate` after adding a new model.  
+**Note:** If you experience some troubles with db, execute the following commands in the given order:  
+```
+python manage.py makemigrations  
+python manage.py makemigrations meetandeat  
+python manage.py migrate  
+```
+It helps sometimes
+ 
 ### Roles ###
 
 **Admin as superuser**
@@ -80,6 +87,9 @@ pip install django-cleanup
 pip install python-decouple
 ```
 
+### Mailing ###
+By default, mailing is disabled. When you register, you won't get an email, but you will see an activation link in the server console.  
+You can enable mailing in `meeteat/development-env/.env`
 ### Python Decouple and Environments ###
 **Note:** you can still run the app with:  
 `python manage.py runserver`  
