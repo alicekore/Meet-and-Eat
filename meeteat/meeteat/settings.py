@@ -149,11 +149,15 @@ MEDIA_URL = config('MEDIA_URL')
 
 EMAIL_ENABLED = config('EMAIL_ENABLED', default=False, cast=bool)
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.mail.yahoo.com'
-EMAIL_HOST_USER = 'meetandeatmailing@yahoo.com'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 EMAIL_PORT = 587
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1
+
+USE_X_FORWARDED_HOST = config('USE_X_FORWARDED_HOST', default=False, cast=bool)
+HOST_ADDR = config('HOST_ADDR', default='')
+
 
 

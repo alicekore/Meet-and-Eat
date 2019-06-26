@@ -1,28 +1,29 @@
-version: "2.3"
+version: "3.7"
 services:
   nginx:
     image: nginx:latest
     container_name: ng01
     ports:
-      - "8000:8000"
+      - "80:80"
     volumes:
-      - meeteat:/meeteat
-      - ./config/nginx:/etc/nginx/conf.d
+      - ./config/nginx:/etc/nginx/conf.d:ro
       - static:/static
       - media:/media/meetandeat
     depends_on:
       - web
+    restart: on-failure
   web:
     build: .
     container_name: dg01
     depends_on:
       - db
     volumes:
-      - meeteat:/meeteat
+      - ./meeteat:/meeteat
       - static:/static
       - media:/media/meetandeat
     expose:
       - "8000"
+    restart: always
 
   db:
     image: postgres:latest
@@ -31,8 +32,9 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=meet_and_eat
+    restart: on-failure
 
 volumes:
-    meeteat:
     static:
     media:
+  
