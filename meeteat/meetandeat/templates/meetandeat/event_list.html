@@ -12,15 +12,33 @@
 {% endblock css %}
 {% block events %}
 <br>
-<div class="row">
-    <div class="col text-right">
-        <form method="post">
-            {% csrf_token %}
-            <button class="btn btn-custom-primary mb-2" type="submit">Search</button>
-            {{form.tags}}
-        </form>
+
+<form method="post">
+  <div class="row">
+      <div class="col text-right">
+        <br>
+              {% csrf_token %}
+              {{form.tags}}
+      </div>
     </div>
-</div>
+    <br>
+    <div class = "row">
+      <div class = "col">
+        {{ form.date }}
+      </div>
+      <div class = "col">
+        {{ form.time }}
+      </div>
+      <br>
+      <div>
+        <button class="btn btn-custom-primary mb-2 " name="submit" type="submit">
+         Search
+        </button>
+      </div>
+    </div>
+</form>
+
+
 {% if event_list %}
 {% for event in event_list %}
 {% if  event.visible == True %}
@@ -101,4 +119,3 @@
 
 {{ form.media.js }}
 {% endblock %}
-

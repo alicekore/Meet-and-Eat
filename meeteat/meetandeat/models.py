@@ -24,6 +24,8 @@ class Event(models.Model):
         permissions = [("join_event", 'Can join event'), ("hide_event", 'Can hide event'),
                        ('edit_event', 'Can Edit Event'), ('seeHidden_event', 'Can see hidden events')]
 
+        ordering = ('datetime',)
+
     def save(self, *args, **kwargs):
         super(Event, self).save(*args, **kwargs)
         self.eventParticipants.add(self.user)
@@ -91,6 +93,3 @@ class User(AbstractUser):
     def activation_attempt_failed(self):
         self.activation_attempts_number -= 1
         self.last_activation_attempt = timezone.now() - timedelta(hours=1)
-
-
-

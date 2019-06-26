@@ -19,8 +19,8 @@ from .models import Event, Tag, Comment
 from .helpers import *
 from meetandeat.tokens import account_activation_token
 from django.template.loader import render_to_string
+from datetime import date
 import json
-
 
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
@@ -55,12 +55,24 @@ class IndexView(View):
         events = Event.objects.filter(visible=True)
         if form.is_valid():
             tags = form.cleaned_data.get('tags')
+            idate = form.cleaned_data.get('date')
+            time = form.cleaned_data.get('time')
             if tags:
                 events = events.filter(tags__in=tags).distinct()
+
+            if idate:
+                events = events.filter(datetime__year=idate.year, datetime__month=idate.month, datetime__day=idate.day)
+            if time:
+                if idate is None:
+                    # filter by todays date
+                    today = date.today()
+                    events = events.filter(datetime__year=today.year, datetime__month=today.month, datetime__day=today.day)
+                 # filter by times greater than input time
+                events = events.filter(datetime__time__gte = time)
+
             return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
         else:
             return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
-
 
 @method_decorator(login_required, name='dispatch')
 class EventJoinView(View):
