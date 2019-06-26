@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load tz %}
+{% block main %}
+<div class="container border border-dark rounded bg-light p-3 my-4">
+    <h2 class="mb-3">{% block formTitle %}{% endblock %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <p>Tag: {{ tag.title }}</p>
+          <p>Description: {{ tag.description }}</p>
+          <p>Submitted by {{ tag.user }}</p>
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-custom-primary">Disapprove Tag</button>
+    </form>
+</div>
+{% endblock %}
