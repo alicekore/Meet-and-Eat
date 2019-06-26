@@ -69,7 +69,7 @@ user(owner): edit, see, join, leave events
 Library: Installing 'Tag-Filter': 
 In python console:
 
-pip install django2_select
+pip install django_select2
 
 ##### Django-cleanup #####
 pip install django-cleanup
