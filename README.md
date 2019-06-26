@@ -2,8 +2,15 @@
 
 App to find people with common interests to eat together. 
 Сhoose place, time and topic and enjoy your meal with perfect companion!
+## Table of contents ##
+1. [ DB. ](#db)
+2. [ Roles. ](#roles)
+3. [ Dependencies. ](#dependencies)
+4. [ Mailing. ](#mailing)
+5. [ Python-decouple and Environments. ](#python-decouple)
+6. [ Dockerisation. ](#docker)
 
-
+<a name="db"></a>
 ### How to set up PostgreSQL (quick guide) ###
 
 Until we set up a server for our DB we have to install everything locally. Therefore I also insert the password here visibly.
@@ -40,9 +47,17 @@ PgAdmin:
 7. PAssword: postgres
 8. Name: meet_and_eat
 
-Afterwards you can access the DB via IntelliJ or DBeaver.
-Make you you use `python manage.py migrate` after adding a new model.
-
+Afterwards you can access the DB via IntelliJ or DBeaver.  
+Make you you use `python manage.py migrate` after adding a new model.  
+**Note:** If you experience some troubles with db, execute the following commands in the given order:  
+```
+python manage.py makemigrations  
+python manage.py makemigrations meetandeat  
+python manage.py migrate  
+```
+It helps sometimes
+ 
+<a name="roles"></a>
 ### Roles ###
 
 **Admin as superuser**
@@ -62,6 +77,7 @@ user(joined): see, leave,join,report events
 mod: -
 user(owner): edit, see, join, leave events
 
+<a name="dependencies"></a>
 ### Dependencies ###
 
 ##### Django-select2 #####
@@ -79,12 +95,19 @@ pip install django-cleanup
 ```
 pip install python-decouple
 ```
+<a name="mailing"></a>
+### Mailing ###
+By default, mailing is disabled. When you register, you won't get an email, but you will see an activation link in the server console.  
+You can enable mailing in `meeteat/development-env/.env`
 
+<a name="python-decouple"></a>
 ### Python Decouple and Environments ###
 **Note:** you can still run the app with:  
 `python manage.py runserver`  
 python-decouple shouldn't affect the development process.  
 python-decouple package provides an ability to set settings dynamic for different application environments. Some values in settings.py is set with python-decouple, the settings for different environments stored in /meeteat/meeteat/env
+
+<a name="docker"></a>
 ### Dockerisation ###
 **Note:** you can still run the app with:  
 `python manage.py runserver`  
