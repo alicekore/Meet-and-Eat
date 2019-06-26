@@ -7,7 +7,7 @@ App to find people with common interests to eat together.
 2. [ Roles. ](#roles)
 3. [ Dependencies. ](#dependencies)
 4. [ Mailing. ](#mailing)
-5. [ Python-decouple and Enviroments. ](#python-decouple)
+5. [ Python-decouple and Environments. ](#python-decouple)
 6. [ Dockerisation. ](#docker)
 
 <a name="db"></a>
