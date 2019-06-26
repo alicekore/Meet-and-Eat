@@ -71,7 +71,7 @@ class IndexView(View):
         form = TagFilterForm(request.POST)
         events = Event.objects.filter(visible=True)
         for event in events:
-            event.set_matching(0)
+            event.set_matching(101)
         if form.is_valid():
             tags = form.cleaned_data.get('tags')
             if tags:
