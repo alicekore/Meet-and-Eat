@@ -1,19 +1,30 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash, logout
 from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth import update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect, HttpResponse
+from django.db.models import Count, Q
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from meetandeat.tokens import account_activation_token
+
 from .forms import *
 from .models import Event, Tag, Comment
 from .helpers import *
@@ -21,6 +32,8 @@ from meetandeat.tokens import account_activation_token
 from django.template.loader import render_to_string
 from datetime import date
 import json
+from .helpers import *
+from .models import *
 
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
@@ -44,22 +57,34 @@ class UserIsStuffMixin(UserPassesTestMixin):
 
 @method_decorator(login_required, name='dispatch')
 class IndexView(View):
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         form = TagFilterForm()
-        events = Event.objects.filter(visible=True)
-        return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
+        ids = Report.objects.filter(reporter=request.user).values_list('event', flat=True).distinct()
+        reportedEvents = Event.objects.filter(id__in=ids)
+
+        events = Event.objects.filter(visible=True).difference(reportedEvents).order_by('pk')
+        return render(request, 'meetandeat/event_list.html',
+                      context={'event_list': events, 'form': form, 'reportedEvents': reportedEvents})
 
     # Filter Events by Tags
     def post(self, request):
         form = TagFilterForm(request.POST)
         events = Event.objects.filter(visible=True)
+        for event in events:
+            event.set_matching(101)
         if form.is_valid():
             tags = form.cleaned_data.get('tags')
             idate = form.cleaned_data.get('date')
             time = form.cleaned_data.get('time')
             if tags:
                 events = events.filter(tags__in=tags).distinct()
-
+                for event in events:
+                        if tags.count() <= event.tags.count():
+                            match = 100
+                        else:
+                            match = event.tags.count() / tags.count() * 100
+                        event.set_matching(match)
+                        
             if idate:
                 events = events.filter(datetime__year=idate.year, datetime__month=idate.month, datetime__day=idate.day)
             if time:
@@ -137,14 +162,22 @@ class TagCreate(CreateView):
     form_class = TagForm
     success_url = reverse_lazy('meetandeat:index')
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 @method_decorator(login_required, name='dispatch')
 class TagUpdate(UserIsStuffMixin, UpdateView):
     model = Tag
     template_name = 'meetandeat/edit-tag.html'
-    form_class = TagForm
-    success_url = reverse_lazy('meetandeat:index')
+    form_class = TagDisapprovalForm
+    success_url = reverse_lazy('meetandeat:tag-view')
 
+    def form_valid(self, form):
+        form.instance.approved = False
+        form.instance.pending = False
+        form.instance.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 @method_decorator(login_required, name='dispatch')
 class TagDetailView(UserIsStuffMixin, DetailView):
@@ -205,31 +238,21 @@ class ProfileView(View):
 
 
 @method_decorator(login_required, name='dispatch')
-class ModView(UserIsStuffMixin, View):
+class ModView(UserIsStuffMixin, ListView):
+    model = Event
+    template_name = 'meetandeat/mod_event_list.html'
 
-    def get(self, request):
-        context = {
-            'event_list': Event.objects.filter(reported=True).order_by("pk")
-        }
-        return render(request, "meetandeat/mod_event_list.html", context=context)
+    def get_queryset(self):
+        events = Event.objects.annotate(num_reports=Count('reports', filter=Q(reports__valid=None))).filter(
+            num_reports=1)[:5]
+        return events
 
 
 @method_decorator(login_required, name='dispatch')
 class ModHide(UserIsStuffMixin, View):
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
-        event.visible = False
-        event.save()
-        return redirect('meetandeat:modView')
-
-
-@method_decorator(login_required, name='dispatch')
-class ModUnHide(UserIsStuffMixin, View):
-
-    def post(self, request, pk):
-        event = get_object_or_404(Event, pk=pk)
-        event.visible = True
-        event.save()
+        event.reports.update(valid=True)
         return redirect('meetandeat:modView')
 
 
@@ -237,10 +260,7 @@ class ModUnHide(UserIsStuffMixin, View):
 class ModUnReport(UserIsStuffMixin, View):
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
-        eventReporter = event.userReportings.all()
-        for reporter in eventReporter:
-            event.userReportings.remove(reporter)
-        event.reported = False
+        event.reports.update(valid=False)
         event.visible = True
         event.save()
         return redirect('meetandeat:modView')
@@ -267,7 +287,8 @@ class UserCreateView(View):
                 user.delete()
                 return redirect(reverse('meetandeat:register'), {'form': form})
 
-            messages.success(request, "You have successfully signed up, we have sent you an activation email", fail_silently=True)
+            messages.success(request, "You have successfully signed up, we have sent you an activation email",
+                             fail_silently=True)
             return redirect(reverse('meetandeat:login'))
         else:
             return render(request, self.template_name, {'form': form})
@@ -301,7 +322,7 @@ class RequestActivateAccountView(View):
             user = User.objects.get(username=form.cleaned_data['username'])
             if user.is_email_confirmed:
                 messages.error(request, "Your account is already activated",
-                                 fail_silently=True)
+                               fail_silently=True)
                 return redirect(reverse('meetandeat:login'))
             user.new_activation_attempt()
             user.save()
@@ -332,7 +353,7 @@ class RequestEmailConfirmView(View):
 
         if user.is_email_confirmed:
             messages.error(request, "Your account is already activated",
-                             fail_silently=True)
+                           fail_silently=True)
             return redirect(reverse('meetandeat:profile'))
         user.new_activation_attempt()
         user.save()
@@ -490,12 +511,20 @@ class EventLeave(View):
 
 @method_decorator(login_required, name='dispatch')
 class EventReport(View):
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         event = Event.objects.get(id=self.kwargs['pk'])
         user = request.user
-        event.userReportings.add(user)
-        event.reported = True
-        event.save()
+        Report.objects.create(reporter=user, event=event)
+        event.leave(user=user)
+        event.hide_by_enough_reports()
+        """
+        totalNumberOfReports = event.reports.filter(valid=None).count()
+        if totalNumberOfReports >= 5:
+            event.visible = False
+            event.save()
+        """
+        ##leave event if user is part of event
+
         return redirect('meetandeat:index')
 
 
@@ -504,9 +533,9 @@ class ApproveTag(UserIsStuffMixin, View):
     def get(self, request, *args, **kwargs):
         tag = Tag.objects.get(id=self.kwargs['pk'])
         tag.approved = True
+        tag.pending = False
         tag.save()
         return redirect('meetandeat:tag-view')
-
 
 @method_decorator(login_required, name='dispatch')
 class OwnEventsView(View):
@@ -533,3 +562,9 @@ class OwnEventsView(View):
                 joined_events = joined_events.filter(tags__in=tags).distinct()
             return render(request, 'meetandeat/own_events_list.html',
                           context={'own_event_list': own_events, 'form': form, 'joined_event_list': joined_events})
+
+class NotificationView(View):
+    def get(self, request):
+        User = self.request.user
+        tags = Tag.objects.filter(user=User).order_by("pk")
+        return render(request, 'meetandeat/notification_list.html', context={'tags': tags})
