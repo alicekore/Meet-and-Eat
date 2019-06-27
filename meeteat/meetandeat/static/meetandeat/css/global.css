@@ -1,5 +1,5 @@
 .bg-custom-light {
-    background-color:#f6f6f6;
+    background-color: #f6f6f6;
     color: #484848;
 }
 
@@ -12,12 +12,12 @@
 }
 
 .text-color-dark {
-
     color: #484848;
 }
 
 .bg-custom-primary {
-    background-color: #f6f6f6 !important;
+    background-color: #f8f6f0 !important;
+    color: #484848;
 }
 
 .bg-custom-secondary {
@@ -28,7 +28,7 @@
 .btn-custom-primary {
     color: #ffffff;
     background-color: #5094ed !important;
-    border-color:#5094ed;
+    border-color: #5094ed;
 }
 
 .btn-custom-primary:hover {
@@ -36,10 +36,11 @@
     background-color: #4f7fc9 !important;
     border-color: #4f7fc9;
 }
+
 .btn-custom-secondary {
     color: #ffffff;
     background-color: #dd5549 !important;
-    border-color:#dd5549;
+    border-color: #dd5549;
 }
 
 .btn-custom-secondary:hover {
@@ -228,7 +229,7 @@
     font-weight: 500;
 }
 
-#profile .profile-img img{
+#profile .profile-img img {
     max-width: 220px;
     max-height: 260px;
 }
@@ -236,24 +237,26 @@
 /*#########################*/
 
 /*##### Event Styles ####*/
-.datefield{
+.datefield {
     max-width: 70px;
     background-color: #efeeee;
     margin-top: -16px;
-    margin-bottom: -16px ;
+    margin-bottom: -16px;
     margin-left: -1px;
     padding-top: 15px;
     padding-bottom: 4px;
     color: #ff8e00;
+
 }
-.headline{
+
+.headline {
     max-width: 85%;
 }
 
-.right-col{
+.right-col {
     max-width: 85px;
     margin-top: -16px;
-    margin-bottom: -16px ;
+    margin-bottom: -16px;
 }
 
 .btn-custom-add {
@@ -263,31 +266,33 @@
     border-radius: 30px;
 }
 
-.btn-custom-add:hover{
+.btn-custom-add:hover {
     color: #22b23b;
     text-decoration: none;
     border-radius: 5px;
 
 
-}.btn-custom-leave{
+}
+
+.btn-custom-leave {
     color: #dd5549;
     font-size: 48px;
     background-color: #f6f6f6;
     border-radius: 30px;
 }
 
-.btn-custom-leave:hover{
+.btn-custom-leave:hover {
     color: #f95e51;
     text-decoration: none;
     background-color: #f6f6f6;
     border-radius: 5px;
 }
 
-.btn-custom-dots{
+.btn-custom-dots {
     font-size: 36px;
 }
 
-.btn-custom-dots:hover{
+.btn-custom-dots:hover {
     background-color: #f6f6f6;
     border-radius: 5px;
 }
@@ -297,19 +302,21 @@
     border-radius: 5px;
 }
 
-.btn-custom-dots-dark:hover{
-    background-color:  #ffffff;
+.btn-custom-dots-dark:hover {
+    background-color: #ffffff;
     border-radius: 5px;
 }
 
-.text-custom-hyperlink{
+.text-custom-hyperlink {
     color: #484848;
 
-}.text-custom-hyperlink:hover{
+}
+
+.text-custom-hyperlink:hover {
     color: #dd5549;
 }
 
-.text-custom-hyperlink:active{
+.text-custom-hyperlink:active {
     color: #dd5549;
 }
 
@@ -317,14 +324,15 @@
 
 /*####COMMENT STYLES##### */
 
-.col-right-comment{
+.col-right-comment {
     max-width: 100px;
     margin-top: -16px;
     margin-bottom: -16px;
     margin-right: -5px;
     background-color: #efeeee;
 }
-.col-left-comment{
+
+.col-left-comment {
     max-width: 100px;
     margin-top: -16px;
     margin-bottom: -16px;
@@ -332,41 +340,62 @@
     background-color: #efeeee;
 }
 
-.col-send-comment{
+.col-send-comment {
     max-width: 100px;
 }
 
-a{
+a {
     color: #484848;
 }
 
-a:hover{
+a:hover {
     color: #dc3545;
 }
 
-a:active{
+a:active {
     color: #dc3545;
     text-decoration: #dc3545;
 }
 
-.col-right-mod{
+.col-right-mod {
     max-width: 250px;
 }
+
+
+@-moz-document url-prefix() {
+    .datefield {
+        max-width: 80px;
+        background-color: #efeeee;
+        margin-top: -20px;
+        margin-bottom: -20px;
+        margin-left: -6px;
+        padding-top: 15px;
+        color: #ff8f41;
+    }
+
+    .col-right-mod {
+        max-width: 270px;
+    }
+
+}
+
+
 /*#########################*/
 
 /*##### ALERT ERROR #####*/
 .alert-error {
-  color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
 }
 
 .alert-error hr {
-  border-top-color: #f1b0b7;
+    border-top-color: #f1b0b7;
 }
 
 .alert-error .alert-link {
-  color: #491217;
+    color: #491217;
 }
+
 /*#######################*/
 

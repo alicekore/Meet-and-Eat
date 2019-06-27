@@ -9,23 +9,29 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
+from decouple import config, AutoConfig
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+DECOUPLE_CONFIGURATION = config('DECOUPLE_CONFIGURATION', default='development')
+
+if DECOUPLE_CONFIGURATION == 'production':
+    config = AutoConfig(search_path='./meeteat/env/production-env/')
+else:
+    config = AutoConfig(search_path='./meeteat/env/development-env/')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'h!om_b9(m84@2^+#(%jjy@hzrbj)f_zhuvrdrsn4_4&h%d&$ev'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
 
 # Application definition
@@ -83,7 +89,7 @@ DATABASES = {
         'NAME': 'meet_and_eat',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
+        'HOST': config('DATABASE_HOST'),
         'PORT': '5432',
     }
 }
@@ -126,23 +132,32 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+# for docker container
+STATIC_ROOT = config('STATIC_ROOT')
+
 STATIC_URL = '/static/'
 
 LOGIN_URL = 'meetandeat:login'
 
 LOGIN_REDIRECT_URL = 'meetandeat:index'
 
-AUTH_USER_MODEL='meetandeat.User'
+AUTH_USER_MODEL = 'meetandeat.User'
 
-MEDIA_ROOT='meetandeat/media'
-MEDIA_URL = '/media/'
 
-#MEDIA_URL
+MEDIA_ROOT = config('MEDIA_ROOT')
+MEDIA_URL = config('MEDIA_URL')
 
+EMAIL_ENABLED = config('EMAIL_ENABLED', default=False, cast=bool)
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.mail.yahoo.com'
-EMAIL_HOST_USER = 'meetandeatmailing@yahoo.com'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 EMAIL_PORT = 587
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1
+
+USE_X_FORWARDED_HOST = config('USE_X_FORWARDED_HOST', default=False, cast=bool)
+HOST_ADDR = config('HOST_ADDR', default='')
+
+
+

@@ -22,10 +22,12 @@ def send_activation_email(request, user):
         mail_subject,
         message,
         to=[to_email],
-        from_email=settings.EMAIL_HOST_USER,
+        from_email='Meet-and-Eat',
     )
-    # sent_emails = email.send(fail_silently=True)
-    sent_emails = 1
+    if settings.EMAIL_ENABLED:
+        sent_emails = email.send(fail_silently=True)
+    else:
+        sent_emails = 1
     return sent_emails
 
 
@@ -48,8 +50,10 @@ def send_password_reset_email(request, user):
         mail_subject,
         message,
         to=[to_email],
-        from_email=settings.EMAIL_HOST_USER,
+        from_email='Meet-and-Eat',
     )
-    # sent_emails = email.send(fail_silently=True)
-    sent_emails = 1
+    if settings.EMAIL_ENABLED:
+        sent_emails = email.send(fail_silently=True)
+    else:
+        sent_emails = 1
     return sent_emails
