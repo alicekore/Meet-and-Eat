@@ -11,16 +11,7 @@
 </style>
 {% endblock css %}
 {% block events %}
-<br>
-<div class="row">
-    <div class="col text-right">
-        <form method="post">
-            {% csrf_token %}
-            <button class="btn btn-custom-primary mb-2" type="submit">Search</button>
-            {{form.tags}}
-        </form>
-    </div>
-</div>
+
 {% if event_list %}
 {% for event in event_list %}
 {% if  event.visible == True %}
@@ -147,4 +138,5 @@
 
 
 {{ form.media.js }}
+
 {% endblock %}

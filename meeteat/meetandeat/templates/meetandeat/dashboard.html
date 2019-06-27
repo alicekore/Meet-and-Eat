@@ -3,6 +3,33 @@
 
 {% block title %}Dashboard{% endblock %}
 {% block main %}
+<div class = "container rounded my-3 bg-custom-light sticky-top">
+  <form method="post">
+  <div class="row">
+      <div class="col text-right">
+        <br>
+              {% csrf_token %}
+              {{form.tags}}
+      </div>
+    </div>
+    <br>
+    <div class = "row">
+      <div class = "col">
+        {{ form.date }}
+      </div>
+      <div class = "col">
+        {{ form.time }}
+      </div>
+      <br>
+      <div>
+        <button class="btn btn-custom-primary mb-2 " name="submit" type="submit">
+         Search
+        </button>
+      </div>
+    </div>
+</form>
+</div>
+
 <div class="container text-color-dark">
     <a href="{% url 'meetandeat:create-event' %}" class="btn btn-custom-primary">Create Event</a>
     <a href="{% url 'meetandeat:create-tag' %}" class="btn btn-custom-primary">Submit Tag</a>
