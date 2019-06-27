@@ -29,8 +29,12 @@
     <div class="row">
         <div class="col datefield border-right">
             <div class="container">
-                <div class="row pl-0"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
-                <div class="row border-bottom border-dark" style="margin-top: -8px"> <h4>{{ event.datetime | localtime | date:"M"}}</h4></div>
+                <div class="row pl-0">
+                    <h3>{{ event.datetime | localtime | date:"d"}}</h3>
+                </div>
+                <div class="row border-bottom border-dark" style="margin-top: -8px">
+                    <h4>{{ event.datetime | localtime | date:"M"}}</h4>
+                </div>
                 <div class="row pt-1" style="text-align: center">{{ event.datetime | localtime | date:"G:i"}}</div>
             </div>
         </div>
@@ -39,20 +43,27 @@
                 <div class="row">
                     <div class="col">
                         {% if user in event.eventParticipants.all %}
-                        <h3><a class="text-custom-hyperlink" href="{% url 'meetandeat:event-view' event.pk %}">{{ event.title }} <small>({{ event.eventParticipants.count }}/{{ event.participants_number }})</small></a></h3>
+                        <h3><a class="text-custom-hyperlink"
+                                href="{% url 'meetandeat:event-view' event.pk %}">{{ event.title }}
+                                <small>({{ event.eventParticipants.count }}/{{ event.participants_number }})</small></a>
+                        </h3>
                         {% else %}
-                        <h3>{{ event.title }} <small>({{ event.eventParticipants.count }}/{{ event.participants_number }})</small></h3>
+                        <h3>{{ event.title }}
+                            <small>({{ event.eventParticipants.count }}/{{ event.participants_number }})</small></h3>
                         {% endif %}
                     </div>
                 </div>
                 <div class="spacing"></div>
                 <div class="row">
-                    <div class="col"><h5><span class="material-icons">room</span>{{ event.location }}</h5></div>
+
+                    <div class="col"><h5>
+                      <span class="material-icons">room</span>{{ event.location }}</h5></div>
                 <div class="col text-right">
                     {% if event.matching < 101 %}
                         <span style="color: #dc3545"><span class="material-icons">whatshot</span><b>{{event.matching}}%</b></span>
                     {% endif %}
                 </div>
+
                 </div>
             </div>
         </div>
@@ -62,7 +73,7 @@
                     <div class="col">
                         <div class="dropdown">
                             <a aria-expanded="false" aria-haspopup="true" class="material-icons btn-custom-dots"
-                               data-toggle="dropdown" id="dropdownMenuLink" role="button">
+                                data-toggle="dropdown" id="dropdownMenuLink" role="button">
                                 more_horiz
                             </a>
                             <div aria-labelledby="dropdownMenuLink" class="dropdown-menu">
@@ -74,14 +85,8 @@
                                 <span class="dropdown-item">Already reported!</span>
                                 {% else%}
 
-                                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#reportModal">Report</button>
-
-
-
-
-
-
-
+                                <button type="button" class="dropdown-item" data-toggle="modal"
+                                    data-target="#reportModal">Report</button>
 
                                 {% endif %}
                             </div>
@@ -93,10 +98,12 @@
                     <div class="col">
                         {% if user in event.eventParticipants.all %}
                         <a class="material-icons btn-custom-leave"
-                           href="{% url 'meetandeat:leave-event' event.pk %}">remove</a>
+                            href="{% url 'meetandeat:leave-event' event.pk %}">remove</a>
                         {% else %}
+                        {% if not event.is_full %}
                         <a class="material-icons btn-custom-add"
-                           href="{% url 'meetandeat:join-event' event.pk %}">add</a>
+                            href="{% url 'meetandeat:join-event' event.pk %}">add</a>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>
@@ -104,31 +111,30 @@
         </div>
     </div>
 </div>
- <form action="{% url 'meetandeat:report-event' event.pk %} " method="post" name="form">
+<form action="{% url 'meetandeat:report-event' event.pk %} " method="post" name="form">
     {% csrf_token %}
-<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade"
-                                 id="reportModal" role="dialog"
-                                 tabindex="-1">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
-                                            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Are you sure you want to report this event?</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button class="btn btn-custom-secondary" data-dismiss="modal" type="button">Close
-                                            </button>
-                                            <input class="btn btn-custom-primary" type="submit" value="Report"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-    </form>
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="reportModal" role="dialog"
+        tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to report this event?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-custom-secondary" data-dismiss="modal" type="button">Close
+                    </button>
+                    <input class="btn btn-custom-primary" type="submit" value="Report" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 
 
 {% else %}
@@ -142,4 +148,3 @@
 
 {{ form.media.js }}
 {% endblock %}
-

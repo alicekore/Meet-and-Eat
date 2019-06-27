@@ -45,6 +45,10 @@ class Event(models.Model):
         self.matching = round(matching, 1)
         self.save()
 
+    def is_full(self):
+        print(self.eventParticipants.all().count())
+        return not self.eventParticipants.count() < self.participants_number
+
 
 class Tag(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

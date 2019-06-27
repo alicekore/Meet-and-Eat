@@ -33,6 +33,7 @@ from django.template.loader import render_to_string
 import json
 from .helpers import *
 from .models import *
+from .tasks import makeEventsInvisibleOlderThan, deleteEventsOlderThan
 
 
 class UserIsInGroupMixin(UserPassesTestMixin):
@@ -58,11 +59,23 @@ class UserIsStuffMixin(UserPassesTestMixin):
 @method_decorator(login_required, name='dispatch')
 class IndexView(View):
     def get(self, request, *args, **kwargs):
+
+        """ Tasks to maintain the database:
+        - Drop events older than 7 days
+        - Make events older than 1 day invisible
+        For now the tasks will be performed whenever this functions gets called.
+        For production these tasks should be performed by a crontab or similar. 
+        """
+        makeEventsInvisibleOlderThan(1)
+        deleteEventsOlderThan(7)
+
         form = TagFilterForm()
-        ids = Report.objects.filter(reporter=request.user).values_list('event', flat=True).distinct()
+        ids = Report.objects.filter(reporter=request.user).values_list(
+            'event', flat=True).distinct()
         reportedEvents = Event.objects.filter(id__in=ids)
 
-        events = Event.objects.filter(visible=True).difference(reportedEvents).order_by('pk')
+        events = Event.objects.filter(visible=True).difference(
+            reportedEvents).order_by('pk')
         return render(request, 'meetandeat/event_list.html',
                       context={'event_list': events, 'form': form, 'reportedEvents': reportedEvents})
 
@@ -92,7 +105,11 @@ class EventJoinView(View):
     def get(self, request, *args, **kwargs):
         e = Event.objects.get(id=self.kwargs['pk'])
         u = self.request.user
-        e.eventParticipants.add(u)
+
+        # Check if event is already full
+        if not e.is_full():
+            e.eventParticipants.add(u)
+
         return redirect('meetandeat:event-view', pk=e.pk)
 
 
@@ -208,7 +225,8 @@ class ProfileView(View):
                 }
                 return render(request, 'meetandeat/profile.html', context)
         elif 'update-image' in request.POST:
-            form = ChangeProfilePictureForm(request.POST, request.FILES, instance=user)
+            form = ChangeProfilePictureForm(
+                request.POST, request.FILES, instance=user)
             if form.is_valid():
                 form.save()
             else:
@@ -293,7 +311,8 @@ class UserActivateAccountView(View):
         if user is not None and account_activation_token.check_token(user, token):
             user.confirm_email()
             user.save()
-            messages.success(request, "You have activated your account. You can now sign in")
+            messages.success(
+                request, "You have activated your account. You can now sign in")
             return redirect('meetandeat:profile')
         else:
             messages.error(request, "Activation link is invalid")
@@ -333,10 +352,12 @@ class RequestEmailConfirmView(View):
     def get(self, request):
         user = request.user
         if user.activation_attempts_number >= 3:
-            messages.error(request, "You have requested too many activation emails")
+            messages.error(
+                request, "You have requested too many activation emails")
             return redirect(reverse('meetandeat:profile'))
         if user.last_activation_attempt + timedelta(hours=1) > timezone.now():
-            messages.error(request, "You have requested an activation email recently")
+            messages.error(
+                request, "You have requested an activation email recently")
             return redirect(reverse('meetandeat:profile'))
 
         if user.is_email_confirmed:
@@ -412,7 +433,8 @@ class PasswordResetConfirmView(View):
             if form.is_valid():
                 print('form is valid')
                 form.save()
-                messages.success(request, "You have successfully changed your password")
+                messages.success(
+                    request, "You have successfully changed your password")
                 return redirect('meetandeat:login')
             else:
                 print('form is invalid')
@@ -443,7 +465,8 @@ class UserUpdateView(UpdateView):
             user.save()
             sent_emails = send_activation_email(request, user)
             if sent_emails == 0:
-                messages.error(request, "Something went wrong, request an activation link")
+                messages.error(
+                    request, "Something went wrong, request an activation link")
                 user.set_old_email()
                 user.save()
                 return redirect(reverse('meetandeat:profile'), {'form': form})
@@ -462,7 +485,8 @@ class UserDeleteAjax(View):
         if form.is_valid():
             logout(request)
             form.instance.delete()
-            response = {'status': 0, 'message': "Ok", "url": reverse('meetandeat:index')}
+            response = {'status': 0, 'message': "Ok",
+                        "url": reverse('meetandeat:index')}
             return HttpResponse(json.dumps(response), content_type='application/json')
         else:
             print('password invalid')
@@ -494,6 +518,20 @@ class EventLeave(View):
         event = Event.objects.get(id=kwargs['pk'])
         user = request.user
         event.eventParticipants.remove(user)
+
+        """ if event owner leaves his own event,
+        pick a random participant and make him the new owner
+        if there are no participants left, the event will be deleted.
+        """
+
+        if user == event.user:
+            rand_participant = event.eventParticipants.all().first()
+            if rand_participant:
+                event.user = rand_participant
+                event.save()
+            else:
+                event.delete()
+
         return redirect('meetandeat:index')
 
 
@@ -511,7 +549,7 @@ class EventReport(View):
             event.visible = False
             event.save()
         """
-        ##leave event if user is part of event
+        # leave event if user is part of event
 
         return redirect('meetandeat:index')
 
