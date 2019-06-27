@@ -10,9 +10,15 @@
             <input type="text" class="form-control form-control-lg {% if form.title.errors %}is-invalid{%  endif %}"
                 id="title" name="title" maxlength="15" {% if form.title.value %}value="{{ form.title.value}}"
                 {% endif %} required>
+            <label for="description">Description:</label>
+            <br><small>Tell us more about your suggested Tag. It will help our approving process.</small>
+            <input type="text" class="form-control form-control-lg {% if form.description.errors %}is-invalid{%  endif %}"
+                id="description" name="description" maxlength="160" {% if form.description.value %}value="{{ form.description.value}}"
+                {% endif %} required>
             <small>Submissions have to be approved by an administrator before they can be used for events.</small>
 
             {% if form.title.errors %}<div class="invalid-feedback">Give a correct name</div>{%  endif %}
+            {% if form.description.errors %}<div class="invalid-feedback">Give a correct description</div>{%  endif %}
         </div>
         <button type="submit" class="btn btn-custom-primary">Submit Tag</button>
     </form>

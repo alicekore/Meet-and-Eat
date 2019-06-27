@@ -83,10 +83,18 @@ class IndexView(View):
     def post(self, request):
         form = TagFilterForm(request.POST)
         events = Event.objects.filter(visible=True)
+        for event in events:
+            event.set_matching(101)
         if form.is_valid():
             tags = form.cleaned_data.get('tags')
             if tags:
                 events = events.filter(tags__in=tags).distinct()
+                for event in events:
+                    if tags.count() <= event.tags.count():
+                        match = 100
+                    else:
+                        match = event.tags.count() / tags.count() * 100
+                    event.set_matching(match)
             return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
         else:
             return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
@@ -159,14 +167,22 @@ class TagCreate(CreateView):
     form_class = TagForm
     success_url = reverse_lazy('meetandeat:index')
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 @method_decorator(login_required, name='dispatch')
 class TagUpdate(UserIsStuffMixin, UpdateView):
     model = Tag
     template_name = 'meetandeat/edit-tag.html'
-    form_class = TagForm
-    success_url = reverse_lazy('meetandeat:index')
+    form_class = TagDisapprovalForm
+    success_url = reverse_lazy('meetandeat:tag-view')
 
+    def form_valid(self, form):
+        form.instance.approved = False
+        form.instance.pending = False
+        form.instance.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 @method_decorator(login_required, name='dispatch')
 class TagDetailView(UserIsStuffMixin, DetailView):
@@ -543,9 +559,9 @@ class ApproveTag(UserIsStuffMixin, View):
     def get(self, request, *args, **kwargs):
         tag = Tag.objects.get(id=self.kwargs['pk'])
         tag.approved = True
+        tag.pending = False
         tag.save()
         return redirect('meetandeat:tag-view')
-
 
 @method_decorator(login_required, name='dispatch')
 class OwnEventsView(View):
@@ -572,3 +588,9 @@ class OwnEventsView(View):
                 joined_events = joined_events.filter(tags__in=tags).distinct()
             return render(request, 'meetandeat/own_events_list.html',
                           context={'own_event_list': own_events, 'form': form, 'joined_event_list': joined_events})
+
+class NotificationView(View):
+    def get(self, request):
+        User = self.request.user
+        tags = Tag.objects.filter(user=User).order_by("pk")
+        return render(request, 'meetandeat/notification_list.html', context={'tags': tags})
