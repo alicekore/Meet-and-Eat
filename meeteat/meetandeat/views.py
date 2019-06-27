@@ -70,10 +70,18 @@ class IndexView(View):
     def post(self, request):
         form = TagFilterForm(request.POST)
         events = Event.objects.filter(visible=True)
+        for event in events:
+            event.set_matching(101)
         if form.is_valid():
             tags = form.cleaned_data.get('tags')
             if tags:
                 events = events.filter(tags__in=tags).distinct()
+                for event in events:
+                    if tags.count() <= event.tags.count():
+                        match = 100
+                    else:
+                        match = event.tags.count() / tags.count() * 100
+                    event.set_matching(match)
             return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
         else:
             return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})

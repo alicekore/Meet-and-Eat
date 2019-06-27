@@ -24,6 +24,7 @@
 {% if event_list %}
 {% for event in event_list %}
 {% if  event.visible == True %}
+{% if  event.matching >= 30 %}
 <div class="container container-no-border border-0 rounded p-3 my-4 bg-custom-secondary">
     <div class="row">
         <div class="col datefield border-right">
@@ -48,8 +49,10 @@
                 <div class="row">
                     <div class="col"><h5><span class="material-icons">room</span>{{ event.location }}</h5></div>
                 <div class="col text-right">
-                        <span style="color: #dc3545"><span class="material-icons">whatshot</span><b>80%</b></span>
-                    </div>
+                    {% if event.matching < 101 %}
+                        <span style="color: #dc3545"><span class="material-icons">whatshot</span><b>{{event.matching}}%</b></span>
+                    {% endif %}
+                </div>
                 </div>
             </div>
         </div>
@@ -129,6 +132,7 @@
 
 
 {% else %}
+{% endif %}
 {% endif %}
 {% endfor %}
 {% else %}
