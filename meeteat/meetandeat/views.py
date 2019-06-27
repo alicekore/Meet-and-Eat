@@ -33,6 +33,7 @@ from django.template.loader import render_to_string
 import json
 from .helpers import *
 from .models import *
+from .tasks import makeEventsInvisibleOlderThan, deleteEventsOlderThan
 
 
 class UserIsInGroupMixin(UserPassesTestMixin):
@@ -58,6 +59,16 @@ class UserIsStuffMixin(UserPassesTestMixin):
 @method_decorator(login_required, name='dispatch')
 class IndexView(View):
     def get(self, request, *args, **kwargs):
+
+        """ Tasks to maintain the database:
+        - Drop events older than 7 days
+        - Make events older than 1 day invisible
+        For now the tasks will be performed whenever this functions gets called.
+        For production these tasks should be performed by a crontab or similar. 
+        """
+        makeEventsInvisibleOlderThan(1)
+        deleteEventsOlderThan(7)
+
         form = TagFilterForm()
         ids = Report.objects.filter(reporter=request.user).values_list(
             'event', flat=True).distinct()
