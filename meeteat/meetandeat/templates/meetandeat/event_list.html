@@ -11,33 +11,6 @@
 </style>
 {% endblock css %}
 {% block events %}
-<!-- <div class = "container rounded p-3 my-4 bg-custom-light sticky-top sticky-offset">
-  <form method="post">
-  <div class="row">
-      <div class="col text-right">
-        <br>
-              {% csrf_token %}
-              {{form.tags}}
-      </div>
-    </div>
-    <br>
-    <div class = "row">
-      <div class = "col">
-        {{ form.date }}
-      </div>
-      <div class = "col">
-        {{ form.time }}
-      </div>
-      <br>
-      <div>
-        <button class="btn btn-custom-primary mb-2 " name="submit" type="submit">
-         Search
-        </button>
-      </div>
-    </div>
-</form>
-</div> -->
-
 
 {% if event_list %}
 {% for event in event_list %}
