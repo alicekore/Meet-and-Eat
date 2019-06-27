@@ -26,13 +26,25 @@
     <link rel="stylesheet" href="{% static 'meetandeat/css/bootstrap.css'%}">
     <link rel="stylesheet" href="{% static 'meetandeat/css/global.css' %}">
 
+    <!-- has to be here to work for safari? dont know why-->
+    <style>
+    body{
+      padding-top: 71px;
+    }
+    .sticky-top{
+      top: 72px;
+    }
+    </style>
+
     {% block css %}{% endblock css %}
     <title>{% block title %}{% endblock %}</title>
 </head>
 
 <body class="bg-custom-light" id="{{ request.resolver_match.url_name }}">
 
+<div class = "fixed-top">
     {% include "header.html" %}
+</div>
 
     <main class="mt-3">
         {% block main %}{% endblock %}
