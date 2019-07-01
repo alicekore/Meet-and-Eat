@@ -43,6 +43,7 @@ class Event(models.Model):
         if user in self.eventParticipants.all():
             self.eventParticipants.remove(user)
             self.save()
+
     def set_matching(self, matching):
         self.matching = round(matching, 1)
         self.save()
