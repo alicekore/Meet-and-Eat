@@ -1,5 +1,14 @@
-<header>
-    <nav class="navbar navbar-expand-md p-3 mb-3 rounded bg-custom-secondary" style="box-shadow: #484848;">
+{% load settings_value %}
+<header class="{% if request.resolver_match.url != 'index' %}sticky-top{% endif %}">
+    {% settings_value "DECOUPLE_CONFIGURATION" as environment%}
+    {% if  environment == "production" %}
+        <div class="warning-test-version">
+            <div>
+                <span class="">This is the test version of the site, all data will be deleted until 31.07.19</span>
+            </div>
+        </div>
+    {% endif %}
+    <nav class="navbar  navbar-expand-md p-3 mb-3 rounded bg-custom-secondary" style="box-shadow: #484848;">
         <span class="navbar-brand unselectable" style="color: #dd5549">Meet&Eat</span>
         <span class="spacing border-right"></span>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +33,7 @@
                     <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:tag-view' %}">Tags{% if request.resolver_match.url_name == 'tag-view' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 {%endif %}
+
             </ul>
             {# right floating items            #}
             <ul class="navbar-nav ml-auto">
@@ -45,4 +55,6 @@
             </ul>
         </div>
     </nav>
+
+
 </header>

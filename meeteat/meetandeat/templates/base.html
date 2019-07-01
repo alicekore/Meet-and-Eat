@@ -1,5 +1,6 @@
 <!doctype html>
 {% load static %}
+{% load settings_value %}
 <html lang="de">
 
 <head>
@@ -27,14 +28,7 @@
     <link rel="stylesheet" href="{% static 'meetandeat/css/global.css' %}">
 
     <!-- has to be here to work for safari? dont know why-->
-    <style>
-    body{
-      padding-top: 71px;
-    }
-    .sticky-top{
-      top: 72px;
-    }
-    </style>
+
 
     {% block css %}{% endblock css %}
     <title>{% block title %}{% endblock %}</title>
@@ -42,9 +36,10 @@
 
 <body class="bg-custom-primary" id="{{ request.resolver_match.url_name }}">
 
-<div class = "fixed-top">
+
     {% include "header.html" %}
-</div>
+
+    {% settings_value "DECOUPLE_CONFIGURATION" as environment%}
 
     <main class="mt-3">
         {% block main %}{% endblock %}

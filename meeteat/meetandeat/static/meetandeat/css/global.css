@@ -399,3 +399,13 @@ a:active {
 
 /*#######################*/
 
+.warning-test-version {
+    color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+
+.warning-test-version span {
+    display: block;
+    text-align: center;
+}
