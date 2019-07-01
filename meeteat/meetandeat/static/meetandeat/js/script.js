@@ -48,6 +48,13 @@ if($pageID === "profile") {
 
     }
 
+    $('#profilePictureUpdate').on('change',function(){
+                //get the file name
+                let fileName = $(this).val().replace('C:\\fakepath\\', " ");
+                //replace the "Choose a file" label
+                $(this).next('.custom-file-label').html(fileName);
+            });
+
 
     function create_post() {
     console.log("create post is working!");
@@ -103,6 +110,17 @@ if($pageID === "profile") {
 }
 //################
 
+
+//##### Register javascript #####
+if($pageID === "register") {
+    $('#profilePicture').on('change',function(){
+                //get the file name
+                let fileName = $(this).val().replace('C:\\fakepath\\', " ");
+                //replace the "Choose a file" label
+                $(this).next('.custom-file-label').html(fileName);
+            });
+}
+//################
 
 function detectmob() {
  if( navigator.userAgent.match(/Android/i)

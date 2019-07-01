@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block main %}
-<div class="container border border-dark rounded bg-light p-3 my-4 login-container">
+<div class="container rounded bg-custom-secondary p-3 my-4 login-container text-color-dark">
     {% if messages %}
          <div>
             <ul class="messages">
@@ -14,20 +14,83 @@
             </ul>
          </div>
     {% endif %}
-    <form method='POST'>
-      {% csrf_token %}
-      <fieldset class='form-group'>
+    <form method="post" enctype='multipart/form-data'>
+        {% csrf_token %}
         <legend class='border-bottom mb-4'>Create Your Account</legend>
-        {{ form.as_p }}
-      </fieldset>
-      <div class='form-group'>
-        <button class='btn btn-outline-info' type='submit'>Sign Up</button>
-      </div>
+        <div class="form-row mb-2">
+           <div class="form-group col-md-6">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control {% if form.username.errors %}is-invalid{%  endif %}"
+                    id="username" name="username" maxlength="150" {% if form.username.value %}value="{{ form.username.value}}"
+                    {% endif %} required>
+                   {% if form.username.errors %}<div class="invalid-feedback">{{ form.username.errors }}</div>{%  endif %}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="email">Email:</label>
+                <input class="form-control {% if form.email.errors %}is-invalid{%  endif %}"
+                    id="email" maxlength="254"
+                    name="email" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" required>
+                {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors }}</div>
+                {%  endif %}
+            </div>
+        </div>
+
+        <div class="form-row mb-2">
+            <div class="form-group col-md-6">
+                <label for="password1">Password:</label>
+                <input type="password"
+                    class="form-control  {% if form.password1.errors %}is-invalid{%  endif %}"
+                    id="password1" name="password1" required minlength="8">
+                {% if form.password1.errors %}<div class="invalid-feedback">{{ form.password1.errors }}</div>{%  endif %}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="password2">Password Confirmation</label>
+                <input type="password" id="password2" class="form-control {% if form.password2.errors %}is-invalid{%  endif %}"
+                    name="password2" minlength="8" required>
+                {% if form.password2.errors %}<div class="invalid-feedback">{{ form.password2.errors }}</div>
+                {%  endif %}
+            </div>
+        </div>
+        <div class="form-row mb-3">
+            <div class="form-group col-md-6">
+                <label for="first_name">First name:</label>
+                <input type="text"
+                    class="form-control {% if form.first_name.errors %}is-invalid{%  endif %}"
+                    id="first_name" name="first_name" maxlength="30"
+                    {% if form.first_name.value %}value="{{ form.first_name.value }}"
+                    {% endif %} required>
+                {% if form.first_name.errors %}<div class="invalid-feedback">{{ form.first_name.errors }}</div>
+                {%  endif %}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="last_name">Last name:</label>
+                <input type="text"
+                    class="form-control {% if form.last_name.errors %}is-invalid{%  endif %}"
+                    id="last_name" name="last_name"
+                    {% if form.last_name.value %}value="{{ form.last_name.value }}"
+                    {% endif %} maxlength="150">
+                {% if form.last_name.errors %}<div class="invalid-feedback">{{ form.last_name.errors }}</div>
+                {%  endif %}
+            </div>
+        </div>
+        <div class="custom-file mb-3">
+                <input type="file"
+                    class="custom-file-input {% if form.profilePicture.errors %}is-invalid{%  endif %}"
+                    id="profilePicture" name="profilePicture" alt="profile image" accept="image/*">
+            <label class="custom-file-label" for="profilePicture">Select profile image...</label>
+
+            {% if form.profilePicture.errors %}<div class="invalid-feedback">{{ form.profilePicture.errors }}</div>
+                {%  endif %}
+        </div>
+        <div class="form-group">
+            <button class='btn btn-custom-primary' type='submit'>Sign Up</button>
+
+        </div>
     </form>
-    <div class='boreder-top pt-3'>
+    <div class='border-top pt-3'>
       <small class='text-muted'>
         Already have an account? <a class='ml-2' href="{% url 'meetandeat:login' %}">Log In</a>
       </small>
     </div>
-    </div>
+</div>
 {% endblock %}

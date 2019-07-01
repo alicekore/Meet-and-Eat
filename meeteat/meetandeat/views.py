@@ -285,15 +285,17 @@ class ModUnReport(UserIsStuffMixin, View):
 
 
 class UserCreateView(View):
-    form_class = UserRegistrationForm
     template_name = 'meetandeat/register.html'
 
     def get(self, request):
-        form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+        if request.user.is_authenticated:
+            return redirect("meetandeat:profile")
+        return render(request, self.template_name)
 
     def post(self, request):
-        form = self.form_class(request.POST, request.FILES)
+        if request.user.is_authenticated:
+            return redirect("meetandeat:profile")
+        form = UserRegistrationForm(request.POST, files=request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False

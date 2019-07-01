@@ -399,3 +399,30 @@ a:active {
 
 /*#######################*/
 
+/*##### CUSTOM FILE INPUT #####*/
+/*both styles below are used to make cursor pointer*/
+.custom-file-input, .custom-file {
+    cursor: pointer;
+}
+
+.custom-file-input {
+    text-indent: -999px;
+}
+
+.custom-file-label {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.custom-file-input:active + .custom-file-label{
+    color: #060606;
+    background-color: #ffffff;
+    border-color: #dc3545;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(219, 70, 70, 0.25);
+}
+
+
+
+
