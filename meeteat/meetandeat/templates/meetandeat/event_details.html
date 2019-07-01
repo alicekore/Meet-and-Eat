@@ -36,13 +36,13 @@
                 <h2>{{event.title}} </h2>
             </div>
             <div class="col text-right">
-                <div class="btn-group dropdown">
+                <div class="btn-group dropdown dropdown-hover">
                     <a aria-expanded="false" aria-haspopup="true" class="md-light"
                        data-toggle="dropdown" id="dropdownMenuLink2" role="button">
 
                        <small>{{ event.eventParticipants.count }}/{{ event.participants_number }} Participants</small>
                     </a>
-                    <div aria-labelledby="dropdownMenuLink2" class="dropdown-menu">
+                    <div aria-labelledby="dropdownMenuLink2" class="dropdown-menu-hover">
                         {% for participant in event.eventParticipants.all %}
                         {% if participant == event.user %}
                         <small class="dropdown-item" style="color: #5094ed"><img width="20" height="20" style="border-radius: 50%;" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>   {{ participant.username }}</small>

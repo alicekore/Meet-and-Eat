@@ -361,6 +361,9 @@ a:active {
     max-width: 250px;
 }
 
+.dropdown-hover:hover .dropdown-menu-hover{
+    display: block;
+}
 
 @-moz-document url-prefix() {
     .datefield {
