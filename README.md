@@ -1,6 +1,6 @@
 # Meet&Eat #
 
-App to find people with common interests to eat together. 
+App to find people with common interests to eat together.
 Сhoose place, time and topic and enjoy your meal with perfect companion!
 ## Table of contents ##
 1. [ DB. ](#db)
@@ -9,6 +9,7 @@ App to find people with common interests to eat together.
 4. [ Mailing. ](#mailing)
 5. [ Python-decouple and Environments. ](#python-decouple)
 6. [ Dockerisation. ](#docker)
+7. [ Backgroundtasks. ](#background-tasks)
 
 <a name="db"></a>
 ### How to set up PostgreSQL (quick guide) ###
@@ -56,13 +57,13 @@ python manage.py makemigrations meetandeat
 python manage.py migrate  
 ```
 It helps sometimes
- 
+
 <a name="roles"></a>
 ### Roles ###
 
 **Admin as superuser**
 
-profile: 
+profile:
 owner: can see all information and edit everything excempt from his username;
 mod:-
 
@@ -82,7 +83,7 @@ user(owner): edit, see, join, leave events
 
 ##### Django-select2 #####
 
-Library: Installing 'Tag-Filter': 
+Library: Installing 'Tag-Filter':
 In python console:
 ```
 pip install django_select2
@@ -114,10 +115,10 @@ python-decouple package provides an ability to set settings dynamic for differen
 Docker shouldn't affect the development process.  
 Dockerfile and docker-compose.yml let you run the app in the docker container. You need to have docker and docker-compose  
 To build and run the containers run following commands in the folder with Dockerfile:  
-  
+
 `sudo docker-compose build`  
 `sudo docker-compose up -d`  
-  
+
 You should be able to access application on 127.0.0.1:8000 after it.  
 For debug purposes you can enter following commands:  
 #Nginx  
@@ -128,3 +129,12 @@ For debug purposes you can enter following commands:
 `docker-compose logs db`  
 You will see then logs of the corresponding containers  
 **Note:** Email password is not in the docker config, because of security reasons. So if you want to test docker application set environment to development in the Dockerfile.    
+
+<a name="background-tasks"></a>
+### Background-tasks ###
+for simple automation we can use a backgroundscheduler.
+this will run tasks from 'tasks.py'.
+tasks have to be added to 'updater.py'.
+to run a task once app starts, run task in 'apps.py' ready() method.
+**Note:** To make sure django only runs in one instance:  
+`python manage.py runserver --noreload`  

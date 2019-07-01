@@ -50,6 +50,9 @@ class Event(models.Model):
     def is_full(self):
         print(self.eventParticipants.all().count())
         return not self.eventParticipants.count() < self.participants_number
+    
+    def __str__(self):
+        return self.title
 
 
 class Tag(models.Model):
