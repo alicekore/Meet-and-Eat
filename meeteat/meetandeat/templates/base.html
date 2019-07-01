@@ -1,5 +1,9 @@
 <!doctype html>
 {% load static %}
+{% load settings_value %}
+
+{% settings_value "DECOUPLE_CONFIGURATION" as environment%}
+
 <html lang="de">
 
 <head>
@@ -29,7 +33,12 @@
     <!-- has to be here to work for safari? dont know why-->
     <style>
     body{
-      padding-top: 71px;
+        {% if  environment == "production" %}
+            padding-top: 91px;
+        {% else %}
+            padding-top: 71px;
+        {% endif %}
+
     }
     .sticky-top{
       top: 72px;

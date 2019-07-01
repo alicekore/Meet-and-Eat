@@ -1,5 +1,5 @@
 {% load settings_value %}
-<header class="{% if request.resolver_match.url != 'index' %}sticky-top{% endif %}">
+<header>
     {% settings_value "DECOUPLE_CONFIGURATION" as environment%}
     {% if  environment == "production" %}
         <div class="warning-test-version">
