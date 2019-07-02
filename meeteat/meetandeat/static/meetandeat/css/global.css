@@ -402,6 +402,18 @@ a:active {
 
 /*#######################*/
 
+
+.warning-test-version {
+    color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+
+.warning-test-version span {
+    display: block;
+    text-align: center;
+}
+
 /*##### CUSTOM FILE INPUT #####*/
 /*both styles below are used to make cursor pointer*/
 .custom-file-input, .custom-file {
