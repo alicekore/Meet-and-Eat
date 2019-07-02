@@ -136,6 +136,7 @@ You will see then logs of the corresponding containers
 
 <a name="background-tasks"></a>
 ### Background-tasks ###
+Background tasks shouldn't start right after app load, it can cause problems after changing model  
 for simple automation we can use a backgroundscheduler.
 this will run tasks from 'tasks.py'.
 tasks have to be added to 'updater.py'.
