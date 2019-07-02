@@ -1,19 +1,53 @@
 $pageBody = document.querySelector("body");
 $pageID = $pageBody.id;
 
+
+if($pageID ==="index") {
+    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    $('#id_date').datepicker({
+      format: 'dd/mm/yyyy',
+      minDate: today
+    });
+
+    $('#id_time').timepicker({
+         mode: '24hr'
+    });
+}
+
 //##### Event Form javascript #####
 if($pageID === "create-event" || $pageID === "edit-event") {
-    $datePicker = $pageBody.querySelector("#date");
-    if(!$datePicker.value) {
-        // $dateString = new Date.toLocaleString();
-        $datePicker.value = getLocalDate();
-    }
+    // $datePicker = $pageBody.querySelector("#date");
+    // if(!$datePicker.value) {
+    //     // $dateString = new Date.toLocaleString();
+    //     $datePicker.value = getLocalDate();
+    // }
+    //
+    // $timePicker = $pageBody.querySelector("#time");
+    // if(!$timePicker.value) {
+    //     // $dateString = new Date.toLocaleString();
+    //     $timePicker.value = getLocalTime();
+    // }
+    let datePicker = $("#date");
 
-    $timePicker = $pageBody.querySelector("#time");
-    if(!$timePicker.value) {
-        // $dateString = new Date.toLocaleString();
-        $timePicker.value = getLocalTime();
-    }
+    datePicker.prop('type', 'text');
+    let d = new Date();
+
+    let today = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    datePicker.datepicker({
+        uiLibrary: 'bootstrap4',
+      format: 'dd/mm/yyyy',
+        minDate: today
+    });
+
+    let timePicker = $("#time");
+    // timePicker.prop('type', 'text');
+    d = new Date();
+    let now = new Date(d.getHours(),  d.getMinutes());
+    timePicker.timepicker({
+        uiLibrary: 'bootstrap4',
+      format: 'HH:MM',
+        mode: '24hr'
+    });
 }
 
 function zeroPadded(val) {
