@@ -6,7 +6,5 @@ class MeetandeatConfig(AppConfig):
     def ready(self):
         from .updater import start
         from .tasks import deleteEvents, makeEventsInvisible
-        print('Starting Tasks:')
-        deleteEvents()
-        makeEventsInvisible()
+
         start()
