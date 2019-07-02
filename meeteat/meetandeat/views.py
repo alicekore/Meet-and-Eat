@@ -88,14 +88,14 @@ class IndexView(View):
                         event.set_matching(match)
 
             if idate:
-                events = events.filter(datetime__year=idate.year, datetime__month=idate.month, datetime__day=idate.day)
+                events = events.filter(date=idate)
             if time:
                 if idate is None:
                     # filter by todays date
                     today = date.today()
-                    events = events.filter(datetime__year=today.year, datetime__month=today.month, datetime__day=today.day)
+                    events = events.filter(date=today)
                  # filter by times greater than input time
-                events = events.filter(datetime__time__gte = time)
+                events = events.filter(time__gte=time)
 
             return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
         else:

@@ -29,9 +29,9 @@
     <div class="row">
         <div class="col datefield border-right">
             <div class="container">
-                <div class="row"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
-                <div class="row border-bottom border-dark" style="margin-top: -8px"><h4>{{ event.datetime | localtime | date:"M"}}</h4></div>
-                <div class="row pt-1">{{ event.datetime | localtime | date:"G:i"}}</div>
+                <div class="row"><h3>{{ event.date|  date:"d"}}</h3></div>
+                <div class="row border-bottom border-dark" style="margin-top: -8px"><h4>{{ event.date |  date:"M"}}</h4></div>
+                <div class="row pt-1">{{ event.time |  date:"G:i"}}</div>
             </div>
         </div>
         <div class="col headline">
@@ -111,9 +111,9 @@
     <div class="row">
         <div class="col datefield border-right">
             <div class="container">
-                <div class="row"><h3>{{ event.datetime | localtime | date:"d"}}</h3></div>
-                <div class="row border-bottom border-dark" style="margin-top: -8px"><h4>{{ event.datetime | localtime | date:"M"}}</h4></div>
-                <div class="row pt-1">{{ event.datetime | localtime | date:"G:i"}}</div>
+                <div class="row"><h3>{{ event.date|  date:"d"}}</h3></div>
+                <div class="row border-bottom border-dark" style="margin-top: -8px"><h4>{{ event.date |  date:"M"}}</h4></div>
+                <div class="row pt-1">{{ event.time |  time:"G:i"}}</div>
             </div>
         </div>
         <div class="col headline">

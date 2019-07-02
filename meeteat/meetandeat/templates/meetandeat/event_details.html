@@ -60,7 +60,7 @@
         <br>
         <hr>
         <p><span class="material-icons">room</span> {{event.location}}</p>
-        <p><span class="material-icons">schedule</span> <span class="pb-1">{{event.datetime | date:"d.m.Y G:i"}}</span>
+        <p><span class="material-icons">schedule</span> <span class="pb-1">{{event.date | date:"d.m.Y"}} {{ event.time | time:"G:i" }}</span>
         </p>
         <hr>
         {% for comment in comment_list reversed %}
