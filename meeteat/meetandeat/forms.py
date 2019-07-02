@@ -1,10 +1,18 @@
+from datetime import timedelta
+
 from django import forms
-from meetandeat.models import *
-from django_select2.forms import Select2MultipleWidget
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
-from datetime import timedelta, datetime
+from django_select2.forms import Select2MultipleWidget
+from meetandeat.models import *
+from django.forms.widgets import PasswordInput, TextInput
+
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label='',widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}))
+    password = forms.CharField(label='',widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+
 
 
 class RequestActivationLinkForm(forms.ModelForm):
