@@ -83,18 +83,21 @@ class DeleteProfileForm(forms.ModelForm):
 
 
 class EventForm(forms.ModelForm):
-    datetime = forms.DateTimeField(label="datetime", input_formats=['%Y-%m-%dT%H:%M'])
     tags_queryset = Tag.objects.filter(approved=True)
     tags = forms.ModelMultipleChoiceField(queryset=tags_queryset,
-                                          widget=Select2MultipleWidget(attrs={'style': 'width: 100%;'}),required=False)
+                                          widget=Select2MultipleWidget(attrs={'style': 'width: 100%;'}), required=False)
 
+    date = forms.DateField(label="", input_formats=['%d/%m/%Y'])
+    time = forms.TimeField(label="", input_formats=['%H:%M'])
+    
     class Meta:
         model = Event
         fields = ['title',
                   'description',
                   'location',
                   'participants_number',
-                  'datetime',
+                  'date',
+                  'time',
                   'tags']
 
 
@@ -102,7 +105,7 @@ class TagFilterForm(forms.Form):
     tags_queryset = Tag.objects.filter(approved=True)
     tags = forms.ModelMultipleChoiceField(required=False, queryset=tags_queryset, widget=Select2MultipleWidget(attrs={'style': 'width: 100%;', 'data-placeholder': 'Search by Tag', 'allowClear': True}))
     date = forms.DateField(label="", input_formats=['%d/%m/%Y'], required=False)
-    time = forms.TimeField(label = "", input_formats = ['%H:%M'], required=False)
+    time = forms.TimeField(label="", input_formats=['%H:%M'], required=False)
 
 class TagForm(forms.ModelForm):
     class Meta:
@@ -123,6 +126,7 @@ class TagDisapprovalForm(forms.ModelForm):
         fields = [
             'disapprovalMsg']
 
+
 class UserRegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
@@ -130,8 +134,7 @@ class UserRegistrationForm(UserCreationForm):
         self.fields['email'].required = True
 
     class Meta:
-
-        model = get_user_model()
+        model = User
         fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'profilePicture']
 
     def clean_profilePicture(self):

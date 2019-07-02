@@ -34,7 +34,6 @@ from datetime import date
 import json
 from .helpers import *
 from .models import *
-from .tasks import makeEventsInvisibleOlderThan, deleteEventsOlderThan
 
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
@@ -59,16 +58,6 @@ class UserIsStuffMixin(UserPassesTestMixin):
 @method_decorator(login_required, name='dispatch')
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-
-        """ Tasks to maintain the database:
-        - Drop events older than 7 days
-        - Make events older than 1 day invisible
-        For now the tasks will be performed whenever this functions gets called.
-        For production these tasks should be performed by a crontab or similar. 
-        """
-        makeEventsInvisibleOlderThan(1)
-        deleteEventsOlderThan(7)
-
         form = TagFilterForm()
         ids = Report.objects.filter(reporter=request.user).values_list(
             'event', flat=True).distinct()
@@ -97,16 +86,16 @@ class IndexView(View):
                         else:
                             match = event.tags.count() / tags.count() * 100
                         event.set_matching(match)
-                        
+
             if idate:
-                events = events.filter(datetime__year=idate.year, datetime__month=idate.month, datetime__day=idate.day)
+                events = events.filter(date=idate)
             if time:
                 if idate is None:
                     # filter by todays date
                     today = date.today()
-                    events = events.filter(datetime__year=today.year, datetime__month=today.month, datetime__day=today.day)
+                    events = events.filter(date=today)
                  # filter by times greater than input time
-                events = events.filter(datetime__time__gte = time)
+                events = events.filter(time__gte=time)
 
             return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
         else:
@@ -285,15 +274,17 @@ class ModUnReport(UserIsStuffMixin, View):
 
 
 class UserCreateView(View):
-    form_class = UserRegistrationForm
     template_name = 'meetandeat/register.html'
 
     def get(self, request):
-        form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+        if request.user.is_authenticated:
+            return redirect("meetandeat:profile")
+        return render(request, self.template_name)
 
     def post(self, request):
-        form = self.form_class(request.POST, request.FILES)
+        if request.user.is_authenticated:
+            return redirect("meetandeat:profile")
+        form = UserRegistrationForm(request.POST, files=request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
