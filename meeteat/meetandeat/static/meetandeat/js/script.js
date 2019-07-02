@@ -3,10 +3,16 @@ $pageID = $pageBody.id;
 
 //##### Event Form javascript #####
 if($pageID === "create-event" || $pageID === "edit-event") {
-    $datePicker = $pageBody.querySelector("#datetime");
+    $datePicker = $pageBody.querySelector("#date");
     if(!$datePicker.value) {
         // $dateString = new Date.toLocaleString();
-        $datePicker.value = getLocalDateTime();
+        $datePicker.value = getLocalDate();
+    }
+
+    $timePicker = $pageBody.querySelector("#time");
+    if(!$timePicker.value) {
+        // $dateString = new Date.toLocaleString();
+        $timePicker.value = getLocalTime();
     }
 }
 
@@ -17,17 +23,22 @@ function zeroPadded(val) {
     return '0' + val;
 }
 
-function getLocalDateTime() {
+function getLocalDate() {
     d = new Date();
-  return d.getFullYear()
-      +"-"
-      +zeroPadded(d.getMonth() + 1)
-      +"-"
-      +zeroPadded(d.getDate())
-      +"T"
-      +zeroPadded(d.getHours())
-      +":"
-      +zeroPadded(d.getMinutes());
+    return  d.getFullYear()
+        + "-"
+        // use +1 because getMonth returns values from 0 to 11
+        + zeroPadded(d.getMonth() + 1)
+        + "-"
+        + zeroPadded(d.getDay());
+}
+
+function getLocalTime() {
+    d = new Date();
+    return  zeroPadded(d.getHours())
+        + ":"
+        + zeroPadded(d.getMinutes());
+
 }
 //###################
 

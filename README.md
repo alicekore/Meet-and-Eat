@@ -96,6 +96,10 @@ pip install django-cleanup
 ```
 pip install python-decouple
 ```
+##### apscheduler #####
+```
+pip install APScheduler
+```
 <a name="mailing"></a>
 ### Mailing ###
 By default, mailing is disabled. When you register, you won't get an email, but you will see an activation link in the server console.  
