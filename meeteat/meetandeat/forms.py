@@ -118,6 +118,7 @@ class TagDisapprovalForm(forms.ModelForm):
         fields = [
             'disapprovalMsg']
 
+
 class UserRegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
@@ -125,8 +126,7 @@ class UserRegistrationForm(UserCreationForm):
         self.fields['email'].required = True
 
     class Meta:
-
-        model = get_user_model()
+        model = User
         fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'profilePicture']
 
     def clean_profilePicture(self):
