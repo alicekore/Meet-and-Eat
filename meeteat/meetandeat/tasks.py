@@ -1,4 +1,5 @@
 from django.utils import timezone
+import pytz
 from .models import Event
 
 def deleteEvents():
@@ -7,10 +8,10 @@ def deleteEvents():
 
     events = Event.objects.all()
     for e in events:
-        diff = timezone.now() - e.datetime
+        diff = timezone.now() - timezone.datetime.combine(e.date, e.time, tzinfo=pytz.UTC)
         if diff.days >= days:
             e.delete()
-            
+
     print('Database updated: Deleted events older than 7 days.')
 
 def makeEventsInvisible():
@@ -20,7 +21,7 @@ def makeEventsInvisible():
     events = Event.objects.all()
     if events:
         for e in events:
-            diff = timezone.now() - e.datetime
+            diff = timezone.now() - timezone.datetime.combine(e.date, e.time, tzinfo=pytz.UTC)
             if diff.days >= days:
                 e.visible = False
                 e.save()

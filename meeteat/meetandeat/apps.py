@@ -1,12 +1,10 @@
 from django.apps import AppConfig
+from django.utils import timezone
 
 class MeetandeatConfig(AppConfig):
     name = 'meetandeat'
 
     def ready(self):
         from .updater import start
-        from .tasks import deleteEvents, makeEventsInvisible
-        print('Starting Tasks:')
-        deleteEvents()
-        makeEventsInvisible()
-        start()
+        startdate = timezone.now() + timezone.timedelta(minutes=1)
+        start(startdate)

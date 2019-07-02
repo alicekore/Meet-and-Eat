@@ -96,6 +96,10 @@ pip install django-cleanup
 ```
 pip install python-decouple
 ```
+##### apscheduler #####
+```
+pip install APScheduler
+```
 <a name="mailing"></a>
 ### Mailing ###
 By default, mailing is disabled. When you register, you won't get an email, but you will see an activation link in the server console.  
@@ -132,6 +136,7 @@ You will see then logs of the corresponding containers
 
 <a name="background-tasks"></a>
 ### Background-tasks ###
+Background tasks shouldn't start right after app load, it can cause problems after changing model  
 for simple automation we can use a backgroundscheduler.
 this will run tasks from 'tasks.py'.
 tasks have to be added to 'updater.py'.

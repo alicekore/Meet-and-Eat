@@ -14,7 +14,8 @@ class Event(models.Model):
     title = models.CharField(max_length=40)
     description = models.CharField(max_length=160)
     location = models.CharField(max_length=30)
-    datetime = models.DateTimeField(default=timezone.now)
+    date = models.DateField(default=timezone.now)
+    time = models.TimeField(default=timezone.now)
     visible = models.BooleanField(default=True)
     participants_number = models.IntegerField(default=2, validators=[MaxValueValidator(16), MinValueValidator(2)])
     tags = models.ManyToManyField(to='meetandeat.Tag')
@@ -24,7 +25,7 @@ class Event(models.Model):
         permissions = [("join_event", 'Can join event'), ("hide_event", 'Can hide event'),
                        ('edit_event', 'Can Edit Event'), ('seeHidden_event', 'Can see hidden events')]
 
-        ordering = ('datetime',)
+        ordering = ['date', 'time']
 
     def save(self, *args, **kwargs):
         super(Event, self).save(*args, **kwargs)
@@ -56,12 +57,12 @@ class Event(models.Model):
 
 
 class Tag(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     alphabetic = RegexValidator(r'^[a-zA-Z]*$', 'Only alphabetic characters are allowed.')
 
     title = models.CharField(max_length=15, validators=[alphabetic])
-    description = models.CharField(max_length=160)
-    disapprovalMsg = models.CharField(max_length=160)
+    description = models.CharField(max_length=160, default="")
+    disapprovalMsg = models.CharField(max_length=160, default="")
     approved = models.BooleanField(default=False)
     pending = models.BooleanField(default=True)
 
