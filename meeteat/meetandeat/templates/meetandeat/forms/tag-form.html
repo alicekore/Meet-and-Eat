@@ -25,7 +25,7 @@
               {% endfor %}
             {% endif %}
 
-            {% if form.title.errors %}<div class="invalid-feedback">A Tag with the title already exists.</div>{%  endif %}
+            {% if form.title.errors %}<div class="invalid-feedback">Give a correct name</div>{%  endif %}
             {% if form.description.errors %}<div class="invalid-feedback">Give a correct description</div>{%  endif %}
         </div>
         <button type="submit" class="btn btn-custom-primary">Submit Tag</button>
