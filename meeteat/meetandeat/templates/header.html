@@ -20,9 +20,6 @@
             {# left floating items            #}
             <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
-                <li class="nav-item  {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
-                    <a class="nav-link" href="{% url 'meetandeat:profile' %}">Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
-                </li>
                 <li class="nav-item {% if request.resolver_match.url_name == 'own_events_list' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'meetandeat:own_events_list' %}">My events{% if request.resolver_match.url_name == 'own_events_list' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
@@ -40,11 +37,20 @@
             {# right floating items            #}
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
-                <li class="nav-item {% if request.resolver_match.url_name == 'NotificationView' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'meetandeat:NotificationView' %}">Notifications{% if request.resolver_match.url_name == 'NotificationView' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                <li>
+                    <a href="{% url 'meetandeat:create-event' %}" class="btn btn-custom-primary">Create Event</a>
                 </li>
-                <li class="nav-item {% if request.resolver_match.url_name == 'logout' %}active{% endif %}">
-                        <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:logout' %}">Logout{% if request.resolver_match.url_name == 'logout' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                <li>
+                  <div class="dropdown">
+                    <button class="btn btn-secondary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Dropdown button
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="{% url 'meetandeat:profile' %}">Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                      <a class="dropdown-item" href="{% url 'meetandeat:NotificationView' %}">Tags{% if request.resolver_match.url_name == 'NotificationView' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                      <a class="dropdown-item" href="{% url 'meetandeat:logout' %}">Logout{% if request.resolver_match.url_name == 'logout' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                    </div>
+                  </div>
                 </li>
                 {% else %}
                 <li class="nav-item {% if request.resolver_match.url_name == 'login' %}active{% endif %}">

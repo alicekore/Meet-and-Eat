@@ -30,10 +30,9 @@
 </form>
 </div>
 
-<div class="container text-color-dark">
-    <a href="{% url 'meetandeat:create-event' %}" class="btn btn-custom-primary">Create Event</a>
-    <a href="{% url 'meetandeat:create-tag' %}" class="btn btn-custom-primary">Submit Tag</a>
+
+
     {% block events %}
     {% endblock events %}
-</div>
+
 {% endblock %}

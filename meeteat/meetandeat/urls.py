@@ -34,6 +34,6 @@ urlpatterns = [
     path('mod/tag/<int:pk>/edit/', TagUpdate.as_view(), name='edit-tag'),
     path('mod/tag/<int:pk>/approve/', ApproveTag.as_view(), name='approve-tag'),
     path('mod/tag/all/', TagView.as_view(), name='tag-view'),
-    path('notifications/', NotificationView.as_view(), name='NotificationView'),
+    path('tags/', NotificationView.as_view(), name='NotificationView'),
 
 ]

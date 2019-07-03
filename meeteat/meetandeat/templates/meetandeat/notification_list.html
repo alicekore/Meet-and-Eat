@@ -3,8 +3,13 @@
 {% load tz %}
 
 {% block main %}
+
+
+
 <div class="container bg-custom-primary rounded p-3 my-4">
-<h1>Notifications:</h1>
+  <h3>There is a Tag that you want to have on our site? Submit it now!</h3>
+  <a href="{% url 'meetandeat:create-tag' %}" class="btn btn-custom-primary">Submit Tag</a>
+
 {% for tag in tags %}
 
     {% if tag.approved == False and tag.pending == True %}
@@ -16,7 +21,9 @@
     {% if tag.approved == False and tag.pending == False %}
     <div class="container bg-custom-secondary rounded  p-3 my-4">
     <p>Your Tag "{{ tag.title }}" was disapproved because of the following reason: {{ tag.disapprovalMsg }}</p>
+    {% if tag.disapprovalMsg == 'Description not clear.' %}
     <p>Description: {{ tag.description }}</p>
+    {% endif %}
     </div>
     {% endif %}
 

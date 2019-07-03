@@ -89,7 +89,7 @@ class EventForm(forms.ModelForm):
 
     date = forms.DateField(label="", input_formats=['%d/%m/%Y'])
     time = forms.TimeField(label="", input_formats=['%H:%M'])
-    
+
     class Meta:
         model = Event
         fields = ['title',
@@ -112,6 +112,13 @@ class TagForm(forms.ModelForm):
         model = Tag
         fields = [
             'title','description']
+
+    def clean(self):
+        title = self.cleaned_data.get('title')
+        if Tag.objects.filter(title=title).exists():
+            raise ValidationError("Tag already exists.")
+
+
 
 class TagDisapprovalForm(forms.ModelForm):
     CHOICES= (

@@ -166,7 +166,7 @@ class TagCreate(CreateView):
     model = Tag
     template_name = 'meetandeat/create-tag.html'
     form_class = TagForm
-    success_url = reverse_lazy('meetandeat:index')
+    success_url = reverse_lazy('meetandeat:NotificationView')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
