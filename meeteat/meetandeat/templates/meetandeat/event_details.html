@@ -4,7 +4,7 @@
 {% block title %}Event Details{% endblock %}
 {% block main %}
 <div class="container">
-<div class="spacing"></div>
+    <div class="spacing"></div>
     <div class="row">
         <div class="col">
             <a class="btn btn-custom-primary" href="{% url 'meetandeat:index' %}">Back to Dashboard</a>
@@ -17,7 +17,7 @@
             {% endif %}
             <div class="btn-group dropdown">
                 <a aria-expanded="false" aria-haspopup="true" class="material-icons md-light btn-custom-dots-dark"
-                   data-toggle="dropdown" id="dropdownMenuLink" role="button">
+                    data-toggle="dropdown" id="dropdownMenuLink" role="button">
                     more_horiz
                 </a>
                 <div aria-labelledby="dropdownMenuLink" class="dropdown-menu">
@@ -50,56 +50,50 @@
         <br>
         <hr>
         <p><span class="material-icons">room</span> {{event.location}}</p>
-        <p><p><span class="material-icons">schedule</span> {{event.datetime | date:"d.m.Y G:i"}}</p>
+        <p><span class="material-icons">schedule</span> {{event.datetime | date:"d.m.Y G:i"}}</p>
         <hr>
-        {% for comment in comment_list reversed %}
-        {% if comment.author == user %}
-        <div class="container rounded bg-custom-secondary p-3 my-4">
-            <div class="row">
-                <div class="col col-left-comment border-right bg-custom-secondary">
-                    <div class="container">
-                        <!-- TODO: <div class="row">{{ comment.profilepciture }}</div> -->
-                        <div class="row pt-1">{{ comment.author }}</div>
-                        <div class="row border-top pt-1"><small>{{ comment.datetime |date:"d.m G:i"}}</small></small></div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="container">
-                        {{ comment.text }}
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% else %}
-        <div class="container rounded bg-custom-secondary p-3 my-4">
-            <div class="row">
-                <div class="col">
-                    <div class="container">
-                        {{ comment.text }}
-                    </div>
-                </div>
-                <div class="col col-right-comment border-left bg-custom-secondary">
-                    <div class="container">
-                            <!-- TODO: <div class="row">{{ comment.profilepciture }}</div> -->
-                            <div class="row pt-1">{{ comment.author }}</div>
-                            <div class="row border-top pt-1"><small>{{ comment.datetime |date:"d.m G:i"}}</small></small></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        {%endfor%}
+
+        <!-- Dynamic loaded -->
+        <div id="comment-list"></div>
+
         <form method='POST' class="border-top pt-4">
             {% csrf_token %}
-                <div class="row">
-                    <div class="col">
-                        {{form.text}}
-                    </div>
-                    <div class="col col-send-comment">
-                        <button class="btn btn-custom-primary material-icons" type="submit">send</button>
-                    </div>
+            <div class="row">
+                <div class="col">
+                    {{form.text}}
                 </div>
+                <div class="col col-send-comment">
+                    <button class="btn btn-custom-primary material-icons" type="submit">send</button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
 {% endblock %}
+
+{% block js %}
+<script>
+    var comment_count = 0;
+    function executeQuery() {
+        $.ajax({
+            url: '/ajax/comments_changed',
+            data: {
+                'event_id': '{{ event.id }}',
+                'comments_amount': comment_count,
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.comments_changed) {
+                    comment_count = data.comment_count;
+                    $("#comment-list").html(data.html);
+                }
+            }
+        });
+        setTimeout(executeQuery, 5000);
+    }
+
+    $(document).ready(function () {
+        executeQuery();
+    });
+</script>
+{% endblock js %}
