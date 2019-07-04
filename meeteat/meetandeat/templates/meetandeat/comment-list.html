@@ -1,5 +1,5 @@
 {% for comment in comment_list reversed %}
-{% if comment.author == user %}
+{% if comment.author == request.user %}
 <div class="container rounded bg-custom-secondary p-3 my-4">
     <div class="row">
         <div class="col col-left-comment border-right bg-custom-secondary">

@@ -621,6 +621,6 @@ def comments_changed(request):
     """
     if data['comments_changed']:
         data['comment_count'] = event_comments.count()
-        data['html'] = render_to_string('meetandeat/comment-list.html', context={'comment_list': event_comments})
+        data['html'] = render_to_string('meetandeat/comment-list.html', context={'request': request,'comment_list': event_comments})
 
     return JsonResponse(data, safe=False)
