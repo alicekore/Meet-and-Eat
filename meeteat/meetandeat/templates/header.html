@@ -1,18 +1,25 @@
+{% load settings_value %}
 <header>
-    <nav class="shadow navbar navbar-expand-md p-3 mb-5 rounded bg-custom-secondary" style="box-shadow: #484848;">
-        <span class="navbar-brand unselectable" style="color: #dd5549">Meet&Eat</span>
+
+    {% settings_value "DECOUPLE_CONFIGURATION" as environment%}
+    {% if  environment == "production" %}
+        <div class="warning-test-version">
+            <div>
+                <span class="">This is the test version of the site, all data will be deleted until 31.07.19</span>
+            </div>
+        </div>
+    {% endif %}
+    <nav class="navbar navbar-expand-md p-3 mb-3 rounded bg-custom-secondary" style="box-shadow: #484848;">
+        <a class="navbar-brand" href="{% url 'meetandeat:index' %}" style="color: #dd5549">Meet&Eat</a>
+
         <span class="spacing border-right"></span>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="material-icons">menu</span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             {# left floating items            #}
             <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
-                <li class="nav-item {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
-                    <a class="nav-link" href="{% url 'meetandeat:index' %}">Dashboard{% if request.resolver_match.url_name == 'index' %}<span class="sr-only">(current)</span>{% endif %}</a>
-                </li>
                 <li class="nav-item  {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'meetandeat:profile' %}">Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
@@ -28,6 +35,7 @@
                     <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:tag-view' %}">Tags{% if request.resolver_match.url_name == 'tag-view' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 {%endif %}
+
             </ul>
             {# right floating items            #}
             <ul class="navbar-nav ml-auto">
@@ -49,4 +57,6 @@
             </ul>
         </div>
     </nav>
+
+
 </header>

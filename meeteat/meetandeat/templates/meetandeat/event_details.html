@@ -4,17 +4,8 @@
 {% block title %}Event Details{% endblock %}
 {% block main %}
 <div class="container">
-    <div class="spacing"></div>
-    <div class="row">
-        <div class="col">
-            <a class="btn btn-custom-primary" href="{% url 'meetandeat:index' %}">Back to Dashboard</a>
-        </div>
+    <div class="row mt-1 pr-3">
         <div class="col text-right">
-            {% if user in event.eventParticipants.all %}
-            <a class="btn btn-custom-secondary" href="{% url 'meetandeat:leave-event' event.pk %}">Leave</a>
-            {% else %}
-            <a class="btn btn-primary" href="{% url 'meetandeat:join-event' event.pk %}">Join Event</a>
-            {% endif %}
             <div class="btn-group dropdown">
                 <a aria-expanded="false" aria-haspopup="true" class="material-icons md-light btn-custom-dots-dark"
                     data-toggle="dropdown" id="dropdownMenuLink" role="button">
@@ -28,29 +19,49 @@
                     {% if user in event.userReportings.all %}
                     <span class="dropdown-item">Already reported!</span>
                     {% else %}
-                    <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report
+                     <button type="button" class="dropdown-item" data-toggle="modal"
+                                    data-target="#reportModal">Report</button>
+                    {% endif %}
+                    {% if user in event.eventParticipants.all %}
+                    <a class="dropdown-item" href="{% url 'meetandeat:leave-event' event.pk %}">Leave
                         Event</a>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
-    <div class="container bg-custom-primary rounded p-3 my-4">
+    <div class="container bg-custom-primary rounded p-3 my-2">
         <div class="row">
             <div class="col">
                 <h2>{{event.title}} </h2>
             </div>
             <div class="col text-right">
-                <small>Creator: <a href="#">{{event.user}}</a></small>
-                <br>
-                <small>{{event.participants_number}} Participants</small>
+                <div class="btn-group dropdown dropdown-hover">
+                    <a aria-expanded="false" aria-haspopup="true" class="md-light"
+                       data-toggle="dropdown" id="dropdownMenuLink2" role="button">
+
+                       <small>{{ event.eventParticipants.count }}/{{ event.participants_number }} Participants</small>
+                    </a>
+                    <div aria-labelledby="dropdownMenuLink2" class="dropdown-menu dropdown-menu-hover">
+                        {% for participant in event.eventParticipants.all %}
+                        {% if participant == event.user %}
+                        <small class="dropdown-item" style="color: #5094ed"><img width="20" height="20" style="border-radius: 50%;" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>   {{ participant.username }}</small>
+                        {% elif participant == request.user%}
+                        <small class="dropdown-item" style="color: #dc3545"><img width="20" height="20" style="border-radius: 50%;" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>   {{ participant.username }}</small>
+                        {% else %}
+                        <small class="dropdown-item"><img width="20" height="20" style="border-radius: 50%;" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>  {{ participant.username }} </small>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
         <small>{{event.description}}</small>
         <br>
         <hr>
         <p><span class="material-icons">room</span> {{event.location}}</p>
-        <p><span class="material-icons">schedule</span> {{event.datetime | date:"d.m.Y G:i"}}</p>
+        <p><span class="material-icons">schedule</span> <span class="pb-1">{{event.date | date:"d.m.Y"}} {{ event.time | time:"G:i" }}</span>
+        </p>
         <hr>
 
         <!-- Dynamic loaded -->
@@ -69,6 +80,32 @@
         </form>
     </div>
 </div>
+   <form action="{% url 'meetandeat:report-event' event.pk %} " method="post" name="form">
+    {% csrf_token %}
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="reportModal" role="dialog"
+        tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to report this event?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-custom-secondary" data-dismiss="modal" type="button">Close
+                    </button>
+                    <input class="btn btn-custom-primary" type="submit" value="Report" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
 {% endblock %}
 
 {% block js %}
