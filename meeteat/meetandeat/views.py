@@ -9,11 +9,12 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.mail import EmailMessage
-from django.http import HttpResponseRedirect, HttpResponse
+from django.core import serializers
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.db.models import Count, Q
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -597,3 +598,29 @@ class NotificationView(View):
         User = self.request.user
         tags = Tag.objects.filter(user=User).order_by("pk")
         return render(request, 'meetandeat/notification_list.html', context={'tags': tags})
+
+def comments_changed(request):
+    """ 
+    This view is used for dynamical loading of comments inside events.
+    returns a JsonResponse with event comment-list, rendered as html
+    """
+    event_id = request.GET.get('event_id', None)
+    event_comments = Comment.objects.filter(event=event_id)
+
+    comments_count_get = int(request.GET.get('comments_amount', None))
+
+    difference = abs(event_comments.count() - comments_count_get)
+    comments_changed = difference > 0
+
+    data = {
+        'comments_changed': comments_changed
+    }
+
+    """
+    return data only if changed or on first load
+    """
+    if data['comments_changed']:
+        data['comment_count'] = event_comments.count()
+        data['html'] = render_to_string('meetandeat/comment-list.html', context={'comment_list': event_comments})
+
+    return JsonResponse(data, safe=False)

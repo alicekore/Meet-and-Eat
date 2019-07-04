@@ -1,4 +1,5 @@
 from django.contrib.auth import views as auth_views
+from django.conf.urls import url
 from django.urls import path
 
 from .views import *
@@ -35,5 +36,5 @@ urlpatterns = [
     path('mod/tag/<int:pk>/approve/', ApproveTag.as_view(), name='approve-tag'),
     path('mod/tag/all/', TagView.as_view(), name='tag-view'),
     path('notifications/', NotificationView.as_view(), name='NotificationView'),
-
+    url(r'^ajax/comments_changed/$', comments_changed, name='comments_changed'),
 ]
