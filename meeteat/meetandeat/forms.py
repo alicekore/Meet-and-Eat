@@ -104,8 +104,9 @@ class EventForm(forms.ModelForm):
 class TagFilterForm(forms.Form):
     tags_queryset = Tag.objects.filter(approved=True)
     tags = forms.ModelMultipleChoiceField(required=False, queryset=tags_queryset, widget=Select2MultipleWidget(attrs={'style': 'width: 100%;', 'data-placeholder': 'Search by Tag', 'allowClear': True}))
-    date = forms.DateField(label="", input_formats=['%d/%m/%Y'], required=False)
-    time = forms.TimeField(label="", input_formats=['%H:%M'], required=False)
+    date = forms.DateField(widget=forms.DateInput(attrs={'autocomplete': 'off'}), label="", input_formats=['%d/%m/%Y'], required=False)
+    time = forms.TimeField(widget=forms.TimeInput(attrs={'autocomplete': 'off'}), label="", input_formats=['%H:%M'], required=False)
+
 
 class TagForm(forms.ModelForm):
     class Meta:

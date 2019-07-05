@@ -33,30 +33,18 @@
     <link rel="stylesheet" href="{% static 'meetandeat/css/bootstrap.css'%}">
     <link rel="stylesheet" href="{% static 'meetandeat/css/global.css' %}">
 
-    <!-- has to be here to work for safari? dont know why-->
-    <style>
-    {#body{#}
-    {#    {% if  environment == "production" %}#}
-    {#        padding-top: 91px;#}
-    {#    {% else %}#}
-    {#        padding-top: 71px;#}
-    {#    {% endif %}#}
-    {##}
-    {#}#}
-
-    </style>
 
     {% block css %}{% endblock css %}
     <title>{% block title %}{% endblock %}</title>
 </head>
 
-<body class="bg-custom-primary mb-3"  id="{{ request.resolver_match.url_name }}">
+<body class="bg-custom-primary"  id="{{ request.resolver_match.url_name }}">
 
 
     {% include "header.html" %}
 
 
-    <main class="mt-3">
+    <main class="mb-3 pb-3">
         {% block main %}{% endblock %}
     </main>
 

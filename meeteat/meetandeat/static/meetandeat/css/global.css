@@ -472,3 +472,8 @@ a:active {
 .sticky-offset-production{
     top: 92px;
 }
+
+/*very important for proper functionality of dropdowns*/
+header.sticky-top {
+    z-index: 1021 !important;
+}

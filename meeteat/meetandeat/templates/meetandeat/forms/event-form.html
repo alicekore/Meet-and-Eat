@@ -56,7 +56,7 @@
                     id="date" name="date"
                        class="form-control form-control-lg {% if form.date.errors %}is-invalid{%  endif %}"
                     {% if form.date.value %}value="{{form.date.value | date:"d/m/Y" }}"
-                    {% endif %}  required>
+                    {% endif %} autocomplete="off" required>
                 {% if form.date.errors %}<div class="invalid-feedback">{{ form.date.errors }}</div>
                 {%  endif %}
             </div>
@@ -66,7 +66,7 @@
                     class="form-control form-control-lg {% if form.time.errors %}is-invalid{%  endif %}"
                     id="time" name="time"
                     {% if form.time.value %}value="{{form.time.value | date:"G:i"}}"
-                    {% endif %} required>
+                    {% endif %} autocomplete="off" required>
                 {% if form.time.errors %}<div class="invalid-feedback">{{ form.time.errors }}</div>
                 {%  endif %}
             </div>
