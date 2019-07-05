@@ -63,7 +63,7 @@
                                data-toggle="dropdown" id="dropdownMenuLink" role="button">
                                 more_horiz
                             </a>
-                            <div aria-labelledby="dropdownMenuLink" class="dropdown-menu">
+                            <div aria-labelledby="dropdownMenuLink" class="dropdown-menu dropdown-menu-right">
                                 {% if event.user == user %}
                                 <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit
                                     Event</a>
@@ -145,7 +145,7 @@
                                data-toggle="dropdown" id="dropdownMenuLink2" role="button">
                                 more_horiz
                             </a>
-                            <div aria-labelledby="dropdownMenuLink2" class="dropdown-menu">
+                            <div aria-labelledby="dropdownMenuLink2" class="dropdown-menu dropdown-menu-right">
                                 {% if event.user == user %}
                                 <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit
                                     Event</a>
