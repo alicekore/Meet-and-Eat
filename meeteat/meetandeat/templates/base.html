@@ -35,17 +35,15 @@
 
     <!-- has to be here to work for safari? dont know why-->
     <style>
-    body{
-        {% if  environment == "production" %}
-            padding-top: 91px;
-        {% else %}
-            padding-top: 71px;
-        {% endif %}
+    {#body{#}
+    {#    {% if  environment == "production" %}#}
+    {#        padding-top: 91px;#}
+    {#    {% else %}#}
+    {#        padding-top: 71px;#}
+    {#    {% endif %}#}
+    {##}
+    {#}#}
 
-    }
-    .sticky-top{
-      top: 72px;
-    }
     </style>
 
     {% block css %}{% endblock css %}
@@ -54,9 +52,9 @@
 
 <body class="bg-custom-primary mb-3"  id="{{ request.resolver_match.url_name }}">
 
-<div class = "fixed-top">
+
     {% include "header.html" %}
-</div>
+
 
     <main class="mt-3">
         {% block main %}{% endblock %}

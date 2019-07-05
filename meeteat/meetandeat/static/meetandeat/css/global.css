@@ -465,3 +465,10 @@ a:active {
 }
 
 
+.sticky-offset{
+    top: 72px;
+}
+
+.sticky-offset-production{
+    top: 92px;
+}

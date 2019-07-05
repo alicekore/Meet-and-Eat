@@ -1,7 +1,8 @@
 {% load settings_value %}
-<header>
+{% settings_value "DECOUPLE_CONFIGURATION" as environment%}
 
-    {% settings_value "DECOUPLE_CONFIGURATION" as environment%}
+<header class="sticky-top">
+
     {% if  environment == "production" %}
         <div class="warning-test-version">
             <div>

@@ -20,7 +20,7 @@
         {% endif %}
     </div>
   <div class="row">
-    <div class="col-md-4 profile-img">
+    <div class="col-md-4 profile-img mb-4 mb-md-0">
       <img {% if request.user.profilePicture %}src="{{ request.user.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %} alt="" class="img-rounded">
         {% include 'meetandeat/forms/change-profile-picture-form.html' %}
     </div>
