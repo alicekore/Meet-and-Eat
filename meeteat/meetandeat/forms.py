@@ -63,7 +63,7 @@ class ChangeProfilePictureForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-    text = forms.CharField(label="text", widget=forms.TextInput(attrs={'class': "form-control", 'placeholder': 'Leave your comment here'}), max_length=160)
+    text = forms.CharField(label="text", widget=forms.TextInput(attrs={'class': "form-control", 'placeholder': 'Leave your comment here', 'autocomplete': 'off'}), max_length=160)
 
     class Meta:
         model = Comment
