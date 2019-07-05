@@ -279,6 +279,7 @@
     font-size: 48px;
     background-color: #f6f6f6;
     border-radius: 30px;
+    user-select: none;
 }
 
 .btn-custom-leave:hover {
@@ -290,6 +291,8 @@
 
 .btn-custom-dots {
     font-size: 36px;
+    user-select: none;
+    cursor: pointer;
 }
 
 .btn-custom-dots:hover {
@@ -438,6 +441,20 @@ a:active {
     box-shadow: 0 0 0 0.2rem rgba(219, 70, 70, 0.25);
 }
 
+.profile-img-header {
+    /*display: table;*/
+    max-width: 36px;
+    max-height: 36px;
+    border-radius: 10%;
+}
+
+.profile-img-header-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+}
 
 
 
