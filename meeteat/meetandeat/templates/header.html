@@ -1,12 +1,12 @@
 {% load settings_value %}
 {% settings_value "DECOUPLE_CONFIGURATION" as environment%}
 
-<header class="sticky-top">
+<header class="sticky-top mb-4">
 
     {% if  environment == "production" %}
         <div class="warning-test-version">
             <div>
-                <span class="">This is the test version of the site, all data will be deleted until 31.07.19</span>
+                <span class="">This is the test version of the site, all data will be deleted until 20.07.19</span>
             </div>
         </div>
     {% endif %}

@@ -4,7 +4,7 @@
 {% settings_value "DECOUPLE_CONFIGURATION" as environment%}
 {% block title %}Dashboard{% endblock %}
 {% block main %}
-<div class = "container rounded my-3 bg-custom-light sticky-top {% if environment == "development" %}sticky-offset{% else %}sticky-offset-production{% endif %}">
+<div class = "container rounded mb-4 bg-custom-light sticky-top {% if environment == "development" %}sticky-offset{% else %}sticky-offset-production{% endif %}">
   <form method="post">
   <div class="row">
       <div class="col text-right">
