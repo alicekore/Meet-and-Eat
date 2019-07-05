@@ -17,6 +17,14 @@
                 {% endif %} required>
             <small>Submissions have to be approved by an administrator before they can be used for events.</small>
 
+
+
+            {% if form.non_field_errors %}
+              {% for err in form.non_field_errors %}
+              <h2 style="color:red;">{{ err }}</h2>
+              {% endfor %}
+            {% endif %}
+
             {% if form.title.errors %}<div class="invalid-feedback">Give a correct name</div>{%  endif %}
             {% if form.description.errors %}<div class="invalid-feedback">Give a correct description</div>{%  endif %}
         </div>
