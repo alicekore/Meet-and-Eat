@@ -248,13 +248,19 @@
 }
 
 .headline {
-    max-width: 85%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.text-overflow-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .right-col {
     max-width: 85px;
-    margin-top: -16px;
-    margin-bottom: -16px;
 }
 
 .btn-custom-add {
