@@ -8,60 +8,6 @@
             {% include "meetandeat/event_tile.html" %}
 
         {% endwith %}
-    <div class="container container-no-border border-0 rounded my-4 bg-custom-secondary">
-
-        <div class="row ">
-            <div class="col datefield border-right rounded-left p-3">
-                <div class="container">
-                    <div class="row"><h3>{{ event.date |  date:"d"}}</h3></div>
-                    <div class="row border-bottom border-dark pb-1" style="margin-top: -2px"><h4>{{ event.date |  date:"M"}}</h4></div>
-                    <div class="row pt-2">{{ event.time |  time:"G:i"}}</div>
-                </div>
-            </div>
-            <div class="col headline p-3">
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            {% if user in event.eventParticipants.all %}
-                            <h3><a class="text-custom-hyperlink"
-                                    href="{% url 'meetandeat:event-view' event.pk %}">{{ event.title }}
-                                    <small>({{ event.eventParticipants.count }}/{{ event.participants_number }})</small></a>
-                            </h3>
-                            {% else %}
-                            <h3>{{ event.title }}
-                                <small>({{ event.eventParticipants.count }}/{{ event.participants_number }})</small></h3>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="spacing"></div>
-                    <div class="row">
-
-                        <div class="col"><h5>
-                          <span class="material-icons">room</span>{{ event.location }}</h5></div>
-                        <div class="col text-right">
-                            {% if event.matching < 101 %}
-                                <span style="color: #dc3545"><span class="material-icons">whatshot</span><b>{{event.matching}}%</b></span>
-                            {% endif %}
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="d-flex align-items-center">
-                                <button class="btn btn-custom-primary mr-2 " data-target="#hideModal" data-toggle="modal"
-                                        type="button">Hide
-                                </button>
-                            <button class="btn btn-custom-secondary mr-2 " data-target="#unreportModal" data-toggle="modal"
-                                        type="button">Unreport
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
     <div aria-hidden="true" aria-labelledby="hideModalLabel" class="modal fade"
