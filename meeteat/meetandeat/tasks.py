@@ -1,6 +1,8 @@
-from django.utils import timezone
 import pytz
+from django.utils import timezone
+
 from .models import Event
+
 
 def deleteEvents():
     # Events older than 'days' will be deleted

@@ -1,40 +1,27 @@
 import json
+from datetime import date
 
 from django.contrib import messages
-from django.contrib.auth import get_user_model, update_session_auth_hash, logout
-from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.mail import EmailMessage
-from django.core import serializers
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.db.models import Count, Q
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.urls import reverse_lazy, reverse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.encoding import force_bytes, force_text
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
-from meetandeat.tokens import account_activation_token
 
 from .forms import *
-from .models import Event, Tag, Comment
-from .helpers import *
-from meetandeat.tokens import account_activation_token
-from django.template.loader import render_to_string
-from datetime import date
-import json
 from .helpers import *
 from .models import *
+
 
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
