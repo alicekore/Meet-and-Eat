@@ -460,3 +460,13 @@ a:active {
 header.sticky-top {
     z-index: 1021 !important;
 }
+
+@media (min-width: 768px) {
+            div.h-md-100 {
+                height: 100vh !important;
+            }
+
+            div.pos-abs-md {
+                position: absolute !important;
+            }
+        }

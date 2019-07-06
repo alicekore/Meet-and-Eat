@@ -16,6 +16,7 @@ def deleteEvents():
 
     print('Database updated: Deleted events older than 7 days.')
 
+
 def makeEventsInvisible():
     # Events older than 'days' will be made invisible
     days = 1

@@ -8,9 +8,9 @@ from meetandeat.models import *
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(label='',widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}))
-    password = forms.CharField(label='',widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
-
+    username = forms.CharField(label='', widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}))
+    password = forms.CharField(label='',
+                               widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
 
 
 class RequestActivationLinkForm(forms.ModelForm):
@@ -23,12 +23,12 @@ class RequestActivationLinkForm(forms.ModelForm):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            raise ValidationError({'username': ["This username does not exist",]})
+            raise ValidationError({'username': ["This username does not exist", ]})
         if user.activation_attempts_number >= 3:
-            raise ValidationError({'username': ["You have requested too many links",]})
+            raise ValidationError({'username': ["You have requested too many links", ]})
         if user.last_activation_attempt is not None \
                 and user.last_activation_attempt + timedelta(hours=1) > timezone.now():
-            raise ValidationError({'username': ["You have requested an activation link recently",]})
+            raise ValidationError({'username': ["You have requested an activation link recently", ]})
 
 
 class RequestPasswordResetLinkForm(forms.ModelForm):
@@ -41,7 +41,7 @@ class RequestPasswordResetLinkForm(forms.ModelForm):
         try:
             User.objects.get(username=username)
         except User.DoesNotExist:
-            raise ValidationError({'username': ["This username does not exist",]})
+            raise ValidationError({'username': ["This username does not exist", ]})
 
 
 class ChangeProfilePictureForm(forms.ModelForm):
@@ -61,7 +61,8 @@ class ChangeProfilePictureForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-    text = forms.CharField(label="text", widget=forms.TextInput(attrs={'class': "form-control", 'placeholder': 'Leave your comment here', 'autocomplete': 'off'}), max_length=160)
+    text = forms.CharField(label="text",
+                           widget=forms.TextInput(attrs={'class': "form-control", 'placeholder': 'Leave your comment here', 'autocomplete': 'off'}), max_length=160)
 
     class Meta:
         model = Comment
@@ -101,16 +102,19 @@ class EventForm(forms.ModelForm):
 
 class TagFilterForm(forms.Form):
     tags_queryset = Tag.objects.filter(approved=True)
-    tags = forms.ModelMultipleChoiceField(required=False, queryset=tags_queryset, widget=Select2MultipleWidget(attrs={'style': 'width: 100%;', 'data-placeholder': 'Search by Tag', 'allowClear': True}))
-    date = forms.DateField(widget=forms.DateInput(attrs={'autocomplete': 'off'}), label="", input_formats=['%d/%m/%Y'], required=False)
-    time = forms.TimeField(widget=forms.TimeInput(attrs={'autocomplete': 'off'}), label="", input_formats=['%H:%M'], required=False)
+    tags = forms.ModelMultipleChoiceField(required=False, queryset=tags_queryset,
+                                          widget=Select2MultipleWidget(attrs={'style': 'width: 100%;', 'data-placeholder': 'Search by Tag', 'allowClear': True}))
+    date = forms.DateField(widget=forms.DateInput(attrs={'autocomplete': 'off'}),
+                           label="", input_formats=['%d/%m/%Y'], required=False)
+    time = forms.TimeField(widget=forms.TimeInput(attrs={'autocomplete': 'off'}),
+                           label="", input_formats=['%H:%M'], required=False)
 
 
 class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
         fields = [
-            'title','description']
+            'title', 'description']
 
     def clean(self):
         title = self.cleaned_data.get('title')
@@ -118,12 +122,11 @@ class TagForm(forms.ModelForm):
             raise ValidationError("Tag already exists.")
 
 
-
 class TagDisapprovalForm(forms.ModelForm):
-    CHOICES= (
-    ('Tag already exists.', 'Tag already exists.'),
-    ('Tag is inappropriate.', 'Tag is inappropriate.'),
-    ('Description not clear.', 'Description not clear.'),
+    CHOICES = (
+        ('Tag already exists.', 'Tag already exists.'),
+        ('Tag is inappropriate.', 'Tag is inappropriate.'),
+        ('Description not clear.', 'Description not clear.'),
     )
     disapprovalMsg = forms.CharField(widget=forms.Select(choices=CHOICES))
 

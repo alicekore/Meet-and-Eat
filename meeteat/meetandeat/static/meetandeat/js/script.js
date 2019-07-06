@@ -16,17 +16,7 @@ if($pageID ==="index") {
 
 //##### Event Form javascript #####
 if($pageID === "create-event" || $pageID === "edit-event") {
-    // $datePicker = $pageBody.querySelector("#date");
-    // if(!$datePicker.value) {
-    //     // $dateString = new Date.toLocaleString();
-    //     $datePicker.value = getLocalDate();
-    // }
-    //
-    // $timePicker = $pageBody.querySelector("#time");
-    // if(!$timePicker.value) {
-    //     // $dateString = new Date.toLocaleString();
-    //     $timePicker.value = getLocalTime();
-    // }
+
     let datePicker = $("#date");
 
     datePicker.prop('type', 'text');
@@ -50,30 +40,8 @@ if($pageID === "create-event" || $pageID === "edit-event") {
     });
 }
 
-function zeroPadded(val) {
-  if (val >= 10)
-    return val;
-  else
-    return '0' + val;
-}
 
-function getLocalDate() {
-    d = new Date();
-    return  d.getFullYear()
-        + "-"
-        // use +1 because getMonth returns values from 0 to 11
-        + zeroPadded(d.getMonth() + 1)
-        + "-"
-        + zeroPadded(d.getDay());
-}
 
-function getLocalTime() {
-    d = new Date();
-    return  zeroPadded(d.getHours())
-        + ":"
-        + zeroPadded(d.getMinutes());
-
-}
 //###################
 
 
@@ -85,7 +53,7 @@ function csrfSafeMethod(method) {
 
 if($pageID === "profile") {
 
-    if (window.innerWidth < 800 || window.innerHeight < 600 || detectmob()) {
+    if (window.innerWidth < 800 || window.innerHeight < 600 || detectMob()) {
         $('#deleteModal').on('show.bs.modal', function (e) {
             e.preventDefault();
             document.location = $('#deleteAccountButton').attr('href');
@@ -167,20 +135,14 @@ if($pageID === "register") {
 }
 //################
 
-function detectmob() {
- if( navigator.userAgent.match(/Android/i)
+function detectMob() {
+ return navigator.userAgent.match(/Android/i)
  || navigator.userAgent.match(/webOS/i)
  || navigator.userAgent.match(/iPhone/i)
  || navigator.userAgent.match(/iPad/i)
  || navigator.userAgent.match(/iPod/i)
  || navigator.userAgent.match(/BlackBerry/i)
- || navigator.userAgent.match(/Windows Phone/i)
- ){
-    return true;
-  }
- else {
-    return false;
-  }
+ || navigator.userAgent.match(/Windows Phone/i);
 }
 
 

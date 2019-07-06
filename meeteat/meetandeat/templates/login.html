@@ -14,7 +14,9 @@
     -->
     <script src="{% static "meetandeat/js/jquery-3.4.1.min.js" %}"></script>
 
-
+    <link rel="icon" type="image/png" href="{% static "meetandeat/icons_favicon/favicon-32x32.png" %}" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{% static "meetandeat/icons_favicon/favicon-16x16.png" %}" sizes="16x16" />
+    <link rel="shortcut icon" href="{% static "meetandeat/icons_favicon/favicon.ico" %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
 
@@ -25,14 +27,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'meetandeat/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'meetandeat/css/global.css' %}">
-    <style>
-
-        @media (min-width: 768px) {
-            .h-md-100 {
-                height: 100vh;
-            }
-        }
-    </style>
+    <title>Meet and Eat - login</title>
 </head>
 
 <body class="bg-custom-primary" id="{{ request.resolver_match.url_name }}">
@@ -51,7 +46,21 @@
         </div>
     </div>
     <div class="col-md-6 p-0 bg-white h-md-100 loginarea">
+        {% if messages %}
+             <div class="m-3 pos-abs-md">
+                <ul class="messages">
+                    {% for msg in messages %}
+                    <li>
+                        <div class="alert alert-{{msg.level_tag}}" role="alert">
+                            {{msg.message}}
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+             </div>
+        {% endif %}
         <div class="d-md-flex align-items-center h-md-100 p-5 justify-content-center">
+
             <form class="border rounded p-5" method="Post">
                 {% csrf_token %}
                 <h3 class="mb-4 text-center">Sign In</h3>
