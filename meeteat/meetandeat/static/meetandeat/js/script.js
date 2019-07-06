@@ -12,6 +12,20 @@ if($pageID ==="index") {
     $('#id_time').timepicker({
          mode: '24hr'
     });
+
+    $('#reportModal').on('show.bs.modal', function (event) {
+    let button = $(event.relatedTarget);
+    let reportURL = button.attr('data-url');
+    $('#reportForm').attr("action", reportURL);
+    });
+}
+
+if($pageID === "own_events_list") {
+    $('#reportModal').on('show.bs.modal', function (event) {
+    let button = $(event.relatedTarget);
+    let reportURL = button.attr('data-url');
+    $('#reportForm').attr("action", reportURL);
+    });
 }
 
 //##### Event Form javascript #####
