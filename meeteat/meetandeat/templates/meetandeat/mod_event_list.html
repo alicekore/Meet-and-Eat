@@ -4,17 +4,21 @@
 
 {% block events %}
     {% for event in event_list %}
-    <div class="container container-no-border border-0 rounded p-3 my-4 bg-custom-secondary">
+        {% with True as mod_view %}
+            {% include "meetandeat/event_tile.html" %}
 
-        <div class="row">
-            <div class="col datefield border-right">
+        {% endwith %}
+    <div class="container container-no-border border-0 rounded my-4 bg-custom-secondary">
+
+        <div class="row ">
+            <div class="col datefield border-right rounded-left p-3">
                 <div class="container">
                     <div class="row"><h3>{{ event.date |  date:"d"}}</h3></div>
                     <div class="row border-bottom border-dark pb-1" style="margin-top: -2px"><h4>{{ event.date |  date:"M"}}</h4></div>
                     <div class="row pt-2">{{ event.time |  time:"G:i"}}</div>
                 </div>
             </div>
-            <div class="col headline">
+            <div class="col headline p-3">
                 <div class="container">
                     <div class="row">
                         <div class="col">

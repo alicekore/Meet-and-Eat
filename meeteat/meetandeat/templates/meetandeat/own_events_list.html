@@ -21,79 +21,10 @@
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane container active" id="own">
-            {% if own_event_list %}
-            {% for event in own_event_list %}
-            {% if event.visible == True %}
-            <div class="container rounded p-3 my-4 bg-custom-secondary">
-    <div class="row">
-        <div class="col datefield border-right">
-            <div class="container">
-                <div class="row"><h3>{{ event.date|  date:"d"}}</h3></div>
-                <div class="row border-bottom border-dark" style="margin-top: -8px"><h4>{{ event.date |  date:"M"}}</h4></div>
-                <div class="row pt-1">{{ event.time |  date:"G:i"}}</div>
-            </div>
-        </div>
-        <div class="col headline">
-            <div class="container">
-                <div class="row">
-                    <div class="col">
-                       {% if user in event.eventParticipants.all %}
-                        <h3><a class="text-custom-hyperlink"
-                                href="{% url 'meetandeat:event-view' event.pk %}">{{ event.title }}
-                                <small>({{ event.eventParticipants.count }}/{{ event.participants_number }})</small></a>
-                        </h3>
-                        {% else %}
-                        <h3>{{ event.title }}
-                            <small>({{ event.eventParticipants.count }}/{{ event.participants_number }})</small></h3>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="spacing"></div>
-                <div class="row">
-                    <div class="col"><h5><span class="material-icons">room</span>{{ event.location }}</h5></div>
-                </div>
-            </div>
-        </div>
-        <div class="col right-col">
-            <div class="container">
-                <div class="row pl-2">
-                    <div class="col">
-                        <div class="dropdown">
-                            <a aria-expanded="false" aria-haspopup="true" class="material-icons btn-custom-dots"
-                               data-toggle="dropdown" id="dropdownMenuLink" role="button">
-                                more_horiz
-                            </a>
-                            <div aria-labelledby="dropdownMenuLink" class="dropdown-menu dropdown-menu-right">
-                                {% if event.user == user %}
-                                <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit
-                                    Event</a>
-                                {% endif %}
-                                {% if user in event.userReportings.all %}
-                                <span class="dropdown-item">Already reported!</span>
-                                {% else %}
-                                <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report
-                                    Event</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="spacing"></div>
-                <div class="row">
-                    <div class="col">
-                        {% if user in event.eventParticipants.all %}
-                        <a class="material-icons btn-custom-leave"
-                           href="{% url 'meetandeat:leave-event' event.pk %}">remove</a>
-                        {% else %}
-                        <a class="material-icons btn-custom-add"
-                           href="{% url 'meetandeat:join-event' event.pk %}">add</a>
-                        {% endif %}
-                    </div>
-                </div>
-                </div>
-            </div>
-         </div>
-        </div>
+    {% if own_event_list %}
+    {% for event in own_event_list %}
+    {% if event.visible == True %}
+    {% include "meetandeat/event_tile.html" %}
             {% endif %}
             {% endfor %}
             {% else %}
@@ -106,76 +37,7 @@
             {% if joined_event_list %}
             {% for event in joined_event_list %}
             {% if event.visible == True %}
-            <div class="container rounded p-3 my-4 bg-custom-secondary">
-    <div class="row">
-        <div class="col datefield border-right">
-            <div class="container">
-                <div class="row"><h3>{{ event.date|  date:"d"}}</h3></div>
-                <div class="row border-bottom border-dark" style="margin-top: -8px"><h4>{{ event.date |  date:"M"}}</h4></div>
-                <div class="row pt-1">{{ event.time |  time:"G:i"}}</div>
-            </div>
-        </div>
-        <div class="col headline">
-            <div class="container">
-                <div class="row">
-                    <div class="col">
-                       {% if user in event.eventParticipants.all %}
-                        <h3><a class="text-custom-hyperlink"
-                                href="{% url 'meetandeat:event-view' event.pk %}">{{ event.title }}
-                                <small>({{ event.eventParticipants.count }}/{{ event.participants_number }})</small></a>
-                        </h3>
-                        {% else %}
-                        <h3>{{ event.title }}
-                            <small>({{ event.eventParticipants.count }}/{{ event.participants_number }})</small></h3>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="spacing"></div>
-                <div class="row">
-                    <div class="col"><h5><span class="material-icons">room</span>{{ event.location }}</h5></div>
-                </div>
-            </div>
-        </div>
-        <div class="col right-col">
-            <div class="container">
-                <div class="row pl-2">
-                    <div class="col">
-                        <div class="dropdown">
-                            <a aria-expanded="false" aria-haspopup="true" class="material-icons btn-custom-dots"
-                               data-toggle="dropdown" id="dropdownMenuLink2" role="button">
-                                more_horiz
-                            </a>
-                            <div aria-labelledby="dropdownMenuLink2" class="dropdown-menu dropdown-menu-right">
-                                {% if event.user == user %}
-                                <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit
-                                    Event</a>
-                                {% endif %}
-                                {% if user in event.userReportings.all %}
-                                <span class="dropdown-item">Already reported!</span>
-                                {% else %}
-                                <a class="dropdown-item" href="{% url 'meetandeat:report-event' event.pk %}">Report
-                                    Event</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="spacing"></div>
-                <div class="row">
-                    <div class="col">
-                        {% if user in event.eventParticipants.all %}
-                        <a class="material-icons btn-custom-leave"
-                           href="{% url 'meetandeat:leave-event' event.pk %}">remove</a>
-                        {% else %}
-                        <a class="material-icons btn-custom-add"
-                           href="{% url 'meetandeat:join-event' event.pk %}">add</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+            {% include "meetandeat/event_tile.html" %}
             {% endif %}
             {% endfor %}
             {% else %}
