@@ -1,18 +1,57 @@
 {% load settings_value %}
-<header>
+{% settings_value "DECOUPLE_CONFIGURATION" as environment%}
 
-    {% settings_value "DECOUPLE_CONFIGURATION" as environment%}
+<header class="sticky-top mb-4">
+
     {% if  environment == "production" %}
         <div class="warning-test-version">
             <div>
-                <span class="">This is the test version of the site, all data will be deleted until 31.07.19</span>
+                <span class="">This is the test version of the site, all data will be deleted until 20.07.19</span>
             </div>
         </div>
     {% endif %}
     <nav class="navbar navbar-expand-md p-3 mb-3 rounded bg-custom-secondary" style="box-shadow: #484848;">
         <a class="navbar-brand" href="{% url 'meetandeat:index' %}" style="color: #dd5549">Meet&Eat</a>
+        {#for mobile version#}
+        {% if user.is_authenticated %}
+        <div class="d-flex order-md-1 ml-auto pr-2">
+            <ul class="navbar-nav flex-row">
+                <li>
+                    <a href="{% url 'meetandeat:create-event' %}" class="btn btn-custom-primary">Create Event</a>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+        <div class="d-none d-md-flex order-md-2 ml-auto pr-2">
+            <ul class="navbar-nav flex-row">
+                {% if user.is_authenticated %}
+                <li >
+                    <div class="btn-group dropdown" style="margin-left:15px; cursor: pointer">
+                        <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle d-flex flex-row align-items-center justify-content-center"
+                           data-toggle="dropdown" id="dropdownMenuLink" role="button">
+                            <div class="profile-img-header-wrapper">
+                                <img {% if request.user.profilePicture %}src="{{ request.user.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %} alt="" class="rounded profile-img-header" >
+                            </div>
+                        </a>
 
-        <span class="spacing border-right"></span>
+                        <div aria-labelledby="dropdownMenuLink" class="dropdown-menu dropdown-menu-right">
+                          <a class="dropdown-item" href="{% url 'meetandeat:profile' %}">Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                          <a class="dropdown-item" href="{% url 'meetandeat:NotificationView' %}">Tags{% if request.resolver_match.url_name == 'NotificationView' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                          <a class="dropdown-item" href="{% url 'meetandeat:logout' %}">Logout{% if request.resolver_match.url_name == 'logout' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                        </div>
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item {% if request.resolver_match.url_name == 'login' %}active{% endif %}">
+                        <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:login' %}">Login{% if request.resolver_match.url_name == 'login' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                </li>
+                <li class="nav-item mr-auto {% if request.resolver_match.url_name == 'create-account' %}active{% endif %}">
+                        <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:register' %}">Register{% if request.resolver_match.url_name == 'register' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        <span class="spacing border-right d-none d-md-inline"></span>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="material-icons">menu</span>
         </button>
@@ -29,38 +68,38 @@
                     <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:modView' %}">Mod{% if request.resolver_match.url_name == 'modView' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 <li class="nav-item {% if request.resolver_match.url_name == 'tag-view' %}active{% endif %}">
-                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:tag-view' %}">Tags{% if request.resolver_match.url_name == 'tag-view' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:tag-view' %}">Manage Tags{% if request.resolver_match.url_name == 'tag-view' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 {%endif %}
 
             </ul>
-            {# right floating items            #}
-            <ul class="navbar-nav ml-auto">
+
+            {# responsive mobile menu            #}
+            <ul class="navbar-nav ml-auto d-md-none">
                 {% if user.is_authenticated %}
+{#                <li class="nav-item {% if request.resolver_match.url_name == 'create-event' %}active{% endif %}">#}
+{#                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:create-event' %}">Create event{% if request.resolver_match.url_name == 'create-event' %}<span class="sr-only">(current)</span>{% endif %}</a>#}
+{#                </li>#}
+                <li class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
 
-                <li>
-                    <a href="{% url 'meetandeat:create-event' %}" class="btn btn-custom-primary">Create Event</a>
+                    <a class="nav-link text-custom-hyperlink d-flex align-items-center" href="{% url 'meetandeat:profile' %}">
+                        <div class="profile-img-header-wrapper mr-1">
+                            <img {% if request.user.profilePicture %}src="{{ request.user.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %} alt="" class="rounded profile-img-header" >
+                        </div>
+                        Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
-                <li>
-                  <div class="btn-group dropdown" style="margin-left:15px;">
-                    <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle"
-                       data-toggle="dropdown" id="dropdownMenuLink" role="button">
-                       <img {% if request.user.profilePicture %}src="{{ request.user.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %} alt="" class="img-rounded"   style="width:36px;height:36px;border-radius: 10%;">
-                    </a>
-                    <div aria-labelledby="dropdownMenuLink" class="dropdown-menu dropdown-menu-right">
-                      <a class="dropdown-item" href="{% url 'meetandeat:profile' %}">Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
-                      <a class="dropdown-item" href="{% url 'meetandeat:NotificationView' %}">Tags{% if request.resolver_match.url_name == 'NotificationView' %}<span class="sr-only">(current)</span>{% endif %}</a>
-                      <a class="dropdown-item" href="{% url 'meetandeat:logout' %}">Logout{% if request.resolver_match.url_name == 'logout' %}<span class="sr-only">(current)</span>{% endif %}</a>
-                    </div>
-                </div>
-                </li>
-
+                <li class="nav-item {% if request.resolver_match.url_name == 'NotificationView' %}active{% endif %}">
+                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:NotificationView' %}">Tags{% if request.resolver_match.url_name == 'NotificationView' %}<span class="sr-only">(current)</span>{% endif %}</a>
+               </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'logout' %}active{% endif %}">
+                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:logout' %}">Logout{% if request.resolver_match.url_name == 'logout' %}<span class="sr-only">(current)</span>{% endif %}</a>
+               </li>
                 {% else %}
                 <li class="nav-item {% if request.resolver_match.url_name == 'login' %}active{% endif %}">
-                        <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:login' %}">Login{% if request.resolver_match.url_name == 'login' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:login' %}">Login{% if request.resolver_match.url_name == 'login' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 <li class="nav-item mr-auto {% if request.resolver_match.url_name == 'create-account' %}active{% endif %}">
-                        <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:register' %}">Register{% if request.resolver_match.url_name == 'register' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:register' %}">Register{% if request.resolver_match.url_name == 'register' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 {% endif %}
             </ul>

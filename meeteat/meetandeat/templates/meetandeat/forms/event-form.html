@@ -11,7 +11,7 @@
 {% endblock css %}
 
 {% block main %}
-<div class="container">
+<div class="container pt-3">
     <h2 class="mb-3">{% block formTitle %}{% endblock %}</h2>
     <form method="post">
         {% csrf_token %}
@@ -19,7 +19,7 @@
             <label for="title">Title:</label>
             <input type="text" class="form-control form-control-lg {% if form.title.errors %}is-invalid{%  endif %}"
                 id="title" name="title" maxlength="50" {% if form.title.value %}value="{{ form.title.value}}"
-                {% endif %} required>
+                {% endif %} autocomplete="off" required>
             {% if form.title.errors %}<div class="invalid-feedback">{{ form.title.errors }}</div>{%  endif %}
         </div>
         <div class="form-group">
@@ -56,7 +56,7 @@
                     id="date" name="date"
                        class="form-control form-control-lg {% if form.date.errors %}is-invalid{%  endif %}"
                     {% if form.date.value %}value="{{form.date.value | date:"d/m/Y" }}"
-                    {% endif %}  required>
+                    {% endif %} autocomplete="off" required>
                 {% if form.date.errors %}<div class="invalid-feedback">{{ form.date.errors }}</div>
                 {%  endif %}
             </div>
@@ -66,7 +66,7 @@
                     class="form-control form-control-lg {% if form.time.errors %}is-invalid{%  endif %}"
                     id="time" name="time"
                     {% if form.time.value %}value="{{form.time.value | date:"G:i"}}"
-                    {% endif %} required>
+                    {% endif %} autocomplete="off" required>
                 {% if form.time.errors %}<div class="invalid-feedback">{{ form.time.errors }}</div>
                 {%  endif %}
             </div>

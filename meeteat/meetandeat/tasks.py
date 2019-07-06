@@ -1,6 +1,8 @@
-from django.utils import timezone
 import pytz
+from django.utils import timezone
+
 from .models import Event
+
 
 def deleteEvents():
     # Events older than 'days' will be deleted
@@ -13,6 +15,7 @@ def deleteEvents():
             e.delete()
 
     print('Database updated: Deleted events older than 7 days.')
+
 
 def makeEventsInvisible():
     # Events older than 'days' will be made invisible

@@ -11,7 +11,7 @@
                     data-toggle="dropdown" id="dropdownMenuLink" role="button">
                     more_horiz
                 </a>
-                <div aria-labelledby="dropdownMenuLink" class="dropdown-menu">
+                <div aria-labelledby="dropdownMenuLink" class="dropdown-menu dropdown-menu-right">
                     {% if event.user == user %}
                     <a class="dropdown-item" href="{% url 'meetandeat:edit-event' event.pk %}">Edit
                         Event</a>
@@ -45,11 +45,11 @@
                     <div aria-labelledby="dropdownMenuLink2" class="dropdown-menu dropdown-menu-hover">
                         {% for participant in event.eventParticipants.all %}
                         {% if participant == event.user %}
-                        <small class="dropdown-item" style="color: #5094ed"><img width="20" height="20" style="border-radius: 50%;" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>   {{ participant.username }}</small>
+                        <small class="dropdown-item" style="color: #5094ed"><img class="event-details-img" alt="user profile image" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>   {{ participant.username }}</small>
                         {% elif participant == request.user%}
-                        <small class="dropdown-item" style="color: #dc3545"><img width="20" height="20" style="border-radius: 50%;" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>   {{ participant.username }}</small>
+                        <small class="dropdown-item" style="color: #dc3545"><img class="event-details-img" alt="user profile image" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>   {{ participant.username }}</small>
                         {% else %}
-                        <small class="dropdown-item"><img width="20" height="20" style="border-radius: 50%;" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>  {{ participant.username }} </small>
+                        <small class="dropdown-item"><img class="event-details-img" alt="user profile image" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>  {{ participant.username }} </small>
                         {% endif %}
                         {% endfor %}
                     </div>

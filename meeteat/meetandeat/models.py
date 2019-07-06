@@ -1,10 +1,11 @@
+from datetime import timedelta
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from datetime import datetime, timedelta
 
 
 # Create your models here.
@@ -44,6 +45,7 @@ class Event(models.Model):
         if user in self.eventParticipants.all():
             self.eventParticipants.remove(user)
             self.save()
+
     def set_matching(self, matching):
         self.matching = round(matching, 1)
         self.save()
@@ -99,8 +101,8 @@ class User(AbstractUser):
     profilePicture = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     visible = models.BooleanField(default=True)
     events = models.ManyToManyField(Event, related_name='eventParticipants', blank=True)
-    ##reports = models.ManyToManyField(Report, related_name='users', blank=True)
-    ##reportedEvents = models.ManyToManyField(Event, related_name='userReportings', blank=True)
+    # reports = models.ManyToManyField(Report, related_name='users', blank=True)
+    # reportedEvents = models.ManyToManyField(Event, related_name='userReportings', blank=True)
     last_activation_attempt = models.DateTimeField(null=True, blank=True)
     activation_attempts_number = models.IntegerField(default=0)
     old_email = models.EmailField('old email address', null=True, blank=True)

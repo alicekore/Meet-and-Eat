@@ -1,40 +1,27 @@
 import json
+from datetime import date
 
 from django.contrib import messages
-from django.contrib.auth import get_user_model, update_session_auth_hash, logout
-from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.mail import EmailMessage
-from django.core import serializers
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.db.models import Count, Q
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.urls import reverse_lazy, reverse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.encoding import force_bytes, force_text
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
-from meetandeat.tokens import account_activation_token
 
 from .forms import *
-from .models import Event, Tag, Comment
-from .helpers import *
-from meetandeat.tokens import account_activation_token
-from django.template.loader import render_to_string
-from datetime import date
-import json
 from .helpers import *
 from .models import *
+
 
 class UserIsInGroupMixin(UserPassesTestMixin):
     def test_func(self):
@@ -82,11 +69,11 @@ class IndexView(View):
             if tags:
                 events = events.filter(tags__in=tags).distinct()
                 for event in events:
-                        if tags.count() <= event.tags.count():
-                            match = 100
-                        else:
-                            match = event.tags.count() / tags.count() * 100
-                        event.set_matching(match)
+                    if tags.count() <= event.tags.count():
+                        match = 100
+                    else:
+                        match = event.tags.count() / tags.count() * 100
+                    event.set_matching(match)
 
             if idate:
                 events = events.filter(date=idate)
@@ -95,12 +82,13 @@ class IndexView(View):
                     # filter by todays date
                     today = date.today()
                     events = events.filter(date=today)
-                 # filter by times greater than input time
+                # filter by times greater than input time
                 events = events.filter(time__gte=time)
 
             return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
         else:
             return render(request, 'meetandeat/event_list.html', context={'event_list': events, 'form': form})
+
 
 @method_decorator(login_required, name='dispatch')
 class EventJoinView(View):
@@ -173,6 +161,7 @@ class TagCreate(CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
+
 @method_decorator(login_required, name='dispatch')
 class TagUpdate(UserIsStuffMixin, UpdateView):
     model = Tag
@@ -185,6 +174,7 @@ class TagUpdate(UserIsStuffMixin, UpdateView):
         form.instance.pending = False
         form.instance.save()
         return HttpResponseRedirect(self.get_success_url())
+
 
 @method_decorator(login_required, name='dispatch')
 class TagDetailView(UserIsStuffMixin, DetailView):
@@ -567,6 +557,7 @@ class ApproveTag(UserIsStuffMixin, View):
         tag.save()
         return redirect('meetandeat:tag-view')
 
+
 @method_decorator(login_required, name='dispatch')
 class OwnEventsView(View):
     def get(self, request):
@@ -593,11 +584,13 @@ class OwnEventsView(View):
             return render(request, 'meetandeat/own_events_list.html',
                           context={'own_event_list': own_events, 'form': form, 'joined_event_list': joined_events})
 
+
 class NotificationView(View):
     def get(self, request):
         User = self.request.user
         tags = Tag.objects.filter(user=User).order_by("pk")
         return render(request, 'meetandeat/notification_list.html', context={'tags': tags})
+
 
 def comments_changed(request):
     """ 
@@ -621,6 +614,7 @@ def comments_changed(request):
     """
     if data['comments_changed']:
         data['comment_count'] = event_comments.count()
-        data['html'] = render_to_string('meetandeat/comment-list.html', context={'request': request,'comment_list': event_comments})
+        data['html'] = render_to_string('meetandeat/comment-list.html',
+                                        context={'request': request, 'comment_list': event_comments})
 
     return JsonResponse(data, safe=False)

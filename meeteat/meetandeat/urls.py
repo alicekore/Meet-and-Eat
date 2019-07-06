@@ -1,5 +1,5 @@
-from django.contrib.auth import views as auth_views
 from django.conf.urls import url
+from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from .views import *
@@ -14,7 +14,8 @@ urlpatterns = [
     path('event/<int:pk>/report', EventReport.as_view(), name='report-event'),
     path('event/create/', EventCreate.as_view(), name='create-event'),
     path('event/<int:pk>/edit/', EventUpdate.as_view(), name='edit-event'),
-    path('login/', auth_views.LoginView.as_view(template_name='login.html',authentication_form=LoginForm, redirect_authenticated_user=True), name='login'),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html',
+                                                authentication_form=LoginForm, redirect_authenticated_user=True), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('my_events/', OwnEventsView.as_view(), name='own_events_list'),
@@ -26,7 +27,8 @@ urlpatterns = [
     path('request_activation', RequestActivateAccountView.as_view(), name='request-activation'),
     path('request_email_confirm', RequestEmailConfirmView.as_view(), name='request-email-confirm'),
     path('password_reset/request', RequestPasswordResetView.as_view(), name='password-reset-request'),
-    path('password_reset/confirm/<str:uidb64>/<str:token>', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
+    path('password_reset/confirm/<str:uidb64>/<str:token>',
+         PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
     path('mod/dashboard', ModView.as_view(), name='modView'),
     path('mod/hide/<int:pk>/', ModHide.as_view(), name='modHide'),
     path('mod/unreport/<int:pk>/', ModUnReport.as_view(), name='modUnreport'),

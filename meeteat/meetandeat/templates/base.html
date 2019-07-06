@@ -18,6 +18,9 @@
     -->
     <script src="{% static "meetandeat/js/jquery-3.4.1.min.js" %}"></script>
 
+    <link rel="icon" type="image/png" href="{% static "meetandeat/icons_favicon/favicon-32x32.png" %}" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{% static "meetandeat/icons_favicon/favicon-16x16.png" %}" sizes="16x16" />
+    <link rel="shortcut icon" href="{% static "meetandeat/icons_favicon/favicon.ico" %}">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
@@ -30,32 +33,18 @@
     <link rel="stylesheet" href="{% static 'meetandeat/css/bootstrap.css'%}">
     <link rel="stylesheet" href="{% static 'meetandeat/css/global.css' %}">
 
-    <!-- has to be here to work for safari? dont know why-->
-    <style>
-    body{
-        {% if  environment == "production" %}
-            padding-top: 91px;
-        {% else %}
-            padding-top: 71px;
-        {% endif %}
-
-    }
-    .sticky-top{
-      top: 72px;
-    }
-    </style>
 
     {% block css %}{% endblock css %}
     <title>{% block title %}{% endblock %}</title>
 </head>
 
-<body class="bg-custom-primary  mb-3"  id="{{ request.resolver_match.url_name }}">
+<body class="bg-custom-primary"  id="{{ request.resolver_match.url_name }}">
 
-<div class = "fixed-top">
+
     {% include "header.html" %}
-</div>
 
-    <main class="mt-3">
+
+    <main class="mb-3 pb-3">
         {% block main %}{% endblock %}
     </main>
 

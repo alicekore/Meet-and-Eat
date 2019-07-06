@@ -238,25 +238,30 @@
 
 /*##### Event Styles ####*/
 .datefield {
+
     max-width: 70px;
     background-color: #efeeee;
-    margin-top: -16px;
-    margin-bottom: -16px;
-    margin-left: -1px;
-    padding-top: 15px;
-    padding-bottom: 4px;
+    /*margin-top: -16px;*/
+    /*margin-bottom: -16px;*/
+
     color: #ff8e00;
 
 }
 
 .headline {
-    max-width: 85%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.text-overflow-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .right-col {
     max-width: 85px;
-    margin-top: -16px;
-    margin-bottom: -16px;
 }
 
 .btn-custom-add {
@@ -279,6 +284,7 @@
     font-size: 48px;
     background-color: #f6f6f6;
     border-radius: 30px;
+    user-select: none;
 }
 
 .btn-custom-leave:hover {
@@ -290,6 +296,8 @@
 
 .btn-custom-dots {
     font-size: 36px;
+    user-select: none;
+    cursor: pointer;
 }
 
 .btn-custom-dots:hover {
@@ -300,6 +308,8 @@
 .btn-custom-dots-dark {
     font-size: 36px;
     border-radius: 5px;
+    user-select: none;
+    cursor: pointer;
 }
 
 .btn-custom-dots-dark:hover {
@@ -358,29 +368,14 @@ a:active {
 }
 
 .col-right-mod {
-    max-width: 250px;
+    max-width: 130px;
 }
 
 .dropdown-hover:hover .dropdown-menu-hover{
     display: block;
 }
 
-@-moz-document url-prefix() {
-    .datefield {
-        max-width: 80px;
-        background-color: #efeeee;
-        margin-top: -20px;
-        margin-bottom: -20px;
-        margin-left: -6px;
-        padding-top: 15px;
-        color: #ff8f41;
-    }
 
-    .col-right-mod {
-        max-width: 270px;
-    }
-
-}
 
 
 /*#########################*/
@@ -438,6 +433,47 @@ a:active {
     box-shadow: 0 0 0 0.2rem rgba(219, 70, 70, 0.25);
 }
 
+.profile-img-header {
+    /*display: table;*/
+    max-width: 36px;
+    max-height: 36px;
+    border-radius: 10%;
+}
+
+.profile-img-header-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+}
+
+.event-details-img {
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 50%;
+}
 
 
+.sticky-offset{
+    top: 72px;
+}
 
+.sticky-offset-production{
+    top: 92px;
+}
+
+/*very important for proper functionality of dropdowns*/
+header.sticky-top {
+    z-index: 1021 !important;
+}
+
+@media (min-width: 768px) {
+            div.h-md-100 {
+                height: 100vh !important;
+            }
+
+            div.pos-abs-md {
+                position: absolute !important;
+            }
+        }
