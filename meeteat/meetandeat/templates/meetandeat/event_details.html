@@ -19,8 +19,8 @@
                     {% if user in event.userReportings.all %}
                     <span class="dropdown-item">Already reported!</span>
                     {% else %}
-                     <button type="button" class="dropdown-item" data-toggle="modal"
-                                    data-target="#reportModal">Report</button>
+                    <button type="button" class="dropdown-item" data-toggle="modal"
+                        data-target="#reportModal">Report</button>
                     {% endif %}
                     {% if user in event.eventParticipants.all %}
                     <a class="dropdown-item" href="{% url 'meetandeat:leave-event' event.pk %}">Leave
@@ -37,19 +37,30 @@
             </div>
             <div class="col text-right">
                 <div class="btn-group dropdown dropdown-hover">
-                    <a aria-expanded="false" aria-haspopup="true" class="md-light"
-                       data-toggle="dropdown" id="dropdownMenuLink2" role="button">
+                    <a aria-expanded="false" aria-haspopup="true" class="md-light" data-toggle="dropdown"
+                        id="dropdownMenuLink2" role="button">
 
-                       <small>{{ event.eventParticipants.count }}/{{ event.participants_number }} Participants</small>
+                        <small>{{ event.eventParticipants.count }}/{{ event.participants_number }} Participants</small>
                     </a>
                     <div aria-labelledby="dropdownMenuLink2" class="dropdown-menu dropdown-menu-hover">
                         {% for participant in event.eventParticipants.all %}
                         {% if participant == event.user %}
-                        <small class="dropdown-item" style="color: #5094ed"><img class="event-details-img" alt="user profile image" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>   {{ participant.username }}</small>
+                        <small class="dropdown-item" style="color: #5094ed"><img class="event-details-img"
+                                alt="user profile image" {% if participant.profilePicture %}
+                                src="{{ participant.profilePicture.url }}"
+                                {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"
+                                {% endif %}> {{ participant.username }}</small>
                         {% elif participant == request.user%}
-                        <small class="dropdown-item" style="color: #dc3545"><img class="event-details-img" alt="user profile image" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>   {{ participant.username }}</small>
+                        <small class="dropdown-item" style="color: #dc3545"><img class="event-details-img"
+                                alt="user profile image" {% if participant.profilePicture %}
+                                src="{{ participant.profilePicture.url }}"
+                                {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"
+                                {% endif %}> {{ participant.username }}</small>
                         {% else %}
-                        <small class="dropdown-item"><img class="event-details-img" alt="user profile image" {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %}>  {{ participant.username }} </small>
+                        <small class="dropdown-item"><img class="event-details-img" alt="user profile image"
+                                {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}"
+                                {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"
+                                {% endif %}> {{ participant.username }} </small>
                         {% endif %}
                         {% endfor %}
                     </div>
@@ -60,7 +71,8 @@
         <br>
         <hr>
         <p><span class="material-icons">room</span> {{event.location}}</p>
-        <p><span class="material-icons">schedule</span> <span class="pb-1">{{event.date | date:"d.m.Y"}} {{ event.time | time:"G:i" }}</span>
+        <p><span class="material-icons">schedule</span> <span class="pb-1">{{event.date | date:"d.m.Y"}}
+                {{ event.time | time:"G:i" }}</span>
         </p>
         <hr>
 
@@ -80,7 +92,7 @@
         </form>
     </div>
 </div>
-   <form action="{% url 'meetandeat:report-event' event.pk %} " method="post" name="form">
+<form action="{% url 'meetandeat:report-event' event.pk %} " method="post" name="form">
     {% csrf_token %}
     <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="reportModal" role="dialog"
         tabindex="-1">
@@ -104,31 +116,32 @@
         </div>
     </div>
 </form>
-
-
 {% endblock %}
 
 {% block js %}
 <script>
-    var comment_count = 0;
+    /*
+        This script will fetch the latest comments via ajax
+        and update the corresponding placeholder
+    */
+    var comment_html = "";
     function executeQuery() {
         $.ajax({
-            url: '/ajax/comments_changed',
+            url: '/ajax/event_get_comments',
             data: {
                 'event_id': '{{ event.id }}',
-                'comments_amount': comment_count,
             },
             dataType: 'json',
             success: function (data) {
-                if (data.comments_changed) {
-                    comment_count = data.comment_count;
+                if (comment_html != data.html) {
                     $("#comment-list").html(data.html);
+                    comment_html = data.html;
                 }
             }
         });
+        // refresh every x milliseconds (5s=5000ms)
         setTimeout(executeQuery, 5000);
     }
-
     $(document).ready(function () {
         executeQuery();
     });

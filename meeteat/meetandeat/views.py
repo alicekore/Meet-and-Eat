@@ -592,29 +592,20 @@ class NotificationView(View):
         return render(request, 'meetandeat/notification_list.html', context={'tags': tags})
 
 
-def comments_changed(request):
+@login_required
+def event_get_comments(request):
     """ 
     This view is used for dynamical loading of comments inside events.
     returns a JsonResponse with event comment-list, rendered as html
     """
+    if not request.is_ajax():
+        return
+
     event_id = request.GET.get('event_id', None)
     event_comments = Comment.objects.filter(event=event_id)
 
-    comments_count_get = int(request.GET.get('comments_amount', None))
-
-    difference = abs(event_comments.count() - comments_count_get)
-    comments_changed = difference > 0
-
     data = {
-        'comments_changed': comments_changed
+        'html': render_to_string('meetandeat/comment-list.html', context={'request': request,'comment_list': event_comments})
     }
-
-    """
-    return data only if changed or on first load
-    """
-    if data['comments_changed']:
-        data['comment_count'] = event_comments.count()
-        data['html'] = render_to_string('meetandeat/comment-list.html',
-                                        context={'request': request, 'comment_list': event_comments})
 
     return JsonResponse(data, safe=False)
