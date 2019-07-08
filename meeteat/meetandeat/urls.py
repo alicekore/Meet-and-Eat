@@ -38,5 +38,5 @@ urlpatterns = [
     path('mod/tag/<int:pk>/approve/', ApproveTag.as_view(), name='approve-tag'),
     path('mod/tag/all/', TagView.as_view(), name='tag-view'),
     path('tags/', NotificationView.as_view(), name='NotificationView'),
-    url(r'^ajax/comments_changed/$', comments_changed, name='comments_changed'),
+    url(r'^ajax/event_get_comments/$', event_get_comments, name='comments_changed'),
 ]
