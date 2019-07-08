@@ -7,6 +7,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
       - ./config/nginx:/etc/nginx/conf.d:ro
       - static:/static
       - media:/media/meetandeat
@@ -14,7 +16,11 @@ services:
       - web
     restart: on-failure
   certbot:
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
   web:
     build: .
     container_name: dg01
