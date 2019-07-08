@@ -1,4 +1,5 @@
 {% load settings_value %}
+{% load static %}
 {% settings_value "DECOUPLE_CONFIGURATION" as environment%}
 
 <header class="sticky-top mb-4">
@@ -30,7 +31,7 @@
                         <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle d-flex flex-row align-items-center justify-content-center"
                            data-toggle="dropdown" id="dropdownMenuLink" role="button">
                             <div class="profile-img-header-wrapper">
-                                <img {% if request.user.profilePicture %}src="{{ request.user.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %} alt="" class="rounded profile-img-header" >
+                                <img {% if request.user.profilePicture %}src="{{ request.user.profilePicture.url }}" {% else %}src="{% static "meetandeat/img/generic-profile-picture.jpg" %}"{% endif %} alt="" class="rounded profile-img-header" >
                             </div>
                         </a>
 
@@ -84,7 +85,7 @@
 
                     <a class="nav-link text-custom-hyperlink d-flex align-items-center" href="{% url 'meetandeat:profile' %}">
                         <div class="profile-img-header-wrapper mr-1">
-                            <img {% if request.user.profilePicture %}src="{{ request.user.profilePicture.url }}" {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"{% endif %} alt="" class="rounded profile-img-header" >
+                            <img {% if request.user.profilePicture %}src="{{ request.user.profilePicture.url }}" {% else %}src="{% static "meetandeat/img/generic-profile-picture.jpg" %}"{% endif %} alt="" class="rounded profile-img-header" >
                         </div>
                         Profile{% if request.resolver_match.url_name == 'profile' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
