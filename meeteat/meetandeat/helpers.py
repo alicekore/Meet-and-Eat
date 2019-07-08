@@ -13,7 +13,7 @@ def send_activation_email(request, user):
     mail_subject = 'Activate your account.'
     message = render_to_string('emails/acc_active_email.html', {
         'user': user,
-        'domain': current_site.domain,
+        'domain': 'meetandeat.site',
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
     })
@@ -37,7 +37,7 @@ def send_password_reset_email(request, user):
     mail_subject = 'Password reset'
     message = render_to_string('emails/acc_password_reset_email.html', {
         'user': user,
-        'domain': current_site.domain,
+        'domain': 'meetandeat.site',
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
     })
