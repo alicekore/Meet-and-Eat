@@ -4,7 +4,7 @@
 {% settings_value "DECOUPLE_CONFIGURATION" as environment%}
 {% block title %}Dashboard{% endblock %}
 {% block main %}
-<div class = "container rounded mb-4 bg-custom-light sticky-top {% if environment == "development" %}sticky-offset{% else %}sticky-offset-production{% endif %}">
+<div class = "container rounded p-md-3 mb-4 bg-custom-light sticky-top {% if environment == "development" %}sticky-offset{% else %}sticky-offset-production{% endif %}">
   <form method="post">
   <div class="row">
       <div class="col text-right">
@@ -22,7 +22,7 @@
         {{ form.time }}
       </div>
       <br>
-      <div>
+      <div class="col-auto">
         <button class="btn btn-custom-primary mb-2 " name="submit" type="submit">
          Search
         </button>
@@ -32,9 +32,11 @@
 </div>
 
 
-
-    {% block events %}
+<div class="container p-0 p-md-3">
+{% block events %}
     {% endblock events %}
+</div>
+
 
 {% include "meetandeat/forms/report-form-modal.html" %}
 
