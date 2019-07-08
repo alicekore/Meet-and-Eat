@@ -5,6 +5,7 @@ services:
     container_name: ng01
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./config/nginx:/etc/nginx/conf.d:ro
       - static:/static
@@ -12,6 +13,8 @@ services:
     depends_on:
       - web
     restart: on-failure
+  certbot:
+    image: certbot/certbot
   web:
     build: .
     container_name: dg01
