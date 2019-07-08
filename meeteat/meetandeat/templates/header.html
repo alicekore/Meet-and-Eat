@@ -7,7 +7,7 @@
     {% if  environment == "production" %}
         <div class="warning-test-version">
             <div>
-                <span class="">This is the test version of the site, all data will be deleted until 20.07.19</span>
+                <span class="">This is the test version of the site, all the data will be deleted until 20.07.19</span>
             </div>
         </div>
     {% endif %}
@@ -69,7 +69,7 @@
                     <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:modView' %}">Mod{% if request.resolver_match.url_name == 'modView' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 <li class="nav-item {% if request.resolver_match.url_name == 'tag-view' %}active{% endif %}">
-                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:tag-view' %}">Manage Tags{% if request.resolver_match.url_name == 'tag-view' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:tag-view' %}">Manage tags{% if request.resolver_match.url_name == 'tag-view' %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 {%endif %}
 
