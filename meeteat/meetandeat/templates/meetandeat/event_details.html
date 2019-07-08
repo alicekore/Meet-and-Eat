@@ -32,17 +32,17 @@
     </div>
     <div class="container bg-custom-primary rounded p-3 my-2">
         <div class="row">
-            <div class="col">
-                <h2>{{event.title}} </h2>
+            <div class="col" >
+                <h2 style="word-wrap: break-word;">{{event.title}} </h2>
             </div>
             <div class="col text-right">
-                <div class="btn-group dropdown dropdown-hover">
+                <div class="btn-group dropdown dropdown-hover dropdown-menu-right">
                     <a aria-expanded="false" aria-haspopup="true" class="md-light" data-toggle="dropdown"
                         id="dropdownMenuLink2" role="button">
 
                         <small>{{ event.eventParticipants.count }}/{{ event.participants_number }} Participants</small>
                     </a>
-                    <div aria-labelledby="dropdownMenuLink2" class="dropdown-menu dropdown-menu-hover">
+                    <div aria-labelledby="dropdownMenuLink2" class="dropdown-menu event-details-participants-dropdown dropdown-menu-hover ">
                         {% for participant in event.eventParticipants.all %}
                         {% if participant == event.user %}
                         <small class="dropdown-item" style="color: #5094ed"><img class="event-details-img"

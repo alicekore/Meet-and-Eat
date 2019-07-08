@@ -477,3 +477,8 @@ header.sticky-top {
                 position: absolute !important;
             }
         }
+
+.event-details-participants-dropdown {
+    left: auto !important;
+  right: 0 !important;
+}
