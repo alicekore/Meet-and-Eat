@@ -335,7 +335,6 @@
 /*####COMMENT STYLES##### */
 
 .col-right-comment {
-    max-width: 100px;
     margin-top: -16px;
     margin-bottom: -16px;
     margin-right: -5px;
@@ -343,7 +342,6 @@
 }
 
 .col-left-comment {
-    max-width: 100px;
     margin-top: -16px;
     margin-bottom: -16px;
     margin-left: -5px;
@@ -374,8 +372,6 @@ a:active {
 .dropdown-hover:hover .dropdown-menu-hover{
     display: block;
 }
-
-
 
 
 /*#########################*/
