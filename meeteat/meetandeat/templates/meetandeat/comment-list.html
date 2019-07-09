@@ -7,11 +7,15 @@
                 {{ comment.text }}
             </div>
         </div>
-        <div class="col col-right-comment border-left bg-custom-secondary">
-            <div class="container">
-                <!-- TODO: <div class="row">{{ comment.profilepciture }}</div> -->
-                <div class="row pt-1">{{ comment.author }}</div>
-                <div class="row border-top pt-1">
+        <div class="col col-right-comment border-left bg-custom-secondary ">
+            <div class="container ">
+                <div class="row pt-1">
+                    {% if comment.author.profilePicture %}
+                    <div class="img"><img src="{{ comment.author.profilePicture.url }}" class="img-fluid " alt="user pic"></div>
+                    {% endif %}
+                </div>
+                <div class="row pt-1 justify-content-md-center">{{ comment.author }}</div>
+                <div class="row border-top pt-1 justify-content-md-center" >
                     <small>{{ comment.datetime |date:"d.m G:i"}}</small></div>
             </div>
         </div>
@@ -21,10 +25,14 @@
 <div class="container rounded bg-custom-secondary p-3 my-4">
     <div class="row">
         <div class="col col-left-comment border-right bg-custom-secondary">
-            <div class="container">
-                <!-- TODO: <div class="row">{{ comment.profilepciture }}</div> -->
-                <div class="row pt-1">{{ comment.author }}</div>
-                <div class="row border-top pt-1">
+            <div class="container ">
+                <div class="row pt-1">
+                    {% if comment.author.profilePicture %}
+                    <div class="img"><img src="{{ comment.author.profilePicture.url }}" class="img-fluid " alt="user pic"></div>
+                    {% endif %}
+                </div>
+                <div class="row pt-1 justify-content-md-center">{{ comment.author }}</div>
+                <div class="row border-top pt-1 justify-content-md-center" >
                     <small>{{ comment.datetime |date:"d.m G:i"}}</small></div>
             </div>
         </div>
