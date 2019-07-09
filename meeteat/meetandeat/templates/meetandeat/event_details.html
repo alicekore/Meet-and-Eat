@@ -48,18 +48,18 @@
                         <small class="dropdown-item" style="color: #5094ed"><img class="event-details-img"
                                 alt="user profile image" {% if participant.profilePicture %}
                                 src="{{ participant.profilePicture.url }}"
-                                {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"
+                                {% else %}src="{% static "meetandeat/img/generic-profile-picture.jpg" %}"
                                 {% endif %}> {{ participant.username }}</small>
                         {% elif participant == request.user%}
                         <small class="dropdown-item" style="color: #dc3545"><img class="event-details-img"
                                 alt="user profile image" {% if participant.profilePicture %}
                                 src="{{ participant.profilePicture.url }}"
-                                {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"
+                                {% else %}src="{% static "meetandeat/img/generic-profile-picture.jpg" %}"
                                 {% endif %}> {{ participant.username }}</small>
                         {% else %}
                         <small class="dropdown-item"><img class="event-details-img" alt="user profile image"
                                 {% if participant.profilePicture %} src="{{ participant.profilePicture.url }}"
-                                {% else %}src="http://westlandchildrensacademy.com/wp-content/uploads/generic-female-profile-picture-8.jpg"
+                                {% else %}src="{% static "meetandeat/img/generic-profile-picture.jpg" %}"
                                 {% endif %}> {{ participant.username }} </small>
                         {% endif %}
                         {% endfor %}
