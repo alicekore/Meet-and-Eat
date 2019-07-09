@@ -60,11 +60,13 @@
 
         <div class="spacing"></div>
         <div class="row">
-        <small>
-          {% for t in event.tags.all %}
-          <span class= "container tag-box"> {{t.title}}</span>
-          {% endfor %}
-        </small>
+          <div class = "col">
+            <small>
+              {% for t in event.tags.all %}
+              <span class= "container tag-box"> {{t.title}}</span>
+              {% endfor %}
+            </small>
+          </div>
         </div>
         <br>
         <hr>
