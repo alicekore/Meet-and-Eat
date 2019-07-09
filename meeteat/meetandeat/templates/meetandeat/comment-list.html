@@ -2,24 +2,6 @@
 {% if comment.author == request.user %}
 <div class="container rounded bg-custom-secondary p-3 my-4">
     <div class="row">
-        <div class="col col-left-comment border-right bg-custom-secondary">
-            <div class="container">
-                <!-- TODO: <div class="row">{{ comment.profilepciture }}</div> -->
-                <div class="row pt-1">{{ comment.author }}</div>
-                <div class="row border-top pt-1">
-                    <small>{{ comment.datetime |date:"d.m G:i"}}</small></div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="container">
-                {{ comment.text }}
-            </div>
-        </div>
-    </div>
-</div>
-{% else %}
-<div class="container rounded bg-custom-secondary p-3 my-4">
-    <div class="row">
         <div class="col">
             <div class="container">
                 {{ comment.text }}
@@ -31,6 +13,24 @@
                 <div class="row pt-1">{{ comment.author }}</div>
                 <div class="row border-top pt-1">
                     <small>{{ comment.datetime |date:"d.m G:i"}}</small></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container rounded bg-custom-secondary p-3 my-4">
+    <div class="row">
+        <div class="col col-left-comment border-right bg-custom-secondary">
+            <div class="container">
+                <!-- TODO: <div class="row">{{ comment.profilepciture }}</div> -->
+                <div class="row pt-1">{{ comment.author }}</div>
+                <div class="row border-top pt-1">
+                    <small>{{ comment.datetime |date:"d.m G:i"}}</small></div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="container">
+                {{ comment.text }}
             </div>
         </div>
     </div>
