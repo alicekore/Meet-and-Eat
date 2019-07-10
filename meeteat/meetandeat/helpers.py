@@ -10,7 +10,7 @@ from meeteat import settings
 
 def send_activation_email(request, user):
     current_site = get_current_site(request)
-    mail_subject = 'Activate your account.'
+    mail_subject = '[Meet&Eat] Confirm Your Email'
     message = render_to_string('emails/acc_active_email.html', {
         'user': user,
         'domain': 'meetandeat.site',
@@ -23,7 +23,7 @@ def send_activation_email(request, user):
         mail_subject,
         message,
         to=[to_email],
-        from_email='Meet-and-Eat',
+        from_email='no-reply@meetandeat.site',
     )
     if settings.EMAIL_ENABLED:
         sent_emails = email.send(fail_silently=True)
@@ -34,7 +34,7 @@ def send_activation_email(request, user):
 
 def send_password_reset_email(request, user):
     current_site = get_current_site(request)
-    mail_subject = 'Password reset'
+    mail_subject = '[Meet&Eat] Password Reset'
     message = render_to_string('emails/acc_password_reset_email.html', {
         'user': user,
         'domain': 'meetandeat.site',
@@ -51,7 +51,7 @@ def send_password_reset_email(request, user):
         mail_subject,
         message,
         to=[to_email],
-        from_email='Meet-and-Eat',
+        from_email='no-reply@meetandeat.site',
     )
     if settings.EMAIL_ENABLED:
         sent_emails = email.send(fail_silently=True)
