@@ -67,6 +67,16 @@
             </div>
         </div>
         <small>{{event.description}}</small>
+        <div class="spacing"></div>
+        <div class="row">
+          <div class = "col">
+            <small>
+              {% for t in event.tags.all %}
+              <span class= "container tag-box"> {{t.title}}</span>
+              {% endfor %}
+            </small>
+          </div>
+        </div>
         <br>
         <hr>
         <p><span class="material-icons">room</span> {{event.location}}</p>
