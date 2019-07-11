@@ -52,7 +52,7 @@ class IndexView(View):
         reportedEvents = Event.objects.filter(id__in=ids)
 
         events = Event.objects.filter(visible=True).difference(
-            reportedEvents).order_by('pk')
+            reportedEvents).order_by('date','time')
         return render(request, 'meetandeat/event_list.html',
                       context={'event_list': events, 'form': form, 'reportedEvents': reportedEvents})
 
@@ -594,7 +594,7 @@ class NotificationView(View):
 
 @login_required
 def event_get_comments(request):
-    """ 
+    """
     This view is used for dynamical loading of comments inside events.
     returns a JsonResponse with event comment-list, rendered as html
     """
