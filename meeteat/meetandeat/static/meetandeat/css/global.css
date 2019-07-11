@@ -429,6 +429,20 @@ a:active {
     box-shadow: 0 0 0 0.2rem rgba(219, 70, 70, 0.25);
 }
 
+.tag-box{
+  background-color: #ffffff;
+  border: 1px solid #484848;
+  border-radius: 5px;
+}
+.tag-group > .row {
+  overflow-x: auto;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+.tag-group > .row > .col-xs-4 {
+  display: inline-block;
+  float: none;
+}
 .profile-img-header {
     /*display: table;*/
     max-width: 36px;

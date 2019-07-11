@@ -27,16 +27,26 @@
                     {% endif %}
                 </div>
             </div>
+            <div class="row">
+              <div class= "container tag-group">
+                <div class="row">
+                  <div class = "col">
+                    <small>
+                        {% for t in event.tags.all %}
+                        <span class= "container tag-box" > {{t.title}}</span>
+                        {% endfor %}
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="spacing"></div>
+            <div class="spacing"></div>
             <div class="row pt-1">
 
                 <div class="col "><h5>
                   <span class="material-icons">room</span>{{ event.location }}</h5></div>
-                <div class="col text-right">
-                {% if event.matching < 101 %}
-                    <span style="color: #dc3545"><span class="material-icons">whatshot</span><b>{{event.matching}}%</b></span>
-                {% endif %}
-            </div>
-
             </div>
             {% if mod_view == True %}
             <div class="row">
@@ -76,6 +86,23 @@
                     {% endif %}
                 </div>
             </div>
+
+            <div class = "row">
+              <div class = "row">
+                <div class="col text-right">
+                {% if event.matching < 101 %}
+                    <div class="spacing"></div>
+                    <span style="color: #dc3545"><span class="material-icons">whatshot</span><b>{{event.matching}}%</b></span>
+                    <div class="spacing"></div>
+                    {%else%}
+                  <div class="spacing"></div>
+                  <div class="spacing"></div>
+                  <div class="spacing"></div>
+                {% endif %}
+                </div>
+              </div>
+            </div>
+
             <div class="row py-3 py-md-2 ">
                 <div class="col">
                     {% if user in event.eventParticipants.all %}
