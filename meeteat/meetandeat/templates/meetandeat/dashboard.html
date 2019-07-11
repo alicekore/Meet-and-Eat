@@ -6,23 +6,23 @@
 {% block main %}
 <div class = "container rounded p-md-3 mb-4 bg-custom-light sticky-top {% if environment == "development" %}sticky-offset{% else %}sticky-offset-production{% endif %}">
   <form method="post">
-  <div class="row">
-      <div class="col text-right">
-        <br>
+{#    <div class="row">#}
+{##}
+{#    </div>#}
+{#    <br>#}
+    <div class = "row">
+      <div class="col-12 col-md pb-3 pb-md-0">
               {% csrf_token %}
               {{form.tags}}
       </div>
-    </div>
-    <br>
-    <div class = "row">
-      <div class = "col">
+      <div class = "col pt-2 pt-md-3">
         {{ form.date }}
       </div>
-      <div class = "col">
+      <div class = "col pt-2 pt-md-3">
         {{ form.time }}
       </div>
       <br>
-      <div class="col-auto">
+      <div class="col-auto pt-md-2">
         <button class="btn btn-custom-primary mb-2 " name="submit" type="submit">
          Search
         </button>

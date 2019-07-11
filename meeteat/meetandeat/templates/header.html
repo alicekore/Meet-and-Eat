@@ -78,9 +78,6 @@
             {# responsive mobile menu            #}
             <ul class="navbar-nav ml-auto d-md-none">
                 {% if user.is_authenticated %}
-{#                <li class="nav-item {% if request.resolver_match.url_name == 'create-event' %}active{% endif %}">#}
-{#                    <a class="nav-link text-custom-hyperlink" href="{% url 'meetandeat:create-event' %}">Create event{% if request.resolver_match.url_name == 'create-event' %}<span class="sr-only">(current)</span>{% endif %}</a>#}
-{#                </li>#}
                 <li class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
 
                     <a class="nav-link text-custom-hyperlink d-flex align-items-center" href="{% url 'meetandeat:profile' %}">

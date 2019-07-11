@@ -89,7 +89,7 @@ class Report(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    datetime = models.DateTimeField(default=datetime.datetime.now())
+    datetime = models.DateTimeField(default=timezone.now)
     text = models.CharField(max_length=160)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
 
