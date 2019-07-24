@@ -1,3 +1,5 @@
+**Note:** Made for Skalierbare Systeme SS19, TU Berlin
+
 # Meet&Eat #
 
 App to find people with common interests to eat together.
