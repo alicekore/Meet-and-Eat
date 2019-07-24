@@ -1,4 +1,4 @@
-**Note:** Made for Skalierbare Systeme SS19, TU Berlin
+**Made for Skalierbare Systeme SS19, TU Berlin**
 
 # Meet&Eat #
 
